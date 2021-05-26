@@ -1,36 +1,47 @@
 <template>
-  <div class="create">
+  <div class="o-page o-page--create">
     <h1>Ajouter un nouvel instrument</h1>
 
-    <form @submit="submit">
+    <form ref="form" @submit="submit">
       <div class="form__group">
         <b-field label="Nom">
-          <b-input type="text" v-model="name"> </b-input>
+          <b-input v-model="name" name="name" type="text"></b-input>
         </b-field>
       </div>
       <div class="form__group">
         <b-field label="Type">
-          <b-input type="text" v-model="type"> </b-input>
+          <b-input v-model="type" name="type" type="text"></b-input>
         </b-field>
       </div>
       <div class="form__group">
         <b-field label="Spécification">
-          <b-input type="text" v-model="specification"> </b-input>
+          <b-input
+            v-model="specification"
+            name="specification"
+            type="text"
+          ></b-input>
         </b-field>
       </div>
+      <FileUpload ref="files" />
       <button type="submit" class="button is-primary">Ajouter</button>
     </form>
+
+    <button @click="showSurvey = true">Répondre aux questions</button>
+    <Survey v-if="showSurvey" @validate="showSurvey = false" />
   </div>
 </template>
 
 <script>
-import ApiService from '~/plugins/ApiService';
+import FileUpload from '@/components/FileUpload';
+import Survey from '@/components/instrument/Survey';
 
 export default {
   name: 'NewInstrument',
+  components: { FileUpload, Survey },
   data() {
     return {
       success: false,
+      showSurvey: false,
       name: '',
       type: '',
       specification: '',
@@ -40,25 +51,28 @@ export default {
     // Form submitted event
     async submit(e) {
       e.preventDefault();
+      const formData = new FormData(this.$refs.form);
+      const file = this.$refs.files.dropFiles[0];
+      formData.append('image', file);
       try {
-        console.log(this.name);
-        const res = await ApiService.newInstrument({
-          name: this.name,
-          type: this.type,
-          specification: this.specification,
-        });
-        console.log('created callback', res);
-        this.createdHandler();
+        await this.$api.newInstrument(formData);
+        this.notifyCreated();
       } catch (e) {
-        console.error(e);
+        this.notifyError();
       }
     },
 
     // Instrument created callback
-    createdHandler() {
+    notifyCreated() {
       this.$buefy.toast.open({
         message: "L'instrument vient d'être créé",
         type: 'is-success',
+      });
+    },
+    notifyError() {
+      this.$buefy.toast.open({
+        message: "L'instrument n'a pas été créé",
+        type: 'is-danger',
       });
     },
   },

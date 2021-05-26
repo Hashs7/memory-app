@@ -1,37 +1,14 @@
-import AuthService from './AuthService';
-
-class ApiService {
+class ApiController {
   constructor($axios) {
     this.$axios = $axios;
-
-    const accessToken = AuthService.getJWT();
-    if (accessToken) {
-      this.setToken(accessToken);
-    }
-  }
-
-  setToken(accessToken) {
-    this.$axios.defaults.headers = {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + accessToken,
-    };
   }
 
   me() {
-    const token = AuthService.getJWT();
-    if (!token) {
-      return null;
-    }
-    return this.$axios.get('/user/me', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    return this.$axios.get('/user/me');
   }
 
   async login(payload) {
     const { data } = await this.$axios.post('/auth/signin', { ...payload });
-    AuthService.setJWT(data.accessToken);
-    this.setToken(data.accessToken);
     return data;
   }
 
@@ -43,8 +20,16 @@ class ApiService {
     return this.$axios.get('/user/online');
   }
 
+  getUserMedias() {
+    return this.$axios.get('/file/user');
+  }
+
   getUserConversations() {
     return this.$axios.get('/chat/conversation');
+  }
+
+  updateUser(payload) {
+    return this.$axios.patch('/user', payload);
   }
 
   sendMessage(payload) {
@@ -52,19 +37,55 @@ class ApiService {
   }
 
   newInstrument(payload) {
-    return this.$axios.post('/instrument', { ...payload });
+    return this.$axios.post('/instrument', payload, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  }
+
+  newMemory(instrumentId, payload) {
+    return this.$axios.post(`/instrument/${instrumentId}/memory`, {
+      ...payload,
+    });
   }
 
   getInstruments() {
     return this.$axios.get('/instrument');
   }
 
+  getUserInstruments() {
+    return this.$axios.get('/instrument/user');
+  }
+
   getInstrumentById(id) {
     return this.$axios.get(`/instrument/${id}`);
+  }
+
+  addInstrumentToWishlist(id) {
+    return this.$axios.patch(`/user/wishlist/${id}`);
+  }
+
+  handoverInstrument(id) {
+    return this.$axios.patch(`/instrument/${id}/handover`);
+  }
+
+  confirmHandoverInstrument(token) {
+    return this.$axios.patch(`/instrument/confirm-handover?token=${token}`);
+  }
+
+  getFile(filename) {
+    return this.$axios.get(`/file/${filename}`);
+  }
+
+  uploadFile(file) {
+    return this.$axios.post('/file', file, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
   }
 }
 
 export default function ({ $axios }, inject) {
-  const api = new ApiService($axios);
+  const api = new ApiController($axios);
   inject('api', api);
 }

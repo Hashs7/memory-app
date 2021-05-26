@@ -1,30 +1,51 @@
 <template>
-  <section class="view view--instrument-list">
-    <b-tabs>
-      <b-tab-item label="Liste des instruments public">
-        <b-table
-          :data="instruments"
-          :columns="columns"
-          :selected.sync="selected"
-          focusable
-        >
-        </b-table>
-      </b-tab-item>
-    </b-tabs>
-  </section>
+  <div class="o-page">
+    <h1>Mes instruments</h1>
+    <section class="view view--instrument-list">
+      <b-tabs>
+        <b-tab-item v-if="userInstruments.length" label="Actuels">
+          <b-table
+            :data="userInstruments"
+            :columns="columns"
+            :selected.sync="selected"
+            focusable
+          >
+          </b-table>
+        </b-tab-item>
+        <b-tab-item v-if="oldInstruments.length" label="Passés">
+          <b-table
+            :data="oldInstruments"
+            :columns="columns"
+            :selected.sync="selected"
+            focusable
+          >
+          </b-table>
+        </b-tab-item>
+        <b-tab-item v-if="wishInstruments.length" label="Favoris">
+          <b-table
+            :data="wishInstruments"
+            :columns="columns"
+            :selected.sync="selected"
+            focusable
+          >
+          </b-table>
+        </b-tab-item>
+      </b-tabs>
+    </section>
+    <NuxtLink to="/instrument/creation" class="u-button u-button--primary"
+      >Ajouter un instrument</NuxtLink
+    >
+  </div>
 </template>
 
 <script>
 export default {
-  async asyncData({ $api }) {
-    const res = await $api.getInstruments();
-    return {
-      instruments: [...res.data],
-    };
-  },
+  middleware: 'auth',
   data() {
     return {
-      instruments: [],
+      userInstruments: [],
+      oldInstruments: [],
+      wishInstruments: [],
       selected: null,
       columns: [
         {
@@ -48,6 +69,20 @@ export default {
       ],
     };
   },
+  async fetch() {
+    try {
+      const res = await this.$api.getUserInstruments();
+      console.log(res.data);
+      const { userInstruments, oldInstruments, wishInstruments } = res.data;
+      console.log(userInstruments, oldInstruments, wishInstruments);
+      this.userInstruments = userInstruments;
+      this.oldInstruments = oldInstruments;
+      this.wishInstruments = wishInstruments;
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  fetchOnServer: false,
   watch: {
     async selected(newVal) {
       await this.$router.push({
