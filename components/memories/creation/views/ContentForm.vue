@@ -10,12 +10,12 @@
         </button>
       </div>
 
-      <div class="">
-        <label class="title">
+      <div class="memory__infos">
+        <label class="memory__title">
           <input
             v-model="name"
             type="text"
-            class="title__input"
+            class="memory__title-input"
             placeholder="Ajouter un titre"
           />
         </label>
@@ -152,6 +152,10 @@ export default {
   }
 }
 
+.o-layout--none .o-page--create-content {
+  max-height: 100vh;
+}
+
 .o-page__footer {
   display: flex;
   justify-content: space-between;
@@ -168,6 +172,26 @@ export default {
 
   input {
     width: 100%;
+  }
+}
+
+.memory__infos {
+  text-align: center;
+}
+
+.memory__title {
+  width: 100%;
+}
+.memory__title-input {
+  text-align: center;
+  width: 100%;
+  background-color: transparent;
+  font-size: 24px;
+  font-family: $font-secondary;
+
+  &::placeholder {
+    font-size: 24px;
+    font-family: $font-secondary;
   }
 }
 

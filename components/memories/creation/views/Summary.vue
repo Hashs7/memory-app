@@ -1,10 +1,7 @@
 <template>
   <div class="o-page o-page--summary">
     <div class="o-page__header o-page__header-nav">
-      <button class="o-page__header-btn icon" @click="$emit('back')">
-        <IconChevron />
-      </button>
-      <span>Résumé</span>
+      <ButtonBack emit @back="$emit('back')" />
       <button class="o-page__header-btn primary" @click="$emit('submit')">
         <template v-if="!edit">Poster</template>
         <template v-else>Enregistrer</template>
@@ -47,13 +44,13 @@
 <script>
 import { VISIBILITY } from '@/const/memory';
 import MemoryPreview from '../../MemoryPreview';
-import IconChevron from '~/assets/svg/ic_chevron.svg?inline';
+import ButtonBack from '../../../UI/ButtonBack';
 
 export default {
   name: 'Summary',
   components: {
+    ButtonBack,
     MemoryPreview,
-    IconChevron,
   },
   props: {
     edit: {

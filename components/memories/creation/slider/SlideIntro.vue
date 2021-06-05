@@ -1,16 +1,20 @@
 <template>
   <div class="slider__item slider__intro">
     <div class="slider__media">
-      <div v-if="!showMedia" class="slider__select" @click="showMedia = true">
+      <div
+        v-if="!memory.preview && !showMedia"
+        class="slider__select"
+        @click="showMedia = true"
+      >
         <div class="slider__help">
           <IconCamera />
           <p>Ajouter une photo de couverture</p>
         </div>
       </div>
-      <MediaContent v-else preview :index="null" :value="memory.preview" />
+      <MediaContent v-else preview :value="memory.preview" />
     </div>
-    <div>
-      <label class="o-cells__label">Date</label>
+    <div class="slider__date">
+      <label class="o-cells__label">Date du souvenir</label>
       <client-only>
         <b-field>
           <b-datepicker
@@ -66,6 +70,10 @@ export default {
 
 .slider__media {
   flex-grow: 1;
+}
+
+.slider__date {
+  margin-top: 16px;
 }
 
 .slider__select {
