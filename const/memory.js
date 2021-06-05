@@ -1,13 +1,3 @@
-export const emptyMemory = {
-  id: null,
-  name: '',
-  date: [],
-  contents: [],
-  tags: [],
-  visibility: null,
-  theme: null,
-};
-
 export const CONTENT_TYPE = {
   media: {
     type: 'media',
@@ -29,6 +19,17 @@ export const CONTENT_TYPE = {
 };
 
 export const getContent = (type) => ({ ...CONTENT_TYPE[type] });
+
+export const emptyMemory = {
+  id: null,
+  name: '',
+  date: [],
+  preview: getContent('media'),
+  contents: [],
+  tags: [],
+  visibility: null,
+  theme: null,
+};
 
 export const VISIBILITY = {
   private: {

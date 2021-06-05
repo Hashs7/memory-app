@@ -39,6 +39,12 @@ export const mutations = {
     }
   },
 
+  updatePreview(state, { file }) {
+    if (file) {
+      state.data.preview.file = file;
+    }
+  },
+
   resetState(state) {
     state.data = { ...emptyMemory };
   },
@@ -58,10 +64,16 @@ export const actions = {
   addSelectedMedia({ rootGetters, commit, dispatch }, index) {
     const selected = rootGetters['gallery/getLastSelected'];
     if (!selected) return;
-    commit('updateContent', {
-      index,
-      file: selected,
-    });
+    if (index) {
+      commit('updateContent', {
+        index,
+        file: selected,
+      });
+    } else {
+      commit('updatePreview', {
+        file: selected,
+      });
+    }
     commit('gallery/removeSelected', selected._id, { root: true });
   },
 };

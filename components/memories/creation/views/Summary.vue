@@ -13,22 +13,7 @@
     <div class="o-page__body">
       <MemoryPreview :data="memory" @click="edit ? $emit('open-form') : ''" />
 
-      <div class="o-cells">
-        <label class="o-cells__label">Date</label>
-        <client-only>
-          <b-field>
-            <b-datepicker
-              :value="new Date(memory.date)"
-              locale="fr"
-              placeholder="Sélectionner une date"
-              icon="calendar-today"
-              trap-focus
-              @input="updateDate($event.toISOString())"
-            >
-            </b-datepicker>
-          </b-field>
-        </client-only>
-      </div>
+      <div class="o-cells"></div>
 
       <div class="o-cells">
         <label class="o-cells__label">Confidentialité</label>
@@ -60,7 +45,6 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
 import { VISIBILITY } from '@/const/memory';
 import MemoryPreview from '../../MemoryPreview';
 import IconChevron from '~/assets/svg/ic_chevron.svg?inline';
@@ -92,7 +76,6 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('memory', ['updateDate']),
     handleChanges(value) {
       this.$store.commit('memory/updateMemory', value);
     },

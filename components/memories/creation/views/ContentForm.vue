@@ -10,6 +10,17 @@
         </button>
       </div>
 
+      <div class="">
+        <label class="title">
+          <input
+            v-model="name"
+            type="text"
+            class="title__input"
+            placeholder="Ajouter un titre"
+          />
+        </label>
+      </div>
+
       <form class="o-page__body o-page__outside">
         <div class="slider">
           <SlideIntro />
@@ -107,6 +118,14 @@ export default {
   },
   computed: {
     ...mapGetters('memory', ['contents']),
+    name: {
+      get() {
+        return this.$store.state.memory.data.name;
+      },
+      set(value) {
+        this.$store.commit('memory/updateName', value);
+      },
+    },
     memory: {
       get() {
         return this.$store.state.memory;

@@ -26,6 +26,10 @@ export default {
       type: Number,
       required: true,
     },
+    preview: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -42,28 +46,9 @@ export default {
     },
   },
   methods: {
-    /*
-    previewImg() {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(this.$refs.file.files[0]);
-      fileReader.addEventListener('loadend', (e) => this.uploadImg(e));
-    },
-    */
     previewImg() {
       this.$store.dispatch('memory/addSelectedMedia', this.index);
       this.showChoices = false;
-    },
-
-    async uploadImg(event) {
-      // this.previewSrc = event.target.result;
-      this.showChoices = false;
-      const formData = new FormData();
-      formData.append('file', this.$refs.file.files[0]);
-      const { data } = await this.$api.uploadFile(formData);
-      this.$store.commit('memory/updateContent', {
-        index: this.index,
-        file: data.response._id,
-      });
     },
   },
 };
