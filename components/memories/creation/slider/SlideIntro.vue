@@ -2,7 +2,7 @@
   <div class="slider__item slider__intro">
     <div class="slider__media">
       <div
-        v-if="!memory.preview && !showMedia"
+        v-if="!memory.preview.file && !showMedia"
         class="slider__select"
         @click="showMedia = true"
       >

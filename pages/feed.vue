@@ -28,7 +28,7 @@
 </router>
 
 <script>
-import SearchBar from '../components/SearchBar';
+import SearchBar from '../components/layout/SearchBar';
 
 export default {
   components: { SearchBar },
