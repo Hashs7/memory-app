@@ -11,6 +11,13 @@
     </h1>
     <p>@{{ user.username }}</p>
 
+    <div v-if="isCurrentUser" class="">
+      <NuxtLink to="/profil/edit" class="u-button u-button--primary"
+        >Modifier mon compte</NuxtLink
+      >
+      <Logout>Déconnexion</Logout>
+    </div>
+
     <section class="">
       <TabSections :sections="sections" :show-index="true" />
     </section>
@@ -19,10 +26,11 @@
 
 <script>
 import TabSections from '../../components/layout/TabSections';
+import Logout from '../../components/user/Logout';
 
 export default {
   name: 'UserProfile',
-  components: { TabSections },
+  components: { Logout, TabSections },
   async asyncData({ $api, params, redirect }) {
     try {
       const user = await $api.getUserByUsername(params.user);
@@ -57,6 +65,11 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    isCurrentUser() {
+      return this.$auth.$state.user.username === this.user.username;
+    },
   },
   created() {
     const instrumentSection = this.sections.find(

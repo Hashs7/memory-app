@@ -12,43 +12,30 @@
 
       <div class="o-cells"></div>
 
-      <div class="o-cells">
-        <label class="o-cells__label">Confidentialité</label>
-        <div class="o-cells__container">
-          <button class="o-cells__item" @click="$emit('params')">
-            <span v-if="!visibilityItem"
-              >Choisissez qui peut voir le souvenir</span
-            >
-            <span v-else class="o-cells__item-content">
-              <span class="o-cells__item-text">{{ visibilityItem.text }}</span>
-              <span class="o-cells__item-help">{{
-                visibilityItem.helper
-              }}</span>
-            </span>
-          </button>
-        </div>
-      </div>
-
-      <div v-if="!edit" class="o-cells">
-        <label class="o-cells__label">Partager</label>
-        <div class="o-cells__container">
-          <button class="o-cells__item">Facebook</button>
-          <button class="o-cells__item">Instagram</button>
-          <button class="o-cells__item">Twitter</button>
-        </div>
-      </div>
+      <TabSections
+        :sections="[
+          {
+            nav: 'Paramètres de confidentialité',
+          },
+        ]"
+      />
+      <Visibility />
     </div>
   </div>
 </template>
 
 <script>
-import { VISIBILITY } from '@/const/memory';
-import MemoryPreview from '../../MemoryPreview';
+import { mapMutations, mapState } from 'vuex';
+import Visibility from '@/components/memories/creation/form/Visibility';
+import MemoryPreview from '@/components/memories/MemoryPreview';
 import ButtonBack from '../../../UI/ButtonBack';
+import TabSections from '../../../layout/TabSections';
 
 export default {
   name: 'Summary',
   components: {
+    TabSections,
+    Visibility,
     ButtonBack,
     MemoryPreview,
   },
@@ -59,20 +46,10 @@ export default {
     },
   },
   computed: {
-    memory: {
-      get() {
-        return this.$store.state.memory.data;
-      },
-      set(value) {
-        this.$store.commit('memory/updateMemory', value);
-      },
-    },
-    visibilityItem() {
-      if (!this.memory.visibility) return null;
-      return VISIBILITY[this.memory.visibility];
-    },
+    ...mapState('memory', { memory: 'data' }),
   },
   methods: {
+    ...mapMutations('memory', ['updateDate']),
     handleChanges(value) {
       this.$store.commit('memory/updateMemory', value);
     },

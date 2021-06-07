@@ -2,8 +2,8 @@
   <div class="o-page">
     <div class="o-page__header">
       <SearchBar />
-      <NuxtLink to="/profil" class="profile">
-        <span v-if="!$auth.loggedIn">Profil</span>
+      <NuxtLink :to="profileLink" class="profile">
+        <IconUser v-if="!$auth.loggedIn || !profilePicture" />
         <img
           v-if="profilePicture"
           :src="profilePicture"
@@ -28,10 +28,11 @@
 </router>
 
 <script>
+import IconUser from '@/assets/svg/ic_user.svg?inline';
 import SearchBar from '../components/layout/SearchBar';
 
 export default {
-  components: { SearchBar },
+  components: { SearchBar, IconUser },
   async fetch() {
     try {
       const res = await this.$api.getInstruments();
@@ -43,6 +44,20 @@ export default {
   computed: {
     profilePicture() {
       return this.$auth.user?.thumbnail?.path;
+    },
+    username() {
+      return this.$auth.$state.user.username;
+    },
+    profileLink() {
+      if (this.$auth.loggedIn) {
+        return {
+          name: 'user',
+          params: { user: this.username },
+        };
+      }
+      return {
+        name: 'connexion',
+      };
     },
   },
 };
