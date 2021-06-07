@@ -4,14 +4,7 @@
     @next="showSummary = true"
     @back="$router.back()"
   />
-  <Summary
-    v-else-if="!showVisibility"
-    edit
-    @back="showSummary = false"
-    @submit="submit"
-    @params="showVisibility = true"
-  />
-  <Visibility v-else @back="showVisibility = false" />
+  <Summary v-else edit @back="showSummary = false" @submit="submit" />
 </template>
 
 <router>
