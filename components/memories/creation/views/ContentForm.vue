@@ -134,7 +134,7 @@ export default {
       draggableOptions: {
         animation: 200,
         direction: 'horizontal',
-        delay: 100,
+        delay: 200,
       },
     };
   },
