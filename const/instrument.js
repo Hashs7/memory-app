@@ -47,7 +47,6 @@ export const INSTRUMENT_TYPE = {
   vuvuzela: 'Vuvuzela',
   washtub_bass: 'Contrebassine',
   xylophone: 'Xylophone',
-  zither: 'cithare',
 };
 
 export const LIST_INSTRUMENT_TYPE = Object.keys(INSTRUMENT_TYPE).map((k) => ({
