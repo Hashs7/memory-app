@@ -23,6 +23,7 @@
     />
   </div>
 </template>
+
 <script>
 import imageLoaded from 'imagesloaded';
 import { throttle } from '@/helpers';
@@ -72,7 +73,6 @@ export default {
     this.$Lazyload.$on('loaded', (lazyEvent) => this.loadedHandler(lazyEvent));
     if (!this.isImage) return;
     this.backgroundColor = await this.$color(this.preview);
-    console.log(this.backgroundColor);
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.throttleResize);
@@ -111,6 +111,7 @@ export default {
   },
 };
 </script>
+
 <style lang="scss">
 .asset {
   position: relative;

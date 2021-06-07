@@ -16,8 +16,8 @@
         <div class="">
           <v-select
             :value="type"
-            @input="selectType"
             :options="options"
+            @input="selectType"
           ></v-select>
         </div>
         <div class="form__group">

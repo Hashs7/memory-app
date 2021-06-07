@@ -10,6 +10,9 @@ export default {
   name: 'TalkUser',
   props: {
     user: {
+      type: Object,
+      required: true,
+
       id: {
         type: String,
         required: true,
@@ -22,7 +25,7 @@ export default {
   },
   methods: {
     startConversation() {
-      console.log('startConversation with : ', this.user.id);
+      // console.log('startConversation with : ', this.user.id);
     },
   },
 };

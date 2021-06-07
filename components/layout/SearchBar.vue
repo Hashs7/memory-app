@@ -69,10 +69,9 @@ export default {
 
       try {
         const res = await this.$api.search(this.searchTxt);
-        console.log(res.data);
         this.results = res.data;
       } catch (e) {
-        console.log(e);
+        throw new Error(e);
       }
     },
     instrumentLink(id) {

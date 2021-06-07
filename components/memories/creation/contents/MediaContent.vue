@@ -25,6 +25,7 @@ export default {
     index: {
       type: Number,
       required: false,
+      default: null,
     },
     preview: {
       type: Boolean,

@@ -88,8 +88,7 @@ export default {
       }
 
       try {
-        const res = await this.$api.confirmHandoverInstrument(this.token);
-        console.log(res);
+        await this.$api.confirmHandoverInstrument(this.token);
         this.validated = true;
       } catch (e) {
         this.error.message = e.response.data.message;

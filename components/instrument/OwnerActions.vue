@@ -53,7 +53,7 @@ export default {
         });
         this.$emit('update', res.data);
       } catch (e) {
-        console.log(e);
+        throw new Error(e);
       }
     },
   },

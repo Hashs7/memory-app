@@ -24,6 +24,10 @@ import Summary from '@/components/memories/creation/views/Summary';
 
 export default {
   components: { Summary, ContentForm },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('memory/resetState');
+    next();
+  },
   middleware: 'auth',
   async asyncData({ $api, store, params }) {
     const memory = (await $api.getMemoryById(params.id, params.memoryId))?.data;
@@ -70,10 +74,6 @@ export default {
         params: { id: this.instrumentId },
       });
     },
-  },
-  beforeRouteLeave(to, from, next) {
-    this.$store.commit('memory/resetState');
-    next();
   },
 };
 </script>

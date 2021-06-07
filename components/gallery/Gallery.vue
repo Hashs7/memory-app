@@ -79,7 +79,7 @@ export default {
         const { data } = await this.$api.uploadFile(formData);
         this.$store.commit('gallery/addMedia', data.response);
       } catch (e) {
-        console.log(e);
+        throw new Error(e);
       }
     },
 
