@@ -271,6 +271,8 @@ export default {
 
   &.sortable-drag {
     opacity: 1 !important;
+    box-shadow: 0 0 20px rgba(black, 0.5);
+    transform: scale(1.05);
   }
 }
 
