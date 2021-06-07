@@ -24,17 +24,32 @@
       <form class="o-page__body o-page__outside">
         <div class="slider">
           <SlideIntro />
-          <div v-for="(content, i) in contents" :key="i" class="slider__item">
-            <component
-              :is="contentType[content.type].component"
-              :key="i"
-              :value="content"
-              :index="i"
-            />
-            <button type="button" class="slider__close" @click="removeItem(i)">
-              x
-            </button>
-          </div>
+          <draggable
+            v-model="contents"
+            class="slider__draggable"
+            draggable=".slider__item"
+            v-bind="draggableOptions"
+          >
+            <div
+              v-for="(content, i) in contents"
+              :key="content.id"
+              class="slider__item"
+            >
+              <component
+                :is="contentType[content.type].component"
+                :key="i"
+                :value="content"
+                :index="i"
+              />
+              <button
+                type="button"
+                class="slider__close"
+                @click="removeItem(i)"
+              >
+                x
+              </button>
+            </div>
+          </draggable>
 
           <SliderAdd />
         </div>
@@ -74,6 +89,7 @@
 </template>
 
 <script>
+import draggable from 'vuedraggable';
 import { mapGetters } from 'vuex';
 import SlideIntro from '@/components/memories/creation/slider/SlideIntro';
 import SliderAdd from '@/components/memories/creation/slider/SliderAdd';
@@ -103,6 +119,7 @@ export default {
     IconBrush,
     IconChevron,
     IconVisibility,
+    draggable,
   },
   props: {
     edit: {
@@ -114,6 +131,11 @@ export default {
     return {
       contentType: CONTENT_TYPE,
       showThemes: false,
+      draggableOptions: {
+        animation: 200,
+        direction: 'horizontal',
+        delay: 100,
+      },
     };
   },
   computed: {
@@ -131,6 +153,14 @@ export default {
         return this.$store.state.memory;
       },
       set(newValue) {},
+    },
+    contents: {
+      get() {
+        return this.$store.getters['memory/contents'];
+      },
+      set(newValue) {
+        this.$store.commit('memory/setContents', newValue);
+      },
     },
   },
   methods: {
@@ -208,6 +238,14 @@ export default {
   }
 }
 
+.slider__draggable {
+  display: flex;
+}
+
+.slider__transition {
+  display: flex;
+}
+
 .slider__item {
   position: relative;
   //min-width: calc(100vw - 60px);
@@ -219,6 +257,21 @@ export default {
   box-shadow: $shadow--first;
   border-radius: $radius;
   background-color: $white;
+
+  &.sortable-ghost {
+    border: 2px dashed $gray-darkest;
+    background: transparent;
+    .memory-content {
+      visibility: hidden;
+    }
+    .slider__close {
+      visibility: hidden;
+    }
+  }
+
+  &.sortable-drag {
+    opacity: 1 !important;
+  }
 }
 
 .slider__close {
@@ -279,5 +332,12 @@ export default {
   &__submit {
     background-color: $primary;
   }
+}
+
+.flip-list-move {
+  transition: transform 0.5s;
+}
+.no-move {
+  transition: transform 0s;
 }
 </style>

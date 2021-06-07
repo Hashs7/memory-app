@@ -67,7 +67,7 @@ export default {
 
     notifyError() {
       this.$buefy.toast.open({
-        message: 'Le souvenir',
+        message: "Le souvenir n'a pas pu être créé",
         type: 'is-danger',
       });
     },
