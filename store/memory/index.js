@@ -61,10 +61,10 @@ export const mutations = {
 };
 
 export const actions = {
-  addSelectedMedia({ rootGetters, commit, dispatch }, index) {
+  addSelectedMedia({ rootGetters, commit, dispatch }, { hasIndex, index }) {
     const selected = rootGetters['gallery/getLastSelected'];
     if (!selected) return;
-    if (index) {
+    if (hasIndex) {
       commit('updateContent', {
         index,
         file: selected,

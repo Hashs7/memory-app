@@ -47,7 +47,10 @@ export default {
   },
   methods: {
     previewImg() {
-      this.$store.dispatch('memory/addSelectedMedia', this.index);
+      this.$store.dispatch('memory/addSelectedMedia', {
+        hasIndex: !this.preview,
+        index: this.index,
+      });
       this.showChoices = false;
     },
   },
