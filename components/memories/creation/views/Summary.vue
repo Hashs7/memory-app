@@ -12,13 +12,7 @@
 
       <div class="o-cells"></div>
 
-      <TabSections
-        :sections="[
-          {
-            nav: 'Paramètres de confidentialité',
-          },
-        ]"
-      />
+      <TabSections :sections="sections" />
       <Visibility />
     </div>
   </div>
@@ -44,6 +38,15 @@ export default {
       type: Boolean,
       default: false,
     },
+  },
+  data() {
+    return {
+      sections: [
+        {
+          nav: 'Paramètres de confidentialité',
+        },
+      ],
+    };
   },
   computed: {
     ...mapState('memory', { memory: 'data' }),
