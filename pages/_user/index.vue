@@ -24,14 +24,7 @@
       </p>
     </div>
 
-    <div v-if="isOwner" class="">
-      <NuxtLink to="/profil/edit" class="u-button u-button--primary"
-        >Modifier mon compte</NuxtLink
-      >
-      <Logout>Déconnexion</Logout>
-    </div>
-
-    <section class="">
+    <section class="o-page__container">
       <TabSections :sections="sections" :show-index="true" />
     </section>
   </div>
@@ -40,11 +33,10 @@
 <script>
 import TabSections from '@/components/layout/TabSections';
 import ButtonBack from '../../components/UI/ButtonBack';
-import Logout from '../../components/user/Logout';
 
 export default {
   name: 'UserProfile',
-  components: { ButtonBack, Logout, TabSections },
+  components: { ButtonBack, TabSections },
   async asyncData({ $api, params, redirect }) {
     try {
       const user = await $api.getUserByUsername(params.user);

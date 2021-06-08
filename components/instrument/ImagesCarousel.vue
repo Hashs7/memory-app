@@ -2,6 +2,7 @@
   <div class="images-carousel">
     <vue-glide
       v-model="active"
+      ref="slider"
       :options="options"
       class="instrument__image-container"
     >
@@ -43,6 +44,10 @@ export default {
         rewind: false,
       },
     };
+  },
+  mounted() {
+    if (this.data.length !== 1) return;
+    this.$refs.slider.glide.destroy();
   },
 };
 </script>

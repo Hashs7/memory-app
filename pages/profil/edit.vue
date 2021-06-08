@@ -16,31 +16,47 @@
           :alt="`Photo de profil de ${user.firstName}`"
         />
       </div>
-      <h1 v-if="name" class="user-name">
-        {{ name }}
-      </h1>
-      <p class="user-username">
-        @<input v-model="user.username" type="text" />
-      </p>
-    </div>
-
-    <div class="">
-      <UserForm />
+      <div class="o-page__container">
+        <div class="user-name">
+          <input
+            v-model="user.firstName"
+            type="text"
+            class="editable-input user-firstname"
+          />
+          <input
+            v-model="user.lastName"
+            type="text"
+            class="editable-input user-lastname"
+          />
+        </div>
+        <p class="user-username">
+          <input
+            v-model="user.username"
+            type="text"
+            class="editable-input user-username"
+          />
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import UserForm from '../../components/user/UserForm';
 import ButtonBack from '../../components/UI/ButtonBack';
 
 export default {
-  components: { ButtonBack, UserForm },
+  components: { ButtonBack },
   middleware: 'auth',
+  data() {
+    return {
+      user: {
+        firstName: null,
+        lastName: null,
+        username: null,
+      },
+    };
+  },
   computed: {
-    user() {
-      return this.$auth.$state.user;
-    },
     userLink() {
       return {
         name: 'user',
@@ -59,5 +75,37 @@ export default {
       return this.$auth.$state.user._id === this.user._id;
     },
   },
+  mounted() {
+    if (this.$auth.loggedIn) {
+      this.user = { ...this.$auth.$state.user };
+    }
+  },
 };
 </script>
+
+<style lang="scss">
+.editable-input {
+  text-align: center;
+  background-color: $background-darker;
+}
+.o-page--profile-edit {
+  .user-name {
+    font-size: 0;
+  }
+
+  .user-firstname {
+    display: inline-block;
+    text-align: right;
+    margin-right: 4px;
+    width: calc(50% - 4px);
+    padding: 8px 4px;
+  }
+  .user-lastname {
+    display: inline-block;
+    margin-left: 4px;
+    width: calc(50% - 4px);
+    padding: 8px 4px;
+    text-align: left;
+  }
+}
+</style>
