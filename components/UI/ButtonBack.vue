@@ -21,6 +21,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    link: {
+      type: String,
+      default: '',
+    },
     absolute: {
       type: Boolean,
       default: false,
@@ -28,6 +32,10 @@ export default {
   },
   methods: {
     back() {
+      if (this.link) {
+        this.$router.push(this.link);
+        return;
+      }
       if (this.emit) {
         this.$emit('back');
         return;

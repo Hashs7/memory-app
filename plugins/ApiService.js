@@ -32,7 +32,11 @@ class ApiController {
   }
 
   updateUser(payload) {
-    return this.$axios.patch('/user', payload);
+    return this.$axios.patch('/user', payload, {
+      header: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
   }
 
   sendMessage(payload) {

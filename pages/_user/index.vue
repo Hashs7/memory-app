@@ -22,6 +22,9 @@
       <p class="user-username">
         @<span>{{ user.username }}</span>
       </p>
+      <p v-if="user.description" class="user-description">
+        {{ user.description }}
+      </p>
     </div>
 
     <section class="o-page__container">
@@ -33,10 +36,12 @@
 <script>
 import TabSections from '@/components/layout/TabSections';
 import ButtonBack from '../../components/UI/ButtonBack';
+import { router } from '../../mixins/router';
 
 export default {
   name: 'UserProfile',
   components: { ButtonBack, TabSections },
+  mixins: [router],
   async asyncData({ $api, params, redirect }) {
     try {
       const user = await $api.getUserByUsername(params.user);

@@ -47,6 +47,14 @@
             class="editable-input user-username"
           />
         </p>
+        <p>
+          <textarea
+            v-model="user.description"
+            name="description"
+            style="resize: none"
+            class="editable-input user-description"
+          ></textarea>
+        </p>
       </div>
     </div>
   </form>
@@ -119,7 +127,12 @@ export default {
     redirect() {
       this.$router.push(this.userLink);
     },
-
+    notifyError() {
+      this.$buefy.toast.open({
+        message: 'Impossible de modifier votre profil',
+        type: 'is-danger',
+      });
+    },
     previewImg() {
       const fileReader = new FileReader();
       const f = this.$refs.file.files[0];
@@ -157,14 +170,14 @@ export default {
   .user-firstname {
     display: inline-block;
     //text-align: right;
-    margin-right: 4px;
-    width: calc(50% - 4px);
+    margin-right: 2px;
+    width: calc(50% - 2px);
     padding: 8px 4px;
   }
   .user-lastname {
     display: inline-block;
-    margin-left: 4px;
-    width: calc(50% - 4px);
+    margin-left: 2px;
+    width: calc(50% - 2px);
     padding: 8px 4px;
     //text-align: left;
   }
@@ -190,6 +203,12 @@ export default {
     left: 0;
     right: 0;
     margin: auto;
+  }
+  .user-description {
+    margin-top: 4px;
+    max-height: 100px;
+    min-height: 100px;
+    text-align: left;
   }
 }
 </style>
