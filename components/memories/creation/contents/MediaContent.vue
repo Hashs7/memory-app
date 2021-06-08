@@ -1,16 +1,20 @@
 <template>
-  <div class="media-content">
-    <div v-if="previewSrc" class="preview">
-      <img :src="previewSrc" alt="" class="preview__img" />
+  <div class="media-content memory-content">
+    <div class="memory-content__inner">
+      <div
+        v-if="previewSrc"
+        class="preview"
+        :style="`background-image: url(${previewSrc})`"
+      ></div>
+      <label v-else-if="showChoices" class="media-content__container">
+        <Gallery @selected="previewImg" />
+      </label>
     </div>
-    <label v-else-if="showChoices" class="media-content__container">
-      <Gallery @selected="previewImg" />
-    </label>
   </div>
 </template>
 
 <script>
-import Gallery from '../../../gallery/Gallery';
+import Gallery from '@/components/gallery/Gallery';
 
 export default {
   name: 'MediaContent',
@@ -40,10 +44,7 @@ export default {
   },
   computed: {
     previewSrc() {
-      if (this.value && this.value.file) {
-        return this.value.file.path;
-      }
-      return null;
+      return this.value?.file?.path;
     },
   },
   methods: {
@@ -90,11 +91,17 @@ export default {
 .preview {
   width: 100%;
   height: 100%;
+  user-select: none;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .preview__img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  user-select: none;
+  pointer-events: none;
 }
 </style>

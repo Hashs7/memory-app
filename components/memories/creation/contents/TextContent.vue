@@ -1,6 +1,10 @@
 <template>
   <client-only>
-    <wysiwyg v-model="html" />
+    <div class="text-content memory-content">
+      <div class="memory-content__inner">
+        <wysiwyg v-model="html" />
+      </div>
+    </div>
   </client-only>
 </template>
 

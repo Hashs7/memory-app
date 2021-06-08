@@ -11,7 +11,13 @@ export const getters = {
 
 export const mutations = {
   addContent(state, type) {
-    state.data.contents.push(getContent(type));
+    const id = Date.now();
+    const content = { ...getContent(type), id };
+    state.data.contents.push(content);
+  },
+
+  setContents(state, value) {
+    state.data.contents = value;
   },
 
   updateName(state, value) {

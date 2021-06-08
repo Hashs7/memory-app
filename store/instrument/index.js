@@ -53,4 +53,8 @@ export const mutations = {
     if (index < 0) return;
     state.data.images.splice(index, 1);
   },
+
+  setImages(state, value) {
+    state.data.images = value;
+  },
 };
