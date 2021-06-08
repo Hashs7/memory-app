@@ -15,7 +15,12 @@
     </div>
     <div class="slider__date">
       <label class="o-cells__label">Date du souvenir</label>
-      <input v-model="date" type="date" placeholder="Sélectionner une date" />
+      <input
+        v-model="date"
+        class="slider__date-input"
+        type="date"
+        placeholder="Sélectionner une date"
+      />
     </div>
   </div>
 </template>
@@ -66,6 +71,8 @@ export default {
 }
 
 .slider__date {
+  display: flex;
+  flex-direction: column;
   margin-top: 16px;
 }
 
