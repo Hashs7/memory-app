@@ -43,7 +43,6 @@ export default {
   },
   methods: {
     previewImg() {
-      console.log('previewImg', this.$refs.file.files);
       const fileReader = new FileReader();
       [...this.$refs.file.files].forEach((f) => {
         fileReader.readAsDataURL(f);
@@ -58,7 +57,7 @@ export default {
         const { data } = await this.$api.uploadFile(formData);
         this.$store.commit('gallery/addMedia', data.response);
       } catch (e) {
-        console.log(e);
+        throw new Error(e);
       }
     },
   },

@@ -1,10 +1,7 @@
 <template>
   <div class="o-page o-page--summary">
     <div class="o-page__header o-page__header-nav">
-      <button class="o-page__header-btn icon" @click="$emit('back')">
-        <IconChevron />
-      </button>
-      <span>Résumé</span>
+      <ButtonBack emit @back="$emit('back')" />
       <button class="o-page__header-btn primary" @click="$emit('submit')">
         <template v-if="!edit">Poster</template>
         <template v-else>Enregistrer</template>
@@ -13,30 +10,9 @@
     <div class="o-page__body">
       <MemoryPreview :data="memory" @click="edit ? $emit('open-form') : ''" />
 
-      <div class="o-cells">
-        <label class="o-cells__label">Date</label>
-        <client-only>
-          <b-field>
-            <b-datepicker
-              :value="new Date(memory.date)"
-              locale="fr"
-              placeholder="Sélectionner une date"
-              icon="calendar-today"
-              trap-focus
-              @input="updateDate($event.toISOString())"
-            >
-            </b-datepicker>
-          </b-field>
-        </client-only>
-      </div>
+      <div class="o-cells"></div>
 
-      <TabSections
-        :sections="[
-          {
-            nav: 'Paramètres de confidentialité',
-          },
-        ]"
-      />
+      <TabSections :sections="sections" />
       <Visibility />
     </div>
   </div>
@@ -46,7 +22,7 @@
 import { mapMutations, mapState } from 'vuex';
 import Visibility from '@/components/memories/creation/form/Visibility';
 import MemoryPreview from '@/components/memories/MemoryPreview';
-import IconChevron from '@/assets/svg/ic_chevron.svg?inline';
+import ButtonBack from '../../../UI/ButtonBack';
 import TabSections from '../../../layout/TabSections';
 
 export default {
@@ -54,8 +30,8 @@ export default {
   components: {
     TabSections,
     Visibility,
+    ButtonBack,
     MemoryPreview,
-    IconChevron,
   },
   props: {
     edit: {
@@ -63,11 +39,23 @@ export default {
       default: false,
     },
   },
+  data() {
+    return {
+      sections: [
+        {
+          nav: 'Paramètres de confidentialité',
+        },
+      ],
+    };
+  },
   computed: {
     ...mapState('memory', { memory: 'data' }),
   },
   methods: {
     ...mapMutations('memory', ['updateDate']),
+    handleChanges(value) {
+      this.$store.commit('memory/updateMemory', value);
+    },
   },
 };
 </script>

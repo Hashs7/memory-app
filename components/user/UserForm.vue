@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import FileUpload from '../FileUpload';
+import FileUpload from '../UI/FileUpload';
 
 export default {
   name: 'UserForm',

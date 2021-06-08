@@ -32,9 +32,9 @@
 </template>
 
 <script>
-import SelectConversation from '../components/SelectConversation';
-import Message from '../components/Message';
-import TalkUser from '../components/TalkUser';
+import SelectConversation from '../components/chat/SelectConversation';
+import Message from '../components/chat/Message';
+import TalkUser from '../components/chat/TalkUser';
 import ApiService from '~/plugins/ApiService';
 
 export default {

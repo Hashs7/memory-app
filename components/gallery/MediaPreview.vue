@@ -49,7 +49,7 @@ export default {
         await this.$store.dispatch('gallery/deleteMedia', this.media._id);
         this.close();
       } catch (e) {
-        console.log(e);
+        throw new Error(e);
       }
     },
   },

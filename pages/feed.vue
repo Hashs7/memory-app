@@ -2,6 +2,7 @@
   <div class="o-page">
     <div class="o-page__header">
       <SearchBar />
+<<<<<<< HEAD
       <transition name="fade" mode="out-in">
         <NuxtLink v-if="!searchActive" to="/profil" class="profile">
           <span v-if="!$auth.loggedIn">Profil</span>
@@ -20,6 +21,16 @@
         </button>
       </transition>
       <SearchModal v-if="searchActive" />
+=======
+      <NuxtLink :to="profileLink" class="profile">
+        <IconUser v-if="!$auth.loggedIn || !profilePicture" />
+        <img
+          v-if="profilePicture"
+          :src="profilePicture"
+          alt="photo de profil"
+        />
+      </NuxtLink>
+>>>>>>> feature/instrument
     </div>
 
     <div class="o-page__body">
@@ -40,12 +51,20 @@
 </router>
 
 <script>
+<<<<<<< HEAD
 import { mapMutations, mapState } from 'vuex';
 import SearchBar from '../components/search/SearchBar';
 import SearchModal from '../components/search/SearchModal';
 
 export default {
   components: { SearchModal, SearchBar },
+=======
+import IconUser from '@/assets/svg/ic_user.svg?inline';
+import SearchBar from '../components/layout/SearchBar';
+
+export default {
+  components: { SearchBar, IconUser },
+>>>>>>> feature/instrument
   async fetch() {
     try {
       const res = await this.$api.getInstruments();
@@ -58,6 +77,20 @@ export default {
     ...mapState('search', { searchActive: 'active' }),
     profilePicture() {
       return this.$auth.user?.thumbnail?.path;
+    },
+    username() {
+      return this.$auth.$state.user.username;
+    },
+    profileLink() {
+      if (this.$auth.loggedIn) {
+        return {
+          name: 'user',
+          params: { user: this.username },
+        };
+      }
+      return {
+        name: 'connexion',
+      };
     },
   },
   methods: {

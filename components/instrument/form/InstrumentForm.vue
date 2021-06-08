@@ -13,15 +13,12 @@
         <h4 class="o-section__title">Informations</h4>
       </div>
       <div class="">
-        <div class="form__group">
-          <b-field>
-            <b-input
-              v-model="type"
-              name="type"
-              type="text"
-              placeholder="Type d'instrument"
-            ></b-input>
-          </b-field>
+        <div class="">
+          <v-select
+            :value="type"
+            :options="options"
+            @input="selectType"
+          ></v-select>
         </div>
         <div class="form__group">
           <b-field>
@@ -33,6 +30,21 @@
               required
             ></b-input>
           </b-field>
+        </div>
+        <div class="form__group">
+          <client-only>
+            <b-field>
+              <b-datepicker
+                :value="new Date(data.buyDate)"
+                locale="fr"
+                placeholder="Date d'obtention"
+                icon="calendar-today"
+                trap-focus
+                @input="updateDate($event.toISOString())"
+              >
+              </b-datepicker>
+            </b-field>
+          </client-only>
         </div>
         <div class="form__group">
           <b-field>
@@ -81,6 +93,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import { LIST_INSTRUMENT_TYPE } from '../../../const/instrument';
 import GalleryView from '../../gallery/GalleryView';
 import ColorsSelector from '../ColorsSelector';
 import InstrumentImagesForm from './InstrumentImagesForm';
@@ -96,6 +109,7 @@ export default {
   data() {
     return {
       showGallery: false,
+      options: LIST_INSTRUMENT_TYPE,
     };
   },
   computed: {
@@ -161,6 +175,14 @@ export default {
       if (!selected) return;
       this.$store.commit('instrument/addImage', selected);
       this.$store.commit('gallery/removeSelected', selected._id);
+    },
+
+    updateDate(date) {
+      this.data.buyDate = date;
+    },
+
+    selectType(value) {
+      this.type = value.label;
     },
 
     redirect(id) {

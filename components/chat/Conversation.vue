@@ -17,6 +17,9 @@ export default {
   name: 'Conversation',
   props: {
     conversation: {
+      type: Object,
+      required: true,
+
       id: {
         type: String,
         required: true,

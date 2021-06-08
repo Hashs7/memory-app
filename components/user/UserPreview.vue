@@ -62,7 +62,6 @@ export default {
         return txt;
       }
       txt += ` ${this.user.lastName}`;
-      console.log(this.user);
       return txt;
     },
   },
