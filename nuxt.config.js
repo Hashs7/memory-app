@@ -1,9 +1,13 @@
 export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
-
+  ssr: false,
   loading: false,
 
+  cache: {
+    max: 1000,
+    maxAge: 900000,
+  },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'Memory Motel',
@@ -70,10 +74,13 @@ export default {
     apiUrl: process.env.VUE_APP_API_URL || 'http://localhost:3000',
   },
 
+  /**
+   * Add 404 page
+   */
   router: {
     extendRoutes(routes, resolve) {
       routes.push({
-        name: 'custom',
+        name: 'errors',
         path: '*',
         component: resolve(__dirname, 'pages/404.vue'),
       });
@@ -110,20 +117,25 @@ export default {
   pwa: {
     icon: {
       fileName: 'favicon.png',
+      purpose: 'maskable',
     },
     manifest: {
       lang: 'fr',
+      name: 'Memory Motel',
+      short_name: 'Memory Motel',
     },
     meta: {
       name: 'Memory Motel',
+      lang: 'fr',
       viewport: 'width=device-width, initial-scale=1, user-scalable=no',
       mobileAppIOS: 'dark-content',
       appleStatusBarStyle: 'black-translucent',
+      orientation: 'portrait-primary',
     },
     themeColor: '#FFF9E2',
     msTileColor: '#373737',
     appleMobileWebAppStatusBarStyle: 'default',
-    /* workboxOptions: {
+    /* workbox: {
       exclude: ['.htaccess'],
       importScripts: ['/serviceWorkerSkipWaiting.js'],
       skipWaiting: false,
