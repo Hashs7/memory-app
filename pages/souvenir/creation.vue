@@ -15,9 +15,10 @@
 </template>
 
 <router>
-path: /souvenir/creation
-alias:
- - /instrument/:id/souvenir/creation
+  path: /instrument/:id/souvenir/creation
+  alias:
+    -
+      path: /souvenir/creation
 </router>
 
 <script>
