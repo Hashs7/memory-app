@@ -76,21 +76,11 @@ export default {
     ...mapMutations('search', ['setActive', 'setQuery']),
     ...mapActions('search', ['search']),
     async submit() {
-<<<<<<< HEAD:components/search/SearchBar.vue
       await this.search();
     },
     onSearchFocus() {
       if (!this.searchActive) {
         this.setActive(true);
-=======
-      if (this.searchTxt.length < 4) return;
-
-      try {
-        const res = await this.$api.search(this.searchTxt);
-        this.results = res.data;
-      } catch (e) {
-        throw new Error(e);
->>>>>>> feature/instrument:components/layout/SearchBar.vue
       }
     },
     instrumentLink(id) {
