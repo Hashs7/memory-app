@@ -15,25 +15,18 @@
     </div>
     <div class="slider__date">
       <label class="o-cells__label">Date du souvenir</label>
-      <client-only>
-        <b-field>
-          <b-datepicker
-            :value="new Date(memory.date)"
-            locale="fr"
-            placeholder="Sélectionner une date"
-            icon="calendar-today"
-            trap-focus
-            @input="updateDate($event.toISOString())"
-          >
-          </b-datepicker>
-        </b-field>
-      </client-only>
+      <input
+        v-model="date"
+        class="slider__date-input"
+        type="date"
+        placeholder="Sélectionner une date"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import dayjs from 'dayjs';
 import MediaContent from '../contents/MediaContent';
 import IconCamera from '~/assets/svg/ic_camera.svg?inline';
 
@@ -54,9 +47,14 @@ export default {
         this.$store.commit('memory/updateMemory', value);
       },
     },
-  },
-  methods: {
-    ...mapMutations('memory', ['updateDate']),
+    date: {
+      get() {
+        return dayjs(this.$store.state.memory.data?.date).format('YYYY-MM-DD');
+      },
+      set(newValue) {
+        this.$store.commit('memory/updateDate', dayjs(newValue).toDate());
+      },
+    },
   },
 };
 </script>
@@ -73,6 +71,8 @@ export default {
 }
 
 .slider__date {
+  display: flex;
+  flex-direction: column;
   margin-top: 16px;
 }
 

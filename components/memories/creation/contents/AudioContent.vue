@@ -1,18 +1,22 @@
 <template>
   <client-only>
-    <audio-recorder
-      upload-url="apiUrl"
-      :attempts="3"
-      :time="2"
-      :headers="headers"
-      :before-recording="callback"
-      :pause-recording="callback"
-      :after-recording="callback"
-      :select-record="callback"
-      :before-upload="callback"
-      :successful-upload="callback"
-      :failed-upload="callback"
-    />
+    <div class="audio-content memory-content">
+      <div class="memory-content__inner">
+        <audio-recorder
+          upload-url="apiUrl"
+          :attempts="3"
+          :time="2"
+          :headers="headers"
+          :before-recording="callback"
+          :pause-recording="callback"
+          :after-recording="callback"
+          :select-record="callback"
+          :before-upload="callback"
+          :successful-upload="callback"
+          :failed-upload="callback"
+        />
+      </div>
+    </div>
   </client-only>
 </template>
 
