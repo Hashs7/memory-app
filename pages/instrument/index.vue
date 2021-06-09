@@ -37,7 +37,7 @@
                 <IconRectangle class="u-button__bg" />
               </NuxtLink>
               <InstrumentPreview
-                v-for="ins in instruments[s.name]"
+                v-for="ins in motel[s.name]"
                 :key="ins.id"
                 :data="ins"
                 :show-favorite="s.name === 'wish'"
@@ -83,24 +83,16 @@ export default {
           class: 'wish-instrument',
         },
       ],
-      instruments: {
-        user: [],
-        old: [],
-        wish: [],
-      },
     };
   },
   async fetch() {
-    try {
-      const res = await this.$api.getUserInstruments();
-      const { userInstruments, oldInstruments, wishInstruments } = res.data;
-      this.instruments.user = userInstruments;
-      this.instruments.old = oldInstruments;
-      this.instruments.wish = wishInstruments;
-      this.showSection('user');
-    } catch (e) {
-      throw new Error(e);
-    }
+    this.showSection('user');
+    await this.$store.dispatch('motel/getUserInstruments');
+  },
+  computed: {
+    motel() {
+      return this.$store.state.motel;
+    },
   },
   fetchOnServer: false,
   methods: {

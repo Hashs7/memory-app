@@ -42,6 +42,7 @@ export default {
     { src: '~/plugins/vue-scroll.js' },
     { src: '~/plugins/carousel.js' /* mode: 'client' */ },
     { src: '~/plugins/vue-lazyload.js', mode: 'client' },
+    { src: '~/plugins/vuex-persist.js', mode: 'client' },
     { src: '~/plugins/colors.js', mode: 'client' },
     { src: '~/plugins/hammer.js', mode: 'client' },
     { src: '~/plugins/audio-recorder.js', mode: 'client' },
@@ -60,10 +61,17 @@ export default {
     '@nuxtjs/style-resources',
     '@nuxtjs/router-extras',
     '@nuxtjs/svg',
+    '@nuxtjs/localforage',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['nuxt-buefy', '@nuxtjs/axios', '@nuxtjs/pwa', '@nuxtjs/auth-next'],
+  modules: [
+    'nuxt-buefy',
+    '@nuxtjs/axios',
+    '@nuxtjs/pwa',
+    '@nuxtjs/auth-next',
+    '@nuxtjs/component-cache',
+  ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
@@ -123,6 +131,7 @@ export default {
       lang: 'fr',
       name: 'Memory Motel',
       short_name: 'Memory Motel',
+      themeColor: '#FFF9E2',
     },
     meta: {
       name: 'Memory Motel',
@@ -131,6 +140,7 @@ export default {
       mobileAppIOS: 'dark-content',
       appleStatusBarStyle: 'black-translucent',
       orientation: 'portrait-primary',
+      theme_color: '#FFF9E2',
     },
     themeColor: '#FFF9E2',
     msTileColor: '#373737',
