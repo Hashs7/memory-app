@@ -19,7 +19,7 @@ export default {
       },
       { hid: 'description', name: 'description', content: '' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/icon.png' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -61,7 +61,6 @@ export default {
     '@nuxtjs/style-resources',
     '@nuxtjs/router-extras',
     '@nuxtjs/svg',
-    '@nuxtjs/localforage',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -124,7 +123,6 @@ export default {
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     icon: {
-      fileName: 'favicon.png',
       purpose: 'maskable',
     },
     manifest: {
