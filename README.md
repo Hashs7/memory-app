@@ -1,6 +1,9 @@
 # Memory Motel App
-[![Netlify Status](https://api.netlify.com/api/v1/badges/1cd8a8b1-4272-4003-8a94-e21b8a558921/deploy-status)](https://app.netlify.com/sites/mm-app/deploys)
-<p align="center"><img align="center" style="width:320px" src="./.github/memory-motel.png"/></p><br/>
+<p align="center"><img align="center" style="width:300px" src="./.github/memory-motel.png"/></p><br/>
+<p align="center">
+    <a href="https://app.netlify.com/sites/mm-app/deploys"><img src="https://api.netlify.com/api/v1/badges/1cd8a8b1-4272-4003-8a94-e21b8a558921/deploy-status" alt="Deploy Status"></a>
+</p>
+
 
 ## Links
 
