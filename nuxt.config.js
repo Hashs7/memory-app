@@ -17,6 +17,10 @@ export default {
         name: 'viewport',
         content: 'width=device-width, initial-scale=1, user-scalable=no',
       },
+      {
+        name: 'theme-color',
+        content: '#FFF9E2',
+      },
       { hid: 'description', name: 'description', content: '' },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/icon.png' }],
