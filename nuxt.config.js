@@ -126,9 +126,6 @@ export default {
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
-    icon: {
-      purpose: 'maskable',
-    },
     manifest: {
       lang: 'fr',
       name: 'Memory Motel',
