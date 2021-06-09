@@ -8,7 +8,8 @@
         v-for="m in memories"
         :key="m._id"
         :link="true"
-        :memory="m"
+        :data="m"
+        editable
       />
     </template>
     <template v-else>
@@ -19,6 +20,7 @@
 
 <script>
 import MemoryPreview from './MemoryPreview';
+
 export default {
   name: 'MemorySection',
   components: { MemoryPreview },

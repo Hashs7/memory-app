@@ -1,63 +1,59 @@
 <template>
-  <div class="media-content">
-    <label v-if="showChoices" class="media-content__container">
-      <IconMedia class="media-content__icon" />
-      <input
-        ref="file"
-        class="media-content__input"
-        type="file"
-        accept="audio/*,video/*,image/*"
-        style="opacity: 0"
-        @change="previewImg"
-      />
-    </label>
-    <div v-if="previewSrc" class="preview">
-      <img :src="previewSrc" alt="" class="preview__img" />
+  <div class="media-content memory-content">
+    <div class="memory-content__inner">
+      <div
+        v-if="previewSrc"
+        class="preview"
+        :style="`background-image: url(${previewSrc})`"
+      ></div>
+      <label v-else-if="showChoices" class="media-content__container">
+        <Gallery @selected="previewImg" />
+      </label>
     </div>
   </div>
 </template>
 
 <script>
-import IconMedia from '@/assets/svg/ic_media.svg?inline';
+import Gallery from '@/components/gallery/Gallery';
 
 export default {
-  name: 'MediaCreation',
+  name: 'MediaContent',
   components: {
-    IconMedia,
+    Gallery,
   },
   props: {
+    value: {
+      type: Object,
+      required: true,
+    },
     index: {
       type: Number,
-      required: true,
+      required: false,
+      default: null,
+    },
+    preview: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
     return {
       showChoices: true,
       file: null,
-      previewSrc: null,
     };
   },
-  mounted() {
-    // this.$refs.file.click();
+  computed: {
+    previewSrc() {
+      return this.value?.file?.path;
+    },
   },
   methods: {
     previewImg() {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(this.$refs.file.files[0]);
-      fileReader.addEventListener('loadend', (e) => this.uploadImg(e));
-    },
-
-    async uploadImg(event) {
-      this.previewSrc = event.target.result;
-      this.showChoices = false;
-      const formData = new FormData();
-      formData.append('file', this.$refs.file.files[0]);
-      const { data } = await this.$api.uploadFile(formData);
-      this.$store.commit('memory/updateContent', {
+      this.$store.dispatch('memory/addSelectedMedia', {
+        hasIndex: !this.preview,
         index: this.index,
-        file: data.response._id,
       });
+      this.showChoices = false;
     },
   },
 };
@@ -76,18 +72,12 @@ export default {
 }
 
 .media-content__container {
+  padding: 16px;
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.media-content__input {
-  height: 0.1px;
-  width: 0.1px;
-  overflow: hidden;
-  position: absolute;
 }
 
 .u-button {
@@ -101,11 +91,17 @@ export default {
 .preview {
   width: 100%;
   height: 100%;
+  user-select: none;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .preview__img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  user-select: none;
+  pointer-events: none;
 }
 </style>

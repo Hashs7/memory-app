@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import FileUpload from '@/components/FileUpload';
+import FileUpload from '@/components/UI/FileUpload';
 
 export default {
   name: 'InstrumentShortForm',

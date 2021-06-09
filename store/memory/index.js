@@ -1,51 +1,62 @@
-import { CONTENT_TYPE, THEMES } from '@/const/memory';
-
-const initialState = {
-  name: '',
-  date: [],
-  type: 'Concert',
-  visibility: null,
-  contents: [],
-  themes: [...THEMES],
-};
+import { getContent, emptyMemory } from '@/const/memory';
 
 // Add memory store
 export const state = () => ({
-  ...initialState,
+  data: { ...emptyMemory },
 });
+
+export const getters = {
+  contents: (state) => state.data.contents,
+};
 
 export const mutations = {
   addContent(state, type) {
-    state.contents.push(CONTENT_TYPE[type]);
+    const id = Date.now();
+    const content = { ...getContent(type), id };
+    state.data.contents.push(content);
+  },
+
+  setContents(state, value) {
+    state.data.contents = value;
   },
 
   updateName(state, value) {
-    state.name = value;
+    state.data.name = value;
   },
 
   updateDate(state, value) {
-    state.date = value;
+    state.data.date = value;
   },
 
   updateVisibility(state, value) {
-    state.visibility = value;
+    state.data.visibility = value;
+  },
+
+  setMemory(state, memory) {
+    state.data = { ...memory };
   },
 
   updateContent(state, { index, value, file }) {
     if (value) {
-      state.contents[index].content = value;
+      state.data.contents[index].content = value;
     }
     if (file) {
-      state.contents[index].file = file;
+      state.data.contents[index].file = file;
+    }
+  },
+
+  updatePreview(state, { file }) {
+    if (file) {
+      state.data.preview.file = file;
     }
   },
 
   resetState(state) {
-    state = { ...initialState };
+    state.data = { ...emptyMemory };
   },
 
   removeContent(state, index) {
-    state.contents.splice(index, 1);
+    state.data.contents.splice(index, 1);
   },
 
   selectTheme(state, slug) {
@@ -55,4 +66,20 @@ export const mutations = {
   },
 };
 
-export const actions = {};
+export const actions = {
+  addSelectedMedia({ rootGetters, commit, dispatch }, { hasIndex, index }) {
+    const selected = rootGetters['gallery/getLastSelected'];
+    if (!selected) return;
+    if (hasIndex) {
+      commit('updateContent', {
+        index,
+        file: selected,
+      });
+    } else {
+      commit('updatePreview', {
+        file: selected,
+      });
+    }
+    commit('gallery/removeSelected', selected._id, { root: true });
+  },
+};

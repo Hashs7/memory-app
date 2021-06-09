@@ -1,47 +1,40 @@
 <template>
-  <CreateForm v-if="!showSummary" @next="showSummary = true" />
-  <Summary
-    v-else-if="!showConfidentiality"
-    @back="showSummary = false"
-    @submit="submit"
-    @params="showConfidentiality = true"
+  <ContentForm
+    v-if="!showSummary"
+    @next="showSummary = true"
+    @back="$router.back()"
   />
-  <Confidentiality v-else @back="showConfidentiality = false" />
+  <Summary v-else edit @back="showSummary = false" @submit="submit" />
 </template>
 
 <router>
-path: /instrument/:id/souvenir/creation
+  path: /instrument/:id/souvenir/creation
+  alias:
+    -
+      path: /souvenir/creation
 </router>
 
 <script>
 import { mapState } from 'vuex';
-import CreateForm from '@/components/memories/creation/views/CreateForm';
 import Summary from '@/components/memories/creation/views/Summary';
-import Confidentiality from '@/components/memories/creation/views/Confidentiality';
-import { formatContentType } from '@/const/memory';
+import ContentForm from '../../components/memories/creation/views/ContentForm';
 
+// TODO get instrument id
 export default {
   name: 'NewInstrument',
   components: {
-    CreateForm,
+    ContentForm,
     Summary,
-    Confidentiality,
   },
+  layout: 'none',
   data() {
     return {
       success: false,
       showSummary: false,
-      showConfidentiality: false,
     };
   },
   computed: {
-    ...mapState({
-      name: (state) => state.memory.name,
-      date: (state) => state.memory.date,
-      type: (state) => state.memory.type,
-      contents: (state) => state.memory.contents,
-      themes: (state) => state.memory.themes,
-    }),
+    ...mapState('memory', ['data']),
     selectedTheme() {
       return this.themes.find((el) => el.selected)?.slug;
     },
@@ -49,45 +42,41 @@ export default {
       return this.$route.params.id;
     },
   },
+  created() {
+    this.$store.commit('memory/resetState');
+  },
   methods: {
     // Form submitted event
     async submit() {
       try {
         await this.$api.newMemory(this.instrumentId, {
-          name: this.name,
-          date: this.date,
-          type: this.type,
-          template: this.selectedTheme,
-          contents: formatContentType(this.contents),
+          ...this.data,
         });
         this.createdHandler();
       } catch (e) {
-        throw new Error(e);
+        this.notifyError();
       }
     },
 
     // Instrument created callback
     createdHandler() {
-      this.$buefy.toast.open({
-        message: "Le souvenir vient d'être créé",
-        type: 'is-success',
+      this.$router.push({
+        name: 'instrument-id',
+        params: { id: this.instrumentId },
       });
-      setTimeout(() => {
-        this.$router.push({
-          name: 'instrument-id',
-          params: { id: this.instrumentId },
-        });
-      }, 1000);
+    },
+
+    notifyError() {
+      this.$buefy.toast.open({
+        message: "Le souvenir n'a pas pu être créé",
+        type: 'is-danger',
+      });
     },
   },
 };
 </script>
 
 <style lang="scss">
-.o-page--create {
-  background-color: #fffefa;
-}
-
 .o-page__footer {
   display: flex;
   justify-content: space-between;

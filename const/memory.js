@@ -18,26 +18,37 @@ export const CONTENT_TYPE = {
   },
 };
 
+export const getContent = (type) => ({ ...CONTENT_TYPE[type] });
+
+export const emptyMemory = {
+  id: null,
+  name: '',
+  date: [],
+  preview: getContent('media'),
+  contents: [],
+  tags: [],
+  visibility: null,
+  theme: null,
+};
+
 export const VISIBILITY = {
   private: {
     slug: 'private',
-    text: 'Moi seulement',
-    helper: 'Vous seul pouvez voir ce souvenir',
+    label: 'Moi seulement',
+    helper: 'Vous êtes le seul à voir le memory',
+    icon: 'IconPrivate',
   },
   unlisted: {
     slug: 'unlisted',
-    text: 'Non répertorié',
-    helper: 'Seul les personnes disposant du lien y ont accès',
-  },
-  fans: {
-    slug: 'fans',
-    text: 'Fans seulement',
-    helper: 'Seuls vos amis pourront voir ce souvenir',
+    label: 'Lien seulement',
+    helper: 'Seuls les utilisateurs qui possèdent le lien',
+    icon: 'IconLink',
   },
   public: {
     slug: 'public',
-    text: 'Tout le monde',
-    helper: 'Votre souvenir est publique',
+    label: 'Tout le monde',
+    helper: 'Tous les  utilisateurs de Memory Motel',
+    icon: 'IconWorld',
   },
 };
 

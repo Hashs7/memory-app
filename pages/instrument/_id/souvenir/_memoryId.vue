@@ -36,7 +36,9 @@
             :src="c.file.path"
             controls
           />
-          <span v-if="c.type !== 'media'">{{ c.type }}</span>
+          <span v-if="c.type !== 'media'">
+            <p v-html="c.content"></p>
+          </span>
         </MemoryCard>
       </div>
     </div>
@@ -50,7 +52,7 @@
 
 <script>
 import MemoryCard from '@/components/memories/MemoryCard';
-import UserPreview from '../../../../components/user/UserPreview';
+import UserPreview from '@/components/user/UserPreview';
 
 export default {
   components: { UserPreview, MemoryCard },
@@ -72,7 +74,7 @@ export default {
   computed: {
     memory() {
       const { memoryId } = this.$route.params;
-      return this.instrument?.memories.find((m) => m._id === memoryId);
+      return this.instrument?.memories.find((m) => m.id === memoryId);
     },
 
     closeMemory() {
@@ -93,7 +95,7 @@ export default {
   },
   methods: {
     mediaType(file) {
-      return file.mimetype.split('/')[0];
+      return file?.mimetype.split('/')[0];
     },
 
     previous() {

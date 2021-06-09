@@ -1,6 +1,10 @@
 <template>
   <client-only>
-    <wysiwyg v-model="html" />
+    <div class="text-content memory-content">
+      <div class="memory-content__inner">
+        <wysiwyg v-model="html" />
+      </div>
+    </div>
   </client-only>
 </template>
 
@@ -16,7 +20,7 @@ export default {
   computed: {
     html: {
       get() {
-        return this.$store.state.memory.contents[this.index].content;
+        return this.$store.state.memory.data.contents[this.index].content;
       },
       set(value) {
         this.$store.commit('memory/updateContent', {
