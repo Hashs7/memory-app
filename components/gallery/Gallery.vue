@@ -20,6 +20,7 @@
         @select="select(m._id)"
       />
     </div>
+    <AudioRecorder />
 
     <MediaPreview v-if="preview && mediaSelected" :media="mediaSelected" />
   </div>
@@ -29,10 +30,11 @@
 import CustomButton from '../UI/CustomButton';
 import MediaPreview from './MediaPreview';
 import GalleryMedia from './GalleryMedia';
+import AudioRecorder from './AudioRecorder';
 
 export default {
   name: 'Gallery',
-  components: { CustomButton, GalleryMedia, MediaPreview },
+  components: { CustomButton, AudioRecorder, GalleryMedia, MediaPreview },
   props: {
     preview: {
       type: Boolean,
