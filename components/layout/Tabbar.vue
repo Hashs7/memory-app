@@ -42,6 +42,12 @@ export default {
           icon: 'IconMotel',
         },
         {
+          slug: 'gallery',
+          label: 'Galerie',
+          path: '/galerie',
+          icon: 'IconMotel',
+        },
+        {
           slug: 'add',
           label: 'Ajouter',
           path: '/capture',
@@ -53,13 +59,18 @@ export default {
           path: '/decouvrir',
           icon: 'IconDiscover',
         },
+        {
+          slug: 'profile',
+          label: 'Profil',
+          path: '/profil',
+          icon: 'IconDiscover',
+        },
       ],
     };
   },
   created() {
     this.updateMemoryPath();
-    console.log(this.$route.path);
-    console.log(this.nav);
+    this.updateProfilePath();
   },
   methods: {
     updateMemoryPath() {
@@ -67,6 +78,11 @@ export default {
       const { id } = this.$store.state.motel.user[0];
       const motelNav = this.nav.find((n) => n.slug === 'motel');
       motelNav.path = `/instrument/${id}`;
+    },
+    updateProfilePath() {
+      if (!this.$auth.loggedIn) return;
+      const motelNav = this.nav.find((n) => n.slug === 'profile');
+      motelNav.path = this.$auth.$state.user.username;
     },
   },
 };

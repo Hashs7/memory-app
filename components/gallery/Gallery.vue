@@ -1,5 +1,5 @@
 <template>
-  <div class="gallery">
+  <div class="gallery-element">
     <CustomButton outline>
       <span>Importer une photo</span>
       <input
@@ -91,12 +91,12 @@ export default {
 </script>
 
 <style>
-.gallery {
+.gallery-element {
   width: 100%;
   height: 100%;
 }
 
-.gallery .media-content {
+.gallery-element .media-content {
   margin-bottom: 20px;
 }
 
