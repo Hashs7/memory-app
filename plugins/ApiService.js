@@ -58,6 +58,13 @@ class ApiController {
   }
 
   /**
+   * Route : Category
+   */
+  fetchAllCategories() {
+    return this.$axios.get(`/category`);
+  }
+
+  /**
    * Route : Instrument
    */
   newInstrument(payload) {
@@ -124,6 +131,17 @@ class ApiController {
    */
   search(text) {
     return this.$axios.get(`/search?text=${text}`);
+  }
+
+  /**
+   * Route : Feed
+   */
+  fetchFeedFavMemories() {
+    return this.$axios.get(`/feed`);
+  }
+
+  fetchMemoriesCat(categories) {
+    return this.$axios.get(`/feed/categories?categories=${categories}`);
   }
 }
 
