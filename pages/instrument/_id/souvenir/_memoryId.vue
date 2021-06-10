@@ -2,17 +2,27 @@
   <div :class="[memory.template]" class="o-page--memory">
     <div class="o-page__container">
       <div class="memory__head">
-        <div class="memory__sound">
-          <button class="memory__sound-btn u-button u-button--icon">
-            <IconSoundButton />
+        <div class="memory__actions">
+          <div class="memory__sound">
+            <button class="memory__sound-btn u-button u-button--icon">
+              <IconSoundButton />
+            </button>
+            <svg class="memory__sound-title" height="14">
+              <text x="0" y="10">Un Super Artiste - Une musique du turfu</text>
+            </svg>
+          </div>
+          <button class="memory__close u-button" @click="closeMemory">
+            <IconCross class="icon" />
           </button>
-          <svg class="memory__sound-title" height="14">
-            <text x="0" y="10">Un Super Artiste - Une musique du turfu</text>
-          </svg>
         </div>
-        <button class="memory__close u-button" @click="closeMemory">
-          <IconCross class="icon" />
-        </button>
+        <div
+          v-if="index === 0 && memory.name"
+          ref="intro"
+          class="memory__intro"
+        >
+          <h2 class="memory__name">{{ memory.name }}</h2>
+          <p v-if="formatedDate" class="memory__date">{{ formatedDate }}</p>
+        </div>
       </div>
       <div class="memory-slider">
         <MemoryCard
@@ -47,6 +57,8 @@
 import MemoryCard from '@/components/memories/MemoryCard';
 import IconCross from '@/assets/svg/ic_cross.svg?inline';
 import IconSoundButton from '@/assets/svg/ic_sound-btn.svg?inline';
+import dayjs from 'dayjs';
+import gsap from 'gsap';
 // import UserPreview from '@/components/user/UserPreview';
 
 export default {
@@ -72,6 +84,12 @@ export default {
       return this.instrument?.memories.find((m) => m.id === memoryId);
     },
 
+    formatedDate() {
+      return this.memory.date
+        ? dayjs(this.memory.date).format('DD/MM/YYYY')
+        : null;
+    },
+
     closeMemoryRoute() {
       const { id } = this.$route.params;
       return `/instrument/${id}`;
@@ -84,6 +102,16 @@ export default {
   mounted() {
     document.body.style.overflow = 'hidden';
     // document.body.style.height = '100vh';
+
+    if (this.memory.name) {
+      gsap.from(this.$refs.intro.children, {
+        y: 30,
+        alpha: 0,
+        duration: 1.5,
+        ease: 'power3.out',
+        stagger: 0.2,
+      });
+    }
   },
   beforeDestroy() {
     this.removeBodyStyle();
@@ -191,10 +219,16 @@ export default {
   left: 0;
   right: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   padding: 30px 24px 0 24px;
   z-index: 30;
-  background-image: linear-gradient(rgba(black, 0.3) 50%, rgba(black, 0));
+  background-image: linear-gradient(rgba(black, 0.3) 70%, rgba(black, 0));
+}
+
+.memory__actions {
+  display: flex;
+  align-items: center;
 }
 
 .memory__close {
@@ -210,15 +244,25 @@ export default {
   }
 }
 
-.memory__background {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100vh;
-  backdrop-filter: blur(5px);
-  background-color: rgba(0, 0, 0, 0.5);
+.memory__intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 30px;
+  width: 80%;
+}
+
+.memory__name {
+  color: $background;
+  text-align: center;
+}
+
+.memory__date {
+  color: $white;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 16px;
 }
 
 .memory__sound {
