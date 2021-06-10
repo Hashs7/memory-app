@@ -18,6 +18,7 @@
         <MemoryCard
           v-for="(c, i) in contents"
           :key="i"
+          ref="cards"
           :class="[c.type, mediaType(c.file), getClass(i), c.component]"
           class="memory--content"
           @swipe="next"
@@ -26,7 +27,8 @@
           <video
             v-if="mediaType(c.file) === 'video'"
             :src="c.file.path"
-            controls
+            loop
+            @click="toggleVideoMute"
           />
           <span v-if="c.type !== 'media'">
             <p v-html="c.content"></p>
@@ -102,7 +104,18 @@ export default {
         this.$router.push(this.closeMemoryRoute);
         return;
       }
+
+      // Stop video before next card
+      if (this.mediaType(this.contents[this.index].file) === 'video') {
+        this.$refs.cards[this.index].$el.firstElementChild?.pause();
+      }
+
       this.index++;
+
+      // Start video when appearing
+      if (this.mediaType(this.contents[this.index].file) === 'video') {
+        this.$refs.cards[this.index].$el.firstElementChild?.play();
+      }
     },
 
     closeMemory() {
@@ -112,6 +125,10 @@ export default {
     removeBodyStyle() {
       document.body.style.overflow = 'auto';
       document.body.style.height = 'auto';
+    },
+
+    toggleVideoMute(e) {
+      e.target.muted = !e.target.muted;
     },
 
     select(index) {
@@ -209,7 +226,7 @@ export default {
   display: flex;
   align-items: center;
   overflow: hidden;
-  max-width: 80%;
+  max-width: 60%;
 }
 
 .memory__sound-title {
