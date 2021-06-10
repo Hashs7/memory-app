@@ -68,14 +68,12 @@ export default {
   left: 0;
   right: 0;
   margin: auto;
-  max-height: 636px;
   height: 100%;
   padding: 32px;
   background-color: #fff;
   transform-origin: center;
   box-shadow: $shadow--first;
   overflow: hidden;
-  border-radius: 8px;
 
   &.media {
     padding: 0;

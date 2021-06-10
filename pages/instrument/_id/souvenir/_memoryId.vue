@@ -2,31 +2,23 @@
   <div :class="[memory.template]" class="o-page--memory">
     <div class="o-page__container">
       <div class="memory__head">
-        <div class="memory__title">
-          <h1 v-if="memory" class="memory__title">{{ memory.name }}</h1>
+        <div class="memory__sound">
+          <button class="memory__sound-btn u-button u-button--icon">
+            <IconSoundButton />
+          </button>
+          <svg class="memory__sound-title" height="14">
+            <text x="0" y="10">Un Super Artiste - Une musique du turfu</text>
+          </svg>
         </div>
-        <div v-if="isOwner" class="memory__owner">
-          <UserPreview :user="instrument.owner" :short="true" />
-        </div>
+        <button class="memory__close u-button" @click="closeMemory">
+          <IconCross class="icon" />
+        </button>
       </div>
-
       <div class="memory-slider">
-        <MemoryCard :class="[getClass(0)]" @swipe="next">
-          <p class="memory__description">
-            Select your favorite social network and share our icons with your
-            contacts or friends, if you do not have these social networks copy
-            the link and paste it in the one you use. For more information read
-            the
-          </p>
-          <ul class="memory-card__tag-container">
-            <li class="memory-card__tag">Variété</li>
-            <li class="memory-card__tag">Concerts</li>
-          </ul>
-        </MemoryCard>
         <MemoryCard
           v-for="(c, i) in contents"
           :key="i"
-          :class="[c.type, mediaType(c.file), getClass(i + 1), c.component]"
+          :class="[c.type, mediaType(c.file), getClass(i), c.component]"
           class="memory--content"
           @swipe="next"
         >
@@ -42,7 +34,6 @@
         </MemoryCard>
       </div>
     </div>
-    <nuxt-link :to="closeMemory" class="memory__background"></nuxt-link>
   </div>
 </template>
 
@@ -52,10 +43,12 @@
 
 <script>
 import MemoryCard from '@/components/memories/MemoryCard';
-import UserPreview from '@/components/user/UserPreview';
+import IconCross from '@/assets/svg/ic_cross.svg?inline';
+import IconSoundButton from '@/assets/svg/ic_sound-btn.svg?inline';
+// import UserPreview from '@/components/user/UserPreview';
 
 export default {
-  components: { UserPreview, MemoryCard },
+  components: { /* UserPreview, */ MemoryCard, IconCross, IconSoundButton },
   props: {
     instrument: {
       type: Object,
@@ -77,7 +70,7 @@ export default {
       return this.instrument?.memories.find((m) => m.id === memoryId);
     },
 
-    closeMemory() {
+    closeMemoryRoute() {
       const { id } = this.$route.params;
       return `/instrument/${id}`;
     },
@@ -104,12 +97,16 @@ export default {
     },
 
     next() {
-      if (this.index >= this.contents.length) {
+      if (this.index >= this.contents.length - 1) {
         this.removeBodyStyle();
-        this.$router.push(this.closeMemory);
+        this.$router.push(this.closeMemoryRoute);
         return;
       }
       this.index++;
+    },
+
+    closeMemory() {
+      this.$router.push(this.closeMemoryRoute);
     },
 
     removeBodyStyle() {
@@ -155,9 +152,9 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 40px;
 
   .o-page__container {
+    position: relative;
     padding: 0;
     width: 100%;
     height: auto;
@@ -172,8 +169,28 @@ export default {
   color: $black;
 }
 .memory__head {
-  text-align: center;
-  color: $black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding: 30px 24px 0 24px;
+  z-index: 30;
+  background-image: linear-gradient(rgba(black, 0.3) 50%, rgba(black, 0));
+}
+
+.memory__close {
+  background: none;
+  border: none;
+  margin-left: auto;
+  padding: 0;
+
+  svg {
+    width: 15px;
+    height: 15px;
+    fill: $background;
+  }
 }
 
 .memory__background {
@@ -185,6 +202,36 @@ export default {
   height: 100vh;
   backdrop-filter: blur(5px);
   background-color: rgba(0, 0, 0, 0.5);
+}
+
+.memory__sound {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  max-width: 80%;
+}
+
+.memory__sound-title {
+  margin-left: 8px;
+  width: 100%;
+
+  text {
+    font-family: $font-primary;
+    font-size: 12px;
+    fill: $background;
+    animation-name: text-banner;
+    animation-duration: 30s;
+    animation-iteration-count: infinite;
+    animation-delay: 5s;
+  }
+}
+
+.memory__sound-btn {
+  svg {
+    width: 34px;
+    height: 34px;
+  }
 }
 
 .memory-slider {
@@ -213,6 +260,16 @@ export default {
 // Templates
 .o-page--memory {
   &.sardines {
+  }
+}
+
+@keyframes text-banner {
+  0%,
+  30% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
   }
 }
 </style>
