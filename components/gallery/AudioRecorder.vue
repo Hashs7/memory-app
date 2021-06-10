@@ -11,6 +11,7 @@
       >
         Stop
       </button>
+      <button @click="upload">Upload</button>
     </p>
     <p>
       <audio ref="recordedAudio"></audio>
@@ -28,10 +29,20 @@ export default {
       recordDisabled: false,
       stopRecordDisabled: true,
       stream: null,
+      audioBlob: null,
     };
   },
   methods: {
-    sendData(data) {},
+    async upload() {
+      const formData = new FormData();
+      formData.append('file', this.audioBlob, 'rot.mp3');
+      try {
+        const { data } = await this.$api.uploadFile(formData);
+        this.$store.commit('gallery/addMedia', data.response);
+      } catch (e) {
+        console.log(e);
+      }
+    },
     handleAudioStream() {
       navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
         this.stream = stream;
@@ -39,7 +50,7 @@ export default {
         this.storeData();
       });
     },
-    startRecord(e) {
+    startRecord() {
       this.handleAudioStream();
     },
     storeData() {
@@ -59,13 +70,22 @@ export default {
       this.rec.ondataavailable = (e) => {
         this.audioChunks.push(e.data);
         if (this.rec.state === 'inactive') {
-          const blob = new Blob(this.audioChunks, { type: 'audio/mpeg-3' });
+          const blob = new Blob(this.audioChunks, { type: 'audio/mp3' });
           this.$refs.recordedAudio.src = URL.createObjectURL(blob);
           this.$refs.recordedAudio.controls = true;
-          this.$refs.recordedAudio.autoplay = true;
-          this.sendData(blob);
+          // this.$refs.recordedAudio.autoplay = true;
+          this.audioBlob = blob;
         }
       };
+    },
+    blobToBase64(blob) {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      return new Promise((resolve) => {
+        reader.onloadend = () => {
+          resolve(reader.result);
+        };
+      });
     },
   },
 };
