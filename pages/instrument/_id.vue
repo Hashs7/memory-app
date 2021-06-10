@@ -1,6 +1,6 @@
 <template>
   <div class="instrument">
-    <ButtonBack class="instrument__back" />
+    <ButtonBack link="/motel" class="instrument__back" />
 
     <div v-if="instrument">
       <ImagesCarousel v-if="thumbnail" :data="instrument.images" />
