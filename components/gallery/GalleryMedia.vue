@@ -6,7 +6,9 @@
     @click="$emit('select')"
   >
     <div class="gallery-media__container">
-      <img class="gallery-media__img" :src="path" alt="" />
+      <img v-if="isImage" class="gallery-media__img" :src="path" alt="" />
+      <span v-if="isAudio">Audio</span>
+      <span v-if="isVideo">Video</span>
     </div>
   </div>
 </template>
@@ -41,6 +43,15 @@ export default {
   computed: {
     path() {
       return `${this.media.path}?w=100`;
+    },
+    isImage() {
+      return this.media.mimetype.split('/')[0] === 'image';
+    },
+    isVideo() {
+      return this.media.mimetype.split('/')[0] === 'video';
+    },
+    isAudio() {
+      return this.media.mimetype.split('/')[0] === 'audio';
     },
   },
   methods: {
