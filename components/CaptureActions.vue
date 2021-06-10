@@ -37,7 +37,7 @@ export default {
   computed: {
     newMemory() {
       return {
-        name: 'souvenir-creation',
+        name: 'souvenir-creation/souvenir/creation',
       };
     },
   },

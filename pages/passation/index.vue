@@ -71,7 +71,12 @@ export default {
     },
     async showQRCode() {
       this.url = `${window.location.href}/reception?token=${this.token}`;
-      await QRCode.toCanvas(this.$refs.canvas, this.url);
+      await QRCode.toCanvas(this.$refs.canvas, this.url, {
+        color: {
+          light: '#0000',
+          dark: '#373737',
+        },
+      });
     },
   },
 };

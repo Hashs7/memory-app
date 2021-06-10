@@ -22,16 +22,12 @@
       <p class="user-username">
         @<span>{{ user.username }}</span>
       </p>
+      <p v-if="user.description" class="user-description">
+        {{ user.description }}
+      </p>
     </div>
 
-    <div v-if="isOwner" class="">
-      <NuxtLink to="/profil/edit" class="u-button u-button--primary"
-        >Modifier mon compte</NuxtLink
-      >
-      <Logout>Déconnexion</Logout>
-    </div>
-
-    <section class="">
+    <section class="o-page__container">
       <TabSections :sections="sections" :show-index="true" />
     </section>
   </div>
@@ -40,11 +36,12 @@
 <script>
 import TabSections from '@/components/layout/TabSections';
 import ButtonBack from '../../components/UI/ButtonBack';
-import Logout from '../../components/user/Logout';
+import { router } from '../../mixins/router';
 
 export default {
   name: 'UserProfile',
-  components: { ButtonBack, Logout, TabSections },
+  components: { ButtonBack, TabSections },
+  mixins: [router],
   async asyncData({ $api, params, redirect }) {
     try {
       const user = await $api.getUserByUsername(params.user);

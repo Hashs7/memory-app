@@ -1,9 +1,13 @@
 export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
-
+  ssr: false,
   loading: false,
 
+  cache: {
+    max: 1000,
+    maxAge: 900000,
+  },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'Memory Motel',
@@ -13,9 +17,13 @@ export default {
         name: 'viewport',
         content: 'width=device-width, initial-scale=1, user-scalable=no',
       },
+      {
+        name: 'theme-color',
+        content: '#FFF9E2',
+      },
       { hid: 'description', name: 'description', content: '' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/icon.png' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -38,6 +46,7 @@ export default {
     { src: '~/plugins/vue-scroll.js' },
     { src: '~/plugins/carousel.js' /* mode: 'client' */ },
     { src: '~/plugins/vue-lazyload.js', mode: 'client' },
+    { src: '~/plugins/vuex-persist.js', mode: 'client' },
     { src: '~/plugins/colors.js', mode: 'client' },
     { src: '~/plugins/hammer.js', mode: 'client' },
     { src: '~/plugins/audio-recorder.js', mode: 'client' },
@@ -59,7 +68,13 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['nuxt-buefy', '@nuxtjs/axios', '@nuxtjs/pwa', '@nuxtjs/auth-next'],
+  modules: [
+    'nuxt-buefy',
+    '@nuxtjs/axios',
+    '@nuxtjs/pwa',
+    '@nuxtjs/auth-next',
+    '@nuxtjs/component-cache',
+  ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
@@ -70,10 +85,13 @@ export default {
     apiUrl: process.env.VUE_APP_API_URL || 'http://localhost:3000',
   },
 
+  /**
+   * Add 404 page
+   */
   router: {
     extendRoutes(routes, resolve) {
       routes.push({
-        name: 'custom',
+        name: 'errors',
         path: '*',
         component: resolve(__dirname, 'pages/404.vue'),
       });
@@ -108,22 +126,25 @@ export default {
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
-    icon: {
-      fileName: 'favicon.png',
-    },
     manifest: {
       lang: 'fr',
+      name: 'Memory Motel',
+      short_name: 'Memory Motel',
+      themeColor: '#FFF9E2',
     },
     meta: {
       name: 'Memory Motel',
+      lang: 'fr',
       viewport: 'width=device-width, initial-scale=1, user-scalable=no',
       mobileAppIOS: 'dark-content',
       appleStatusBarStyle: 'black-translucent',
+      orientation: 'portrait-primary',
+      theme_color: '#FFF9E2',
     },
     themeColor: '#FFF9E2',
     msTileColor: '#373737',
     appleMobileWebAppStatusBarStyle: 'default',
-    /* workboxOptions: {
+    /* workbox: {
       exclude: ['.htaccess'],
       importScripts: ['/serviceWorkerSkipWaiting.js'],
       skipWaiting: false,

@@ -38,6 +38,24 @@
 .user-name {
   margin: 28px 0 4px 0;
   font-size: 24px;
+  font-family: $font-secondary;
+
+  input {
+    font-family: $font-secondary;
+    font-size: 24px;
+    &::placeholder {
+      font-family: $font-secondary;
+      font-size: 24px;
+    }
+  }
+}
+
+.user-description {
+  margin-top: 12px;
+  font-size: 16px;
+  font-weight: 300;
+  padding: 8px 32px;
+  line-height: 1.2;
 }
 
 .user-thumbnail {
