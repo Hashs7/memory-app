@@ -75,6 +75,22 @@ export default {
   box-shadow: $shadow--first;
   overflow: hidden;
 
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: $black;
+    opacity: 0.4;
+    z-index: +1;
+    pointer-events: none;
+    transition: opacity 0.3s ease-out;
+  }
+
   &.media {
     padding: 0;
     user-select: none;
@@ -96,6 +112,10 @@ export default {
 
   &.active {
     z-index: 10;
+
+    &:after {
+      opacity: 0;
+    }
   }
   &.next {
     transform: scale(1);
