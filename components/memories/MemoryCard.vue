@@ -77,17 +77,20 @@ export default {
 
   &.media {
     padding: 0;
+    user-select: none;
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      user-select: none;
     }
 
     &.video {
       display: flex;
       align-items: center;
       background-color: #000;
+      user-select: none;
     }
   }
 
@@ -95,15 +98,15 @@ export default {
     z-index: 10;
   }
   &.next {
-    transform: scale(0.98) translateX(24px);
+    transform: scale(1);
     z-index: 9;
   }
   &.next--second {
-    transform: scale(0.96) translateX(44px);
+    transform: scale(1);
     z-index: 8;
   }
   &.previous {
-    transform: scale(0.98) translateX(-24px);
+    transform: scale(1) translateX(-24px);
     z-index: 9;
   }
   &.previous--second {

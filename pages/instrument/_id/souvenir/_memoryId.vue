@@ -33,14 +33,19 @@
           class="memory--content"
           @swipe="next"
         >
-          <img v-if="mediaType(c.file) === 'image'" :src="c.file.path" alt="" />
+          <img
+            v-if="mediaType(c.file) === 'image'"
+            :src="c.file.path"
+            :alt="memory.name"
+            draggable="false"
+          />
           <video
-            v-if="mediaType(c.file) === 'video'"
+            v-else-if="mediaType(c.file) === 'video'"
             :src="c.file.path"
             loop
             @click="toggleVideoMute"
           />
-          <span v-if="c.type !== 'media'">
+          <span v-else-if="c.type !== 'media'">
             <p v-html="c.content"></p>
           </span>
         </MemoryCard>
@@ -135,14 +140,14 @@ export default {
 
       // Stop video before next card
       if (this.mediaType(this.contents[this.index].file) === 'video') {
-        this.$refs.cards[this.index].$el.firstElementChild?.pause();
+        this.$refs.cards[this.index].$el.querySelector('video')?.pause();
       }
 
       this.index++;
 
       // Start video when appearing
       if (this.mediaType(this.contents[this.index].file) === 'video') {
-        this.$refs.cards[this.index].$el.firstElementChild?.play();
+        this.$refs.cards[this.index].$el.querySelector('video')?.play();
       }
     },
 
