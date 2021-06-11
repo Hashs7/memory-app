@@ -72,6 +72,7 @@ export default {
     }
     return layout;
   },
+  scrollToTop: false,
   async asyncData({ $api, params, redirect }) {
     try {
       const instrument = (await $api.getInstrumentById(params.id))?.data;
