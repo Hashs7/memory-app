@@ -2,7 +2,7 @@
   <div class="o-page o-page--full with-nav">
     <div class="media-preview">
       <ButtonBack emit @back="close" />
-      <div class="o-page__outside">
+      <div>
         <img v-if="isImage" class="" :src="media.path" alt="" />
         <div v-if="isAudio" class="">
           <AudioPlayer :media="media" visualizer />

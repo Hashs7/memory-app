@@ -128,8 +128,8 @@ export default function fromElement(elementId, canvasId, options) {
     run.call(waveContext);
   } else {
     // wait for a valid user gesture
-    document.body.addEventListener('touchstart', create, { once: true });
-    document.body.addEventListener('touchmove', create, { once: true });
+    // document.body.addEventListener('touchstart', create, { once: true });
+    // document.body.addEventListener('touchmove', create, { once: true });
     // document.body.addEventListener('touchend', create, { once: true });
     // document.body.addEventListener('mouseup', create, { once: true });
     document.body.addEventListener('click', create, { once: true });

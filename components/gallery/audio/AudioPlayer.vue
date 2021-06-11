@@ -10,8 +10,6 @@
       <div class="player-controls">
         <div class="player-controls__item -xl js-play" @click="play">
           <p class="icon">
-            <!--            <use xlink:href="#icon-pause" v-if="isTimerPlaying"></use>-->
-            <!--            <use xlink:href="#icon-play" v-else></use>-->
             <span v-if="isTimerPlaying">pause</span>
             <span v-else>play</span>
           </p>
@@ -59,7 +57,6 @@ export default {
   },
   data() {
     return {
-      // audio: null,
       circleLeft: null,
       barWidth: null,
       duration: null,
@@ -70,7 +67,7 @@ export default {
     };
   },
   mounted() {
-    this.$refs.audio.loadedmetadata = (e) => {
+    this.$refs.audio.loadedmetadata = () => {
       this.generateTime();
     };
 
@@ -78,12 +75,12 @@ export default {
       this.generateTime();
     });
 
-    this.$refs.audio.ontimeupdate = (e) => {
+    this.$refs.audio.ontimeupdate = () => {
       this.generateTime();
     };
 
-    this.$refs.audio.addEventListener('onended', (e) => {
-      this.isTimerPlaying = true;
+    this.$refs.audio.addEventListener('ended', () => {
+      this.isTimerPlaying = false;
     });
 
     if (!this.visualizer) return;
@@ -92,7 +89,6 @@ export default {
   methods: {
     enableVisualizer() {
       const canvas = document.getElementById('canvas');
-      console.log(canvas);
       canvas.width = window.innerWidth;
       canvas.height = (9 / 16) * window.innerWidth;
 
@@ -102,16 +98,17 @@ export default {
         colors: ['#373737', '#373737'],
       });
     },
+
     play() {
       if (this.$refs.audio.paused) {
         this.$refs.audio.play();
-        console.log(this.wave);
         this.isTimerPlaying = true;
       } else {
         this.$refs.audio.pause();
         this.isTimerPlaying = false;
       }
     },
+
     generateTime() {
       if (!this.$refs.audio || this.$refs.audio.duration === Infinity) return;
       const width =
@@ -137,6 +134,7 @@ export default {
       this.duration = durmin + ':' + dursec;
       this.currentTime = curmin + ':' + cursec;
     },
+
     updateBar(x) {
       const progress = this.$refs.progress;
       const maxduration = this.$refs.audio.duration;
@@ -153,23 +151,11 @@ export default {
       this.$refs.audio.currentTime = (maxduration * percentage) / 100;
       this.$refs.audio.play();
     },
+
     clickProgress(e) {
       this.isTimerPlaying = true;
       this.$refs.audio.pause();
       this.updateBar(e.pageX);
-    },
-    resetPlayer() {
-      this.barWidth = 0;
-      this.circleLeft = 0;
-      this.$refs.audio.currentTime = 0;
-      this.$refs.audio.src = this.src;
-      setTimeout(() => {
-        if (this.isTimerPlaying) {
-          this.$refs.audio.play();
-        } else {
-          this.$refs.audio.pause();
-        }
-      }, 300);
     },
   },
 };
@@ -179,6 +165,13 @@ export default {
 .audio-vizualiser {
   display: block;
   width: 100%;
+}
+
+#audio-element {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: -1;
 }
 
 .icon {
