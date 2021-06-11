@@ -2,8 +2,8 @@
   <nav class="tabbar">
     <div class="tabbar__container">
       <nuxt-link
-        v-for="navItem in nav"
-        :key="navItem.path"
+        v-for="(navItem, i) in nav"
+        :key="i"
         :to="navItem.path"
         class="tabbar__item"
         :class="[
@@ -36,10 +36,16 @@ export default {
     return {
       nav: [
         {
-          slug: 'discover',
-          label: 'Découvrir',
-          path: '/decouvrir',
-          icon: 'IconDiscover',
+          slug: 'motel',
+          label: 'Mon motel',
+          path: '/motel',
+          icon: 'IconMotel',
+        },
+        {
+          slug: 'gallery',
+          label: 'Galerie',
+          path: '/galerie',
+          icon: 'IconMotel',
         },
         {
           slug: 'add',
@@ -48,13 +54,36 @@ export default {
           icon: 'IconAdd',
         },
         {
-          slug: 'motel',
-          label: 'Mon motel',
-          path: '/motel',
-          icon: 'IconMotel',
+          slug: 'discover',
+          label: 'Découvrir',
+          path: '/decouvrir',
+          icon: 'IconDiscover',
+        },
+        {
+          slug: 'profile',
+          label: 'Profil',
+          path: '/profil',
+          icon: 'IconDiscover',
         },
       ],
     };
+  },
+  created() {
+    this.updateMemoryPath();
+    this.updateProfilePath();
+  },
+  methods: {
+    updateMemoryPath() {
+      if (!this.$store.state.motel.user.length) return;
+      const { id } = this.$store.state.motel.user[0];
+      const motelNav = this.nav.find((n) => n.slug === 'motel');
+      motelNav.path = `/instrument/${id}`;
+    },
+    updateProfilePath() {
+      if (!this.$auth.loggedIn) return;
+      const motelNav = this.nav.find((n) => n.slug === 'profile');
+      motelNav.path = this.$auth.$state.user.username;
+    },
   },
 };
 </script>

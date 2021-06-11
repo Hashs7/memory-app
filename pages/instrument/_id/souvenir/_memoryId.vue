@@ -2,47 +2,76 @@
   <div :class="[memory.template]" class="o-page--memory">
     <div class="o-page__container">
       <div class="memory__head">
-        <div class="memory__title">
-          <h1 v-if="memory" class="memory__title">{{ memory.name }}</h1>
+        <div class="memory__actions">
+          <div
+            class="memory__sound"
+            :class="{ 'memory__sound--muted': globalAudioMuted }"
+          >
+            <button class="memory__sound-btn u-button u-button--icon">
+              <IconSoundButton @click="toggleGlobalAudioMute" />
+            </button>
+            <audio
+              ref="globalAudio"
+              class="memory__sound-audio"
+              src="/misuc.mp3"
+              autoplay
+              loop
+            />
+            <svg class="memory__sound-title" height="14">
+              <text x="0" y="10">Un Super Artiste - Une musique du turfu</text>
+            </svg>
+          </div>
+          <button class="memory__close u-button" @click="closeMemory">
+            <IconCross class="icon" />
+          </button>
         </div>
-        <div v-if="isOwner" class="memory__owner">
-          <UserPreview :user="instrument.owner" :short="true" />
+        <div
+          v-if="index === 0 && memory.name"
+          ref="intro"
+          class="memory__intro"
+        >
+          <h2 class="memory__name">{{ memory.name }}</h2>
+          <p v-if="formatedDate" class="memory__date">{{ formatedDate }}</p>
         </div>
       </div>
-
       <div class="memory-slider">
-        <MemoryCard :class="[getClass(0)]" @swipe="next">
-          <p class="memory__description">
-            Select your favorite social network and share our icons with your
-            contacts or friends, if you do not have these social networks copy
-            the link and paste it in the one you use. For more information read
-            the
-          </p>
-          <ul class="memory-card__tag-container">
-            <li class="memory-card__tag">Variété</li>
-            <li class="memory-card__tag">Concerts</li>
-          </ul>
-        </MemoryCard>
         <MemoryCard
           v-for="(c, i) in contents"
           :key="i"
-          :class="[c.type, mediaType(c.file), getClass(i + 1), c.component]"
+          ref="cards"
+          :class="[c.type, mediaType(c.file), getClass(i), c.component]"
           class="memory--content"
           @swipe="next"
         >
-          <img v-if="mediaType(c.file) === 'image'" :src="c.file.path" alt="" />
-          <video
-            v-if="mediaType(c.file) === 'video'"
+          <img
+            v-if="mediaType(c.file) === 'image'"
             :src="c.file.path"
-            controls
+            :alt="memory.name"
+            draggable="false"
           />
-          <span v-if="c.type !== 'media'">
+          <video
+            v-else-if="mediaType(c.file) === 'video'"
+            :src="c.file.path"
+            loop
+            @click="toggleVideoMute"
+          />
+          <span v-else-if="c.type !== 'media'">
             <p v-html="c.content"></p>
           </span>
         </MemoryCard>
       </div>
+      <transition name="fade">
+        <div v-show="index > 0" class="memory__controls">
+          <span
+            v-for="(c, i) in contents"
+            :key="i"
+            class="memory__controls-item"
+            :class="{ 'memory__controls-item--current': i === index }"
+            @click="select(i)"
+          ></span>
+        </div>
+      </transition>
     </div>
-    <nuxt-link :to="closeMemory" class="memory__background"></nuxt-link>
   </div>
 </template>
 
@@ -52,10 +81,13 @@
 
 <script>
 import MemoryCard from '@/components/memories/MemoryCard';
-import UserPreview from '@/components/user/UserPreview';
+import IconCross from '@/assets/svg/ic_cross.svg?inline';
+import IconSoundButton from '@/assets/svg/ic_sound-btn.svg?inline';
+import dayjs from 'dayjs';
+import gsap from 'gsap';
 
 export default {
-  components: { UserPreview, MemoryCard },
+  components: { MemoryCard, IconCross, IconSoundButton },
   props: {
     instrument: {
       type: Object,
@@ -69,6 +101,9 @@ export default {
   data() {
     return {
       index: 0,
+      globalAudio: null,
+      globalAudioMuted: false,
+      globalAudioDiscreet: false,
     };
   },
   computed: {
@@ -77,7 +112,13 @@ export default {
       return this.instrument?.memories.find((m) => m.id === memoryId);
     },
 
-    closeMemory() {
+    formatedDate() {
+      return this.memory.date
+        ? dayjs(this.memory.date).format('DD/MM/YYYY')
+        : null;
+    },
+
+    closeMemoryRoute() {
       const { id } = this.$route.params;
       return `/instrument/${id}`;
     },
@@ -86,9 +127,26 @@ export default {
       return this.memory.contents;
     },
   },
+  watch: {
+    globalAudioDiscreet(active) {
+      gsap.to(this.$refs.globalAudio, {
+        volume: active ? 0.2 : 1,
+        duration: 1,
+      });
+    },
+  },
   mounted() {
     document.body.style.overflow = 'hidden';
-    // document.body.style.height = '100vh';
+
+    if (this.memory.name) {
+      gsap.from(this.$refs.intro.children, {
+        y: 30,
+        alpha: 0,
+        duration: 1.5,
+        ease: 'power3.out',
+        stagger: 0.2,
+      });
+    }
   },
   beforeDestroy() {
     this.removeBodyStyle();
@@ -104,12 +162,21 @@ export default {
     },
 
     next() {
-      if (this.index >= this.contents.length) {
+      if (this.index >= this.contents.length - 1) {
         this.removeBodyStyle();
-        this.$router.push(this.closeMemory);
+        this.$router.push(this.closeMemoryRoute);
         return;
       }
+
+      this.handleMediaBeforeIndexChange();
+
       this.index++;
+
+      this.handleMediaAfterIndexChange();
+    },
+
+    closeMemory() {
+      this.$router.push(this.closeMemoryRoute);
     },
 
     removeBodyStyle() {
@@ -117,8 +184,21 @@ export default {
       document.body.style.height = 'auto';
     },
 
+    toggleVideoMute(e) {
+      e.target.muted = !e.target.muted;
+    },
+
+    toggleGlobalAudioMute() {
+      if (this.$refs.globalAudio && !this.globalAudioDiscreet) {
+        this.$refs.globalAudio.muted = !this.$refs.globalAudio.muted;
+        this.globalAudioMuted = this.$refs.globalAudio.muted;
+      }
+    },
+
     select(index) {
+      this.handleMediaBeforeIndexChange();
       this.index = index;
+      this.handleMediaAfterIndexChange();
     },
 
     getClass(contentIndex) {
@@ -142,6 +222,22 @@ export default {
       }
       return setClass;
     },
+
+    handleMediaBeforeIndexChange() {
+      // Stop video before next card
+      if (this.mediaType(this.contents[this.index].file) === 'video') {
+        this.globalAudioDiscreet = false;
+        this.$refs.cards[this.index].$el.querySelector('video')?.pause();
+      }
+    },
+
+    handleMediaAfterIndexChange() {
+      // Start video when appearing
+      if (this.mediaType(this.contents[this.index].file) === 'video') {
+        this.globalAudioDiscreet = true;
+        this.$refs.cards[this.index].$el.querySelector('video')?.play();
+      }
+    },
   },
 };
 </script>
@@ -155,9 +251,9 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 40px;
 
   .o-page__container {
+    position: relative;
     padding: 0;
     width: 100%;
     height: auto;
@@ -172,19 +268,111 @@ export default {
   color: $black;
 }
 .memory__head {
-  text-align: center;
-  color: $black;
-}
-
-.memory__background {
-  position: fixed;
+  position: absolute;
   top: 0;
-  bottom: 0;
   left: 0;
   right: 0;
-  height: 100vh;
-  backdrop-filter: blur(5px);
-  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 24px 0 24px;
+  z-index: 30;
+  background-image: linear-gradient(rgba(black, 0.7), rgba(black, 0));
+}
+
+.memory__actions {
+  display: flex;
+  align-items: center;
+}
+
+.memory__close {
+  background: none;
+  border: none;
+  margin-left: auto;
+  padding: 0;
+
+  svg {
+    width: 15px;
+    height: 15px;
+    fill: $background;
+  }
+}
+
+.memory__intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 30px;
+  width: 80%;
+}
+
+.memory__name {
+  color: $background;
+  text-align: center;
+}
+
+.memory__date {
+  color: $white;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 16px;
+}
+
+.memory__sound {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  max-width: 60%;
+}
+
+.memory__sound-title {
+  margin-left: 8px;
+  width: 100%;
+
+  text {
+    font-family: $font-primary;
+    font-size: 12px;
+    fill: $background;
+    animation-name: text-banner;
+    animation-duration: 30s;
+    animation-iteration-count: infinite;
+    animation-delay: 5s;
+  }
+}
+
+.memory__sound-audio {
+  visibility: hidden;
+  height: 0;
+  width: 0;
+}
+
+.memory__sound-btn {
+  position: relative;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: calc(34px / 2 - 1px);
+    left: 0;
+    width: 34px;
+    height: 2px;
+    background: $background;
+    transform: rotate(45deg);
+    transform-origin: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .memory__sound--muted & {
+    &:after {
+      opacity: 1;
+    }
+  }
+  svg {
+    width: 34px;
+    height: 34px;
+  }
 }
 
 .memory-slider {
@@ -193,26 +381,45 @@ export default {
   flex-grow: 1;
 }
 
-.memory-slider__control {
+.memory__controls {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 25%;
-  z-index: 20;
-  opacity: 0;
-}
-
-.memory-slider__previous {
   left: 0;
+  right: 0;
+  bottom: 60px;
+  display: flex;
+  justify-content: center;
+  z-index: 30;
+  width: 100%;
 }
 
-.memory-slider__next {
-  right: 0;
+.memory__controls-item {
+  width: 18px;
+  height: 4px;
+  border-radius: 4px;
+  background-color: rgba($background, 0.5);
+  border: none;
+  margin: 0 2px;
+  transition: width 0.3s ease;
+
+  &--current {
+    width: 36px;
+    background-color: rgba($background, 1);
+  }
 }
 
 // Templates
 .o-page--memory {
   &.sardines {
+  }
+}
+
+@keyframes text-banner {
+  0%,
+  30% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
   }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="instrument">
-    <ButtonBack class="instrument__back" />
+    <ButtonBack link="/motel" class="instrument__back" />
 
     <div v-if="instrument">
       <ImagesCarousel v-if="thumbnail" :data="instrument.images" />
@@ -72,6 +72,7 @@ export default {
     }
     return layout;
   },
+  scrollToTop: false,
   async asyncData({ $api, params, redirect }) {
     try {
       const instrument = (await $api.getInstrumentById(params.id))?.data;
