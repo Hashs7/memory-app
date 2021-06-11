@@ -137,7 +137,6 @@ export default {
         const { data } = await this.$api.fetchMemoriesCat(
           this.selectedCategoriesMapped
         );
-
         this.memoriesCat = data;
       } catch (e) {
         console.log(e);

@@ -1,11 +1,6 @@
 <template>
   <div>
-    <MemoryPreview
-      v-for="result in memoriesFavInstru"
-      :key="result.id"
-      :data="result"
-    >
-    </MemoryPreview>
+    <FeedMemoryCarousel :data="memoriesFavInstru"> </FeedMemoryCarousel>
 
     <section
       v-for="categoryId in memoriesCat"
@@ -16,21 +11,16 @@
         <h4 class="o-section__title">{{ categoryId.category.name }}</h4>
       </div>
 
-      <MemoryPreview
-        v-for="memory in categoryId.memories"
-        :key="memory.id"
-        :data="memory"
-      >
-      </MemoryPreview>
+      <FeedMemoryCarousel :data="categoryId.memories"> </FeedMemoryCarousel>
     </section>
   </div>
 </template>
 
 <script>
-import MemoryPreview from '../memories/MemoryPreview';
+import FeedMemoryCarousel from './FeedMemoryCarousel';
 export default {
   name: 'FeedMemorySection',
-  components: { MemoryPreview },
+  components: { FeedMemoryCarousel },
   props: {
     memoriesFavInstru: {
       type: Array,
