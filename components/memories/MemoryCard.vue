@@ -68,44 +68,65 @@ export default {
   left: 0;
   right: 0;
   margin: auto;
-  max-height: 636px;
   height: 100%;
   padding: 32px;
   background-color: #fff;
   transform-origin: center;
   box-shadow: $shadow--first;
   overflow: hidden;
-  border-radius: 8px;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: $black;
+    opacity: 0.4;
+    z-index: +1;
+    pointer-events: none;
+    transition: opacity 0.3s ease-out;
+  }
 
   &.media {
     padding: 0;
+    user-select: none;
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      user-select: none;
     }
 
     &.video {
       display: flex;
       align-items: center;
       background-color: #000;
+      user-select: none;
     }
   }
 
   &.active {
     z-index: 10;
+
+    &:after {
+      opacity: 0;
+    }
   }
   &.next {
-    transform: scale(0.98) translateX(24px);
+    transform: scale(1);
     z-index: 9;
   }
   &.next--second {
-    transform: scale(0.96) translateX(44px);
+    transform: scale(1);
     z-index: 8;
   }
   &.previous {
-    transform: scale(0.98) translateX(-24px);
+    transform: scale(1) translateX(-24px);
     z-index: 9;
   }
   &.previous--second {

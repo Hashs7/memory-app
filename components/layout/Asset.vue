@@ -51,7 +51,7 @@ export default {
   },
   computed: {
     isImage() {
-      return this.data.mimetype.split('/')[0] === 'image';
+      return this.data.mimetype?.split('/')[0] === 'image';
     },
     url() {
       return this.data.path;
@@ -67,9 +67,6 @@ export default {
     },
   },
   async mounted() {
-    window.addEventListener('resize', () => this.throttleResize(), {
-      passive: true,
-    });
     this.$Lazyload.$on('loaded', (lazyEvent) => this.loadedHandler(lazyEvent));
     if (!this.isImage) return;
     this.backgroundColor = await this.$color(this.preview);
@@ -78,21 +75,20 @@ export default {
     window.removeEventListener('resize', this.throttleResize);
   },
   methods: {
-    open(src) {
-      if (src === this.url) {
-        this.loaded = true;
-        if (!this.$refs.asset) return;
-        this.backgroundColor = 'transparent';
-        this.sendSize();
-      }
+    open() {
+      this.loaded = true;
+      if (!this.$refs.asset) return;
+      this.backgroundColor = 'transparent';
+      // this.sendSize();
     },
     loadedHandler(lazyEvent) {
+      if (lazyEvent.src === this.url) return;
       if (!this.$refs.asset) return;
       imageLoaded(this.$refs.asset).on('progress', (loadedEvent) => {
         if (!loadedEvent.images.length) return;
         this.width = loadedEvent.images[0].img.naturalWidth;
         this.height = loadedEvent.images[0].img.naturalHeight;
-        this.open(lazyEvent.src);
+        this.open();
       });
     },
     sendSize() {

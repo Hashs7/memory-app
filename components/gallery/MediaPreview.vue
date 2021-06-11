@@ -3,7 +3,15 @@
     <div class="media-preview">
       <ButtonBack emit @back="close" />
       <div class="o-page__outside">
-        <img class="" :src="media.path" alt="" />
+        <img v-if="isImage" class="" :src="media.path" alt="" />
+        <audio v-if="isAudio" controls>
+          <source :src="media.path" :type="media.mimetype" />
+          Sorry, your browser doesn't support embedded videos.
+        </audio>
+        <video v-if="isVideo" controls>
+          <source :src="media.path" :type="media.mimetype" />
+          Sorry, your browser doesn't support embedded videos.
+        </video>
       </div>
       <div class="media-preview__actions">
         <a :href="downloadUrl" class="u-button--action">
@@ -38,6 +46,15 @@ export default {
   computed: {
     downloadUrl() {
       return `${this.media.path}?download=true`;
+    },
+    isImage() {
+      return this.media.mimetype.split('/')[0] === 'image';
+    },
+    isVideo() {
+      return this.media.mimetype.split('/')[0] === 'video';
+    },
+    isAudio() {
+      return this.media.mimetype.split('/')[0] === 'audio';
     },
   },
   methods: {
