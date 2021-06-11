@@ -3,10 +3,20 @@
     <div class="o-page__container">
       <div class="memory__head">
         <div class="memory__actions">
-          <div class="memory__sound">
+          <div
+            class="memory__sound"
+            :class="{ 'memory__sound--muted': globalAudioMuted }"
+          >
             <button class="memory__sound-btn u-button u-button--icon">
-              <IconSoundButton />
+              <IconSoundButton @click="toggleGlobalAudioMute" />
             </button>
+            <audio
+              ref="globalAudio"
+              class="memory__sound-audio"
+              src="/misuc.mp3"
+              autoplay
+              loop
+            />
             <svg class="memory__sound-title" height="14">
               <text x="0" y="10">Un Super Artiste - Une musique du turfu</text>
             </svg>
@@ -75,10 +85,9 @@ import IconCross from '@/assets/svg/ic_cross.svg?inline';
 import IconSoundButton from '@/assets/svg/ic_sound-btn.svg?inline';
 import dayjs from 'dayjs';
 import gsap from 'gsap';
-// import UserPreview from '@/components/user/UserPreview';
 
 export default {
-  components: { /* UserPreview, */ MemoryCard, IconCross, IconSoundButton },
+  components: { MemoryCard, IconCross, IconSoundButton },
   props: {
     instrument: {
       type: Object,
@@ -92,6 +101,9 @@ export default {
   data() {
     return {
       index: 0,
+      globalAudio: null,
+      globalAudioMuted: false,
+      globalAudioDiscreet: false,
     };
   },
   computed: {
@@ -113,6 +125,14 @@ export default {
 
     contents() {
       return this.memory.contents;
+    },
+  },
+  watch: {
+    globalAudioDiscreet(active) {
+      gsap.to(this.$refs.globalAudio, {
+        volume: active ? 0.2 : 1,
+        duration: 1,
+      });
     },
   },
   mounted() {
@@ -168,6 +188,13 @@ export default {
       e.target.muted = !e.target.muted;
     },
 
+    toggleGlobalAudioMute() {
+      if (this.$refs.globalAudio && !this.globalAudioDiscreet) {
+        this.$refs.globalAudio.muted = !this.$refs.globalAudio.muted;
+        this.globalAudioMuted = this.$refs.globalAudio.muted;
+      }
+    },
+
     select(index) {
       this.handleMediaBeforeIndexChange();
       this.index = index;
@@ -199,6 +226,7 @@ export default {
     handleMediaBeforeIndexChange() {
       // Stop video before next card
       if (this.mediaType(this.contents[this.index].file) === 'video') {
+        this.globalAudioDiscreet = false;
         this.$refs.cards[this.index].$el.querySelector('video')?.pause();
       }
     },
@@ -206,6 +234,7 @@ export default {
     handleMediaAfterIndexChange() {
       // Start video when appearing
       if (this.mediaType(this.contents[this.index].file) === 'video') {
+        this.globalAudioDiscreet = true;
         this.$refs.cards[this.index].$el.querySelector('video')?.play();
       }
     },
@@ -313,7 +342,33 @@ export default {
   }
 }
 
+.memory__sound-audio {
+  visibility: hidden;
+  height: 0;
+  width: 0;
+}
+
 .memory__sound-btn {
+  position: relative;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: calc(34px / 2 - 1px);
+    left: 0;
+    width: 34px;
+    height: 2px;
+    background: $background;
+    transform: rotate(45deg);
+    transform-origin: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .memory__sound--muted & {
+    &:after {
+      opacity: 1;
+    }
+  }
   svg {
     width: 34px;
     height: 34px;
