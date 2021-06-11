@@ -2,7 +2,7 @@
   <ContentForm
     v-if="!showSummary"
     @next="showSummary = true"
-    @back="$router.back()"
+    @back="$router.go('instrument')"
   />
   <Summary v-else edit @back="showSummary = false" @submit="submit" />
 </template>

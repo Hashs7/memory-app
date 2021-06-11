@@ -32,6 +32,8 @@
 ⚠️ You first need to install Memory Motel API to run this project    
 [github.com/Hashs7/memory-api](https://github.com/Hashs7/memory-api)
 
+Enable getUserMedia on your navigator    
+For Chrome go to: chrome://flags/#enable-experimental-web-platform-features
 
 ```bash
 # copy env variables and fill with dev values

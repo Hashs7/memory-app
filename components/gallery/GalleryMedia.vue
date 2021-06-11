@@ -5,7 +5,11 @@
     class="gallery-media"
     @click="$emit('select')"
   >
-    <img class="gallery-media__img" :src="path" alt="" />
+    <div class="gallery-media__container">
+      <img v-if="isImage" class="gallery-media__img" :src="path" alt="" />
+      <span v-if="isAudio">Audio</span>
+      <span v-if="isVideo">Video</span>
+    </div>
   </div>
 </template>
 
@@ -40,6 +44,15 @@ export default {
     path() {
       return `${this.media.path}?w=100`;
     },
+    isImage() {
+      return this.media.mimetype.split('/')[0] === 'image';
+    },
+    isVideo() {
+      return this.media.mimetype.split('/')[0] === 'video';
+    },
+    isAudio() {
+      return this.media.mimetype.split('/')[0] === 'audio';
+    },
   },
   methods: {
     selectHandler() {
@@ -64,6 +77,8 @@ export default {
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  width: 100%;
+  height: 100%;
 
   &.selected:after {
     content: '';
@@ -77,13 +92,19 @@ export default {
   }
 }
 
-.gallery-media__img {
+.gallery-media__container {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
   margin: auto;
+}
+
+.gallery-media__img {
+  object-fit: cover;
+  object-position: center;
   width: 100%;
+  height: 100%;
 }
 </style>

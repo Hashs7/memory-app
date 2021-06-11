@@ -58,6 +58,7 @@ export const actions = {
   },
 
   async deleteMedia({ commit }, id) {
+    console.log('looo');
     try {
       await this.$api.deleteMedia(id);
       commit('removeMedia', id);
