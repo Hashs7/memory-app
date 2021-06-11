@@ -46,6 +46,37 @@ yarn install
 yarn dev
 ```
 
+### HTTPS Configuration
+This project uses [mkcert](https://github.com/FiloSottile/mkcert) to generate SSL certificate.
+Please refer to the [mkcert installation doc](https://github.com/FiloSottile/mkcert#installation) to install it on your machine.
+
+1. Generate a local certificate in `/cert` folder, in root of project.
+````bash
+# Create and go in /cert
+mkdir cert && cd cert
+
+# Generate certificate
+# Replace [localip] by your machine's ip in your local network (or static url on Mac)
+mkcert -key-file key.pem -cert-file cert.pem localhost 127.0.0.1 [localip] ::1
+
+# On MacOS, you can also use your local DNS (Settings -> Share). I.E. :
+mkcert -key-file key.pem -cert-file cert.pem localhost 127.0.0.1 robin.local ::1
+````
+2. Install the certificate on your machine.
+````bash
+mkcert -install
+````
+
+3. Mobile connection :
+  - Transfer the `cert/cert.pem` file on your mobile (i.e. via AirDrop)
+  - For the certificates to be trusted on mobile devices, you will have 
+    to install the root CA. It's the `rootCA.pem` file in the folder 
+    printed by `mkcert -CAROOT`. 
+    Also transfer it on your mobile.
+  - Install both profiles on the device
+
+4. Enjoy ! 🎉
+
 ### Lint code
 ```bash
 # see lint errors and warnings
