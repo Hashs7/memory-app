@@ -50,6 +50,17 @@
           </span>
         </MemoryCard>
       </div>
+      <transition name="fade">
+        <div v-show="index > 0" class="memory__controls">
+          <span
+            v-for="(c, i) in contents"
+            :key="i"
+            class="memory__controls-item"
+            :class="{ 'memory__controls-item--current': i === index }"
+            @click="select(i)"
+          ></span>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -106,7 +117,6 @@ export default {
   },
   mounted() {
     document.body.style.overflow = 'hidden';
-    // document.body.style.height = '100vh';
 
     if (this.memory.name) {
       gsap.from(this.$refs.intro.children, {
@@ -138,17 +148,11 @@ export default {
         return;
       }
 
-      // Stop video before next card
-      if (this.mediaType(this.contents[this.index].file) === 'video') {
-        this.$refs.cards[this.index].$el.querySelector('video')?.pause();
-      }
+      this.handleMediaBeforeIndexChange();
 
       this.index++;
 
-      // Start video when appearing
-      if (this.mediaType(this.contents[this.index].file) === 'video') {
-        this.$refs.cards[this.index].$el.querySelector('video')?.play();
-      }
+      this.handleMediaAfterIndexChange();
     },
 
     closeMemory() {
@@ -165,7 +169,9 @@ export default {
     },
 
     select(index) {
+      this.handleMediaBeforeIndexChange();
       this.index = index;
+      this.handleMediaAfterIndexChange();
     },
 
     getClass(contentIndex) {
@@ -188,6 +194,20 @@ export default {
           break;
       }
       return setClass;
+    },
+
+    handleMediaBeforeIndexChange() {
+      // Stop video before next card
+      if (this.mediaType(this.contents[this.index].file) === 'video') {
+        this.$refs.cards[this.index].$el.querySelector('video')?.pause();
+      }
+    },
+
+    handleMediaAfterIndexChange() {
+      // Start video when appearing
+      if (this.mediaType(this.contents[this.index].file) === 'video') {
+        this.$refs.cards[this.index].$el.querySelector('video')?.play();
+      }
     },
   },
 };
@@ -228,7 +248,7 @@ export default {
   align-items: center;
   padding: 30px 24px 0 24px;
   z-index: 30;
-  background-image: linear-gradient(rgba(black, 0.3) 70%, rgba(black, 0));
+  background-image: linear-gradient(rgba(black, 0.7), rgba(black, 0));
 }
 
 .memory__actions {
@@ -306,21 +326,30 @@ export default {
   flex-grow: 1;
 }
 
-.memory-slider__control {
+.memory__controls {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 25%;
-  z-index: 20;
-  opacity: 0;
-}
-
-.memory-slider__previous {
   left: 0;
+  right: 0;
+  bottom: 60px;
+  display: flex;
+  justify-content: center;
+  z-index: 30;
+  width: 100%;
 }
 
-.memory-slider__next {
-  right: 0;
+.memory__controls-item {
+  width: 18px;
+  height: 4px;
+  border-radius: 4px;
+  background-color: rgba($background, 0.5);
+  border: none;
+  margin: 0 2px;
+  transition: width 0.3s ease;
+
+  &--current {
+    width: 36px;
+    background-color: rgba($background, 1);
+  }
 }
 
 // Templates
