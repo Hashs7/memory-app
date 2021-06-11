@@ -24,7 +24,7 @@
             :class="[s.class]"
             class="instruments-container"
           >
-            <div v-show="selectedSection === s.name" class="">
+            <div v-if="selectedSection === s.name" class="">
               <NuxtLink
                 v-if="selectedSection === 'user'"
                 to="/instrument/creation"
