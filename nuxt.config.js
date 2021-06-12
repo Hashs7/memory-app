@@ -1,6 +1,25 @@
 import path from 'path';
 import fs from 'fs';
 
+const serverConfig =
+  process.env.NODE_ENV === 'development'
+    ? {
+        server: {
+          host: '0.0.0.0',
+          port: 8080,
+          https: {
+            key: fs.readFileSync(path.resolve(__dirname, 'cert/key.pem')),
+            cert: fs.readFileSync(path.resolve(__dirname, 'cert/cert.pem')),
+          },
+        },
+      }
+    : {
+        server: {
+          host: '0.0.0.0',
+          port: 8080,
+        },
+      };
+
 export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
@@ -199,15 +218,7 @@ export default {
     }, */
   },
 
-  server: {
-    host: '0.0.0.0',
-    port: 8080,
-
-    https: {
-      key: fs.readFileSync(path.resolve(__dirname, 'cert/key.pem')),
-      cert: fs.readFileSync(path.resolve(__dirname, 'cert/cert.pem')),
-    },
-  },
+  ...serverConfig,
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
