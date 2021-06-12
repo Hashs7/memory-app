@@ -73,6 +73,15 @@
   line-height: 36px;
 }
 
+.u-button--icon {
+  background: none;
+  border: none;
+  outline: none;
+  padding: 0;
+  height: auto;
+  line-height: 0;
+}
+
 .u-button__content {
   position: absolute;
   top: 0;
