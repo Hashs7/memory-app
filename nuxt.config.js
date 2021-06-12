@@ -10,7 +10,7 @@ const serverConfig = {
 
 if (process.env.NODE_ENV === 'development') {
   serverConfig.server = {
-    ...serverConfig,
+    ...serverConfig.server,
     https: {
       key: fs.readFileSync(path.resolve(__dirname, 'cert/key.pem')),
       cert: fs.readFileSync(path.resolve(__dirname, 'cert/cert.pem')),
