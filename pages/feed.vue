@@ -84,7 +84,8 @@ export default {
         categories: categories.data,
       };
     } catch (e) {
-      throw new Error(e);
+      // throw new Error(e);
+      console.log(e);
     }
   },
   data() {
@@ -117,10 +118,13 @@ export default {
       };
     },
     selectedCategoriesMapped() {
-      const selectedCats = this.categories.filter((c) => {
+      /*
+      const selectedCats = this.categories?.filter((c) => {
         return c.selected;
       });
       return selectedCats.map((s) => s._id);
+      */
+      return [];
     },
   },
   methods: {
