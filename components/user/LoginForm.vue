@@ -63,24 +63,7 @@
 </template>
 
 <script>
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { required, email, min } from 'vee-validate/dist/rules';
-// No message specified.
-extend('email', {
-  ...email,
-  message: "L'email n'est pas valide",
-});
-
-// Override the default message.
-extend('required', {
-  ...required,
-  message: 'Le champs est requis',
-});
-// Override the default message.
-extend('min', {
-  ...min,
-  message: '8 charactères minimum',
-});
+import { ValidationProvider, ValidationObserver } from 'vee-validate';
 
 export default {
   name: 'LoginForm',
