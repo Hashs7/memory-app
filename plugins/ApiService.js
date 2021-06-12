@@ -108,7 +108,12 @@ class ApiController {
   }
 
   uploadFile(file) {
-    return this.$axios.post('/file', file, {
+    /*
+    const path =
+      process.env.NODE_ENV === 'production' ? '/file/azure' : '/file';
+      */
+    const path = '/file/azure';
+    return this.$axios.post(path, file, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
