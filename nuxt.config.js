@@ -1,3 +1,23 @@
+import path from 'path';
+import fs from 'fs';
+
+const serverConfig = {
+  server: {
+    host: '0.0.0.0',
+    port: 8080,
+  },
+};
+
+if (process.env.NODE_ENV === 'development') {
+  serverConfig.server = {
+    ...serverConfig.server,
+    https: {
+      key: fs.readFileSync(path.resolve(__dirname, 'cert/key.pem')),
+      cert: fs.readFileSync(path.resolve(__dirname, 'cert/cert.pem')),
+    },
+  };
+}
+
 export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
@@ -46,6 +66,7 @@ export default {
     { src: '~/plugins/vue-scroll.js' },
     { src: '~/plugins/carousel.js' /* mode: 'client' */ },
     { src: '~/plugins/vue-lazyload.js', mode: 'client' },
+    { src: '~/plugins/vee-validate.js', mode: 'client' },
     { src: '~/plugins/vuex-persist.js', mode: 'client' },
     { src: '~/plugins/colors.js', mode: 'client' },
     { src: '~/plugins/hammer.js', mode: 'client' },
@@ -196,13 +217,12 @@ export default {
     }, */
   },
 
-  server: {
-    host: '0.0.0.0',
-    port: 8080,
-  },
+  ...serverConfig,
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    transpile: ['vee-validate/dist/rules'],
+  },
 
   generate: {
     exclude: [

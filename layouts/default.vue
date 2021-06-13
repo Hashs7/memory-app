@@ -11,6 +11,7 @@
 import Tabbar from '@/components/layout/Tabbar';
 
 export default {
+  name: 'LayoutDefault',
   components: {
     Tabbar,
   },

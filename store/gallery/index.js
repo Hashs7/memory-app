@@ -14,6 +14,14 @@ export const getters = {
     if (!state.selected[0]) return;
     return state.medias.find((m) => m._id === state.selected[0]);
   },
+
+  getAudios(state) {
+    return state.medias.filter((m) => m.mimetype.split('/')[0] === 'audio');
+  },
+
+  getImgAndVideos(state) {
+    return state.medias.filter((m) => m.mimetype.split('/')[0] !== 'audio');
+  },
 };
 
 export const mutations = {

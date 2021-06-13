@@ -1,12 +1,17 @@
 <template>
-  <vue-glide ref="slider" v-model="active" :options="options">
-    <vue-glide-slide
-      v-for="(memory, i) in data"
-      :key="i"
-      class="memory-preview"
+  <div class="feed-images-carousel o-page__outside">
+    <vue-glide
+      v-if="data.length"
+      ref="slider"
+      v-model="active"
+      :options="options"
     >
-      <NuxtLink :to="getLinkUrl(memory)" class="instrument-preview">
-        <div class="feed-images-carousel o-page__outside">
+      <vue-glide-slide
+        v-for="(memory, i) in data"
+        :key="i"
+        class="memory-preview"
+      >
+        <NuxtLink :to="getLinkUrl(memory)" class="instrument-preview">
           <div class="memory-preview__image-container">
             <img
               class="memory-preview__image"
@@ -31,10 +36,10 @@
               </div>
             </div>
           </div>
-        </div>
-      </NuxtLink>
-    </vue-glide-slide>
-  </vue-glide>
+        </NuxtLink>
+      </vue-glide-slide>
+    </vue-glide>
+  </div>
 </template>
 
 <script>

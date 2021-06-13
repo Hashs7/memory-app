@@ -99,8 +99,8 @@ class ApiController {
     return this.$axios.patch(`/user/wishlist/${id}`);
   }
 
-  handoverInstrument(id) {
-    return this.$axios.patch(`/instrument/${id}/handover`);
+  handoverInstrument(id, date) {
+    return this.$axios.patch(`/instrument/${id}/handover/${date}`);
   }
 
   confirmHandoverInstrument(token) {
@@ -115,7 +115,9 @@ class ApiController {
   }
 
   uploadFile(file) {
-    return this.$axios.post('/file', file, {
+    const path =
+      process.env.NODE_ENV === 'production' ? '/file/azure' : '/file';
+    return this.$axios.post(path, file, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
