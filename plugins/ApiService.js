@@ -99,8 +99,8 @@ class ApiController {
     return this.$axios.patch(`/user/wishlist/${id}`);
   }
 
-  handoverInstrument(id) {
-    return this.$axios.patch(`/instrument/${id}/handover`);
+  handoverInstrument(id, date) {
+    return this.$axios.patch(`/instrument/${id}/handover/${date}`);
   }
 
   confirmHandoverInstrument(token) {

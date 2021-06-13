@@ -18,6 +18,11 @@
   padding-right: 16px;
 }
 
+.o-page__container {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
 .o-page--full {
   z-index: 50;
   position: fixed;
@@ -78,11 +83,10 @@
 }
 
 .o-page__title {
-  font-size: 24px;
-  //font-size: 16px;
-  font-weight: 300;
-  margin-bottom: 20px;
   display: block;
+  margin: 72px 0 20px 0;
+  font-size: 24px;
+  font-weight: 300;
 }
 
 .o-page__subtitle {
@@ -98,6 +102,17 @@
 .o-page__body {
   flex-grow: 1;
   padding: 0 25px;
+}
+
+.o-page__flex {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 48px;
+
+  .o-page__body {
+    padding: 0;
+  }
 }
 
 

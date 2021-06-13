@@ -1,5 +1,10 @@
 <template>
   <div class="step step-2">
+    <nav class="o-section__head tab-nav">
+      <button class="tab-nav__item current">
+        <span>Scannez le code</span>
+      </button>
+    </nav>
     <div class="handover__qrcode">
       <canvas ref="canvas" class="canvas" width="172px" height="172px"></canvas>
       <Background class="background" />
@@ -21,16 +26,15 @@ export default {
     ClipboardCopy,
     Background,
   },
-  props: {
-    token: {
-      type: String,
-      default: '',
-    },
-  },
   data() {
     return {
       url: '',
     };
+  },
+  computed: {
+    token() {
+      return this.$store.state.handover.senderToken;
+    },
   },
   watch: {
     token() {
