@@ -10,7 +10,30 @@
     <div class="o-page__body">
       <MemoryPreview :data="memory" @click="edit ? $emit('open-form') : ''" />
 
-      <div class="o-cells"></div>
+      <div class="o-cells">
+        <div class="form__group">
+          <b-field>
+            <label class="o-cells__label">Nom du souvenir</label>
+            <b-input
+              v-model="name"
+              name="name"
+              type="text"
+              placeholder="Nom du souvenir"
+              required
+            ></b-input>
+          </b-field>
+        </div>
+      </div>
+
+      <div class="o-cells">
+        <label class="o-cells__label">Date du souvenir</label>
+        <input
+          v-model="date"
+          class="slider__date-input"
+          type="date"
+          placeholder="Sélectionner une date"
+        />
+      </div>
 
       <TabSections :sections="sections" />
       <Visibility />
@@ -22,6 +45,7 @@
 import { mapMutations, mapState } from 'vuex';
 import Visibility from '@/components/memories/creation/form/Visibility';
 import MemoryPreview from '@/components/memories/MemoryPreview';
+import dayjs from 'dayjs';
 import ButtonBack from '../../../UI/ButtonBack';
 import TabSections from '../../../layout/TabSections';
 
@@ -50,6 +74,22 @@ export default {
   },
   computed: {
     ...mapState('memory', { memory: 'data' }),
+    name: {
+      get() {
+        return this.$store.state.memory.data?.name;
+      },
+      set(newValue) {
+        this.$store.commit('memory/updateName', newValue);
+      },
+    },
+    date: {
+      get() {
+        return dayjs(this.$store.state.memory.data?.date).format('YYYY-MM-DD');
+      },
+      set(newValue) {
+        this.$store.commit('memory/updateDate', dayjs(newValue).toDate());
+      },
+    },
   },
   methods: {
     ...mapMutations('memory', ['updateDate']),

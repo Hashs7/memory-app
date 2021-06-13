@@ -23,7 +23,6 @@
 
       <form class="o-page__body o-page__outside">
         <div class="slider">
-          <SlideIntro />
           <draggable
             v-model="contents"
             class="slider__draggable"
@@ -91,7 +90,6 @@
 <script>
 import draggable from 'vuedraggable';
 import { mapGetters } from 'vuex';
-import SlideIntro from '@/components/memories/creation/slider/SlideIntro';
 import SliderAdd from '@/components/memories/creation/slider/SliderAdd';
 import TextContent from '@/components/memories/creation/contents/TextContent';
 import AudioContent from '@/components/memories/creation/contents/AudioContent';
@@ -109,7 +107,6 @@ export default {
   name: 'ContentForm',
   components: {
     ThemeSelector,
-    SlideIntro,
     SliderAdd,
     TextContent,
     AudioContent,

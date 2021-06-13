@@ -4,7 +4,7 @@
     @next="showSummary = true"
     @back="$router.go('instrument')"
   />
-  <Summary v-else edit @back="showSummary = false" @submit="submit" />
+  <Summary v-else @back="showSummary = false" @submit="submit" />
 </template>
 
 <router>

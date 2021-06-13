@@ -24,7 +24,6 @@ export const emptyMemory = {
   id: null,
   name: '',
   date: [],
-  preview: getContent('media'),
   contents: [],
   tags: [],
   visibility: null,
