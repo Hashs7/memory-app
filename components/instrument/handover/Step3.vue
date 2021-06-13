@@ -42,38 +42,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.instrument-container {
-  position: relative;
-  width: 232px;
-  height: 232px;
-  padding: 16px;
-  margin: 48px auto;
-
-  .background {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-  }
-}
-
-.instrument__thumbnail {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  overflow: hidden;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-}
-</style>

@@ -64,7 +64,7 @@
   }
 
   &.primary {
-    color: #FEC26F;
+    color: #fec26f;
     font-weight: 600;
   }
 
@@ -115,7 +115,6 @@
   }
 }
 
-
 .o-page--summary .o-page__body {
   padding: 0 8px;
 }
@@ -123,7 +122,6 @@
 // Specific
 .o-page--register,
 .o-page--login {
-
   .o-page__header {
     text-align: center;
     margin: 144px 0 64px 0;
@@ -152,6 +150,42 @@
   .form__actions {
     .u-button {
       width: 100%;
+    }
+  }
+}
+
+// Handover page
+.o-page--handover {
+  .instrument-container {
+    position: relative;
+    width: 232px;
+    height: 232px;
+    padding: 16px;
+    margin: 48px auto;
+
+    .background {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+    }
+  }
+
+  .instrument__thumbnail {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
     }
   }
 }

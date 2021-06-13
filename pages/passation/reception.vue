@@ -1,14 +1,26 @@
 <template>
-  <div class="o-page">
-    <h1 class="o-page__title">Passation</h1>
-    <h2 v-if="validated && instrument">
+  <div class="o-page o-page--handover o-page__container">
+    <h1 v-if="validated && instrument" class="o-page__title">
       Vous venez de faire l'acquisition de {{ instrument.name }}
-    </h2>
-    <div v-if="error.hasError" class="error">
-      <p>{{ error.message }}</p>
+    </h1>
+    <div v-if="error.hasError" class="o-page__title error">
+      <h1>{{ error.message }}</h1>
+    </div>
+
+    <div class="instrument-container">
+      <Background class="background" />
+      <div class="instrument__thumbnail">
+        <img
+          v-if="thumbnail"
+          class=""
+          :src="thumbnail.path"
+          alt="image de l'instrument"
+        />
+      </div>
     </div>
 
     <div v-if="!$auth.loggedIn" class="">
+      <h1>Pour faire l'acquisition de {{ instrument.name }}</h1>
       <p>Veuillez d'abord vous authentifier</p>
       <NuxtLink :to="signIn" class="u-button u-button--primary"
         >Connexion</NuxtLink
@@ -17,6 +29,10 @@
         >Inscription</NuxtLink
       >
     </div>
+
+    <NuxtLink v-if="validated" to="/motel" class="u-button u-button--primary">
+      Voir mon motel
+    </NuxtLink>
   </div>
 </template>
 
@@ -25,19 +41,22 @@ path: /instrument/:id/passation/reception
 </router>
 
 <script>
+import Background from '@/assets/svg/handover/instrument-background.svg?inline';
+
 export default {
-  /*
-  async asyncData($api, params) {
+  components: {
+    Background,
+  },
+  async asyncData({ $api, params }) {
     try {
       const res = await $api.getInstrumentById(params.id);
       return {
         instrument: res.data,
       };
     } catch (e) {
-      throw new Error(e);
+      console.log(e);
     }
   },
-  */
   data() {
     return {
       error: {
@@ -61,9 +80,11 @@ export default {
     signUp() {
       return `/inscription`;
     },
+    thumbnail() {
+      return this.instrument?.images[0];
+    },
   },
   mounted() {
-    this.getInstrument();
     if (!this.$auth.loggedIn) {
       this.storeToken();
       return;
@@ -71,14 +92,6 @@ export default {
     this.validateToken();
   },
   methods: {
-    async getInstrument() {
-      try {
-        const res = await this.$api.getInstrumentById(this.instrumentId);
-        this.instrument = res.data;
-      } catch (e) {
-        throw new Error(e);
-      }
-    },
     async validateToken() {
       if (!this.$route.query.token) {
         this.error.message = "Votre jeton n'est pas valide";
