@@ -44,6 +44,10 @@ import ButtonBack from '../../components/UI/ButtonBack';
 
 export default {
   components: { ButtonBack, Step1, Step2, Step3 },
+  async asyncData({ $api, store, params }) {
+    const instrument = (await $api.getInstrumentById(params.id))?.data;
+    store.commit('instrument/setInstrumentData', instrument);
+  },
   data() {
     return {
       MAX_STEP: 3,
