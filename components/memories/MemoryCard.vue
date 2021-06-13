@@ -82,7 +82,6 @@ export default {
   right: 0;
   margin: auto;
   height: 100%;
-  padding: 32px;
   background-color: #fff;
   transform-origin: center;
   box-shadow: $shadow--first;
