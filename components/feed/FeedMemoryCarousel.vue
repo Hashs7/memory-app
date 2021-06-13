@@ -1,12 +1,12 @@
 <template>
-  <div class="feed-images-carousel o-page__outside">
-    <vue-glide ref="slider" v-model="active" :options="options">
-      <vue-glide-slide
-        v-for="(memory, i) in data"
-        :key="i"
-        class="memory-preview"
-      >
-        <NuxtLink :to="getLinkUrl(memory)" class="instrument-preview">
+  <vue-glide ref="slider" v-model="active" :options="options">
+    <vue-glide-slide
+      v-for="(memory, i) in data"
+      :key="i"
+      class="memory-preview"
+    >
+      <NuxtLink :to="getLinkUrl(memory)" class="instrument-preview">
+        <div class="feed-images-carousel o-page__outside">
           <div class="memory-preview__image-container">
             <img
               class="memory-preview__image"
@@ -31,10 +31,10 @@
               </div>
             </div>
           </div>
-        </NuxtLink>
-      </vue-glide-slide>
-    </vue-glide>
-  </div>
+        </div>
+      </NuxtLink>
+    </vue-glide-slide>
+  </vue-glide>
 </template>
 
 <script>
@@ -53,7 +53,7 @@ export default {
       active: 0,
       options: {
         perView: 1,
-        gap: 0,
+        gap: 10,
         rewind: false,
       },
     };
