@@ -58,7 +58,7 @@ export default {
       active: 0,
       options: {
         perView: 1,
-        gap: 0,
+        gap: 10,
         rewind: false,
       },
     };
