@@ -6,9 +6,7 @@
         <NuxtLink to="profil/edit" class="btn-edit">Modifier</NuxtLink>
       </div>
     </div>
-    <div class="user-banner">
-      <img src="http://seb-mbp.local:3000/file/guitar1975.jpg" alt="" />
-    </div>
+    <!--    <div class="user-banner"></div>-->
     <div class="user-infos">
       <div v-if="user.thumbnail" class="user-thumbnail">
         <img
