@@ -82,7 +82,7 @@ export default {
     updateProfilePath() {
       if (!this.$auth.loggedIn) return;
       const motelNav = this.nav.find((n) => n.slug === 'profile');
-      motelNav.path = this.$auth.$state.user.username;
+      motelNav.path = `/${this.$auth.$state.user.username}`;
     },
   },
 };

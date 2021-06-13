@@ -13,7 +13,7 @@
       :to="handover"
       class="u-button u-button--primary"
     >
-      Passation
+      Je ne suis plus propriétaire
     </NuxtLink>
 
     <NuxtLink :to="edit" class="u-button u-button--primary">
@@ -60,4 +60,14 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.owner-actions {
+  .u-button {
+    width: 100%;
+
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
+  }
+}
+</style>

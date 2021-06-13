@@ -2,12 +2,11 @@
   <div class="o-page o-page--full with-nav">
     <div class="media-preview">
       <ButtonBack emit @back="close" />
-      <div class="o-page__outside">
+      <div>
         <img v-if="isImage" class="" :src="media.path" alt="" />
-        <audio v-if="isAudio" controls>
-          <source :src="media.path" :type="media.mimetype" />
-          Sorry, your browser doesn't support embedded videos.
-        </audio>
+        <div v-if="isAudio" class="">
+          <AudioPlayer :media="media" visualizer />
+        </div>
         <video v-if="isVideo" controls>
           <source :src="media.path" :type="media.mimetype" />
           Sorry, your browser doesn't support embedded videos.
@@ -29,6 +28,7 @@
 import IconTrash from '@/assets/svg/ic_trash.svg?inline';
 import IconDownload from '@/assets/svg/ic_download.svg?inline';
 import ButtonBack from '../UI/ButtonBack';
+import AudioPlayer from './audio/AudioPlayer';
 
 export default {
   name: 'MediaPreview',
@@ -36,12 +36,18 @@ export default {
     ButtonBack,
     IconTrash,
     IconDownload,
+    AudioPlayer,
   },
   props: {
     media: {
       type: Object,
       required: true,
     },
+  },
+  data() {
+    return {
+      wave: null,
+    };
   },
   computed: {
     downloadUrl() {
@@ -66,7 +72,7 @@ export default {
         await this.$store.dispatch('gallery/deleteMedia', this.media._id);
         this.close();
       } catch (e) {
-        throw new Error(e);
+        console.log(e);
       }
     },
   },

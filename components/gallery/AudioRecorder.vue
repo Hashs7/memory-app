@@ -1,27 +1,41 @@
 <template>
-  <div>
-    <p>
-      <button ref="record" :disabled="recordDisabled" @click="startRecord">
-        Enregistrer
-      </button>
-      <button
-        ref="stopRecord"
-        :disabled="stopRecordDisabled"
-        @click="stopRecord"
-      >
-        Stop
-      </button>
+  <div class="audio-recorder">
+    <div v-if="!disabled" class="container">
+      <div class="stopwatch">
+        <StopWatch ref="stopwatch" />
+      </div>
+      <div class="audio-recorder__btn">
+        <button
+          v-show="!recordDisabled"
+          ref="record"
+          class="record"
+          :disabled="recordDisabled"
+          @click="startRecord"
+        ></button>
+        <button
+          v-show="!stopRecordDisabled"
+          ref="stopRecord"
+          class="stop"
+          :disabled="stopRecordDisabled"
+          @click="stopRecord"
+        ></button>
+      </div>
       <button @click="upload">Upload</button>
-    </p>
-    <p>
-      <audio ref="recordedAudio"></audio>
-    </p>
+      <p>
+        <audio ref="recordedAudio"></audio>
+      </p>
+    </div>
+    <div v-else>
+      <p>L'enregistrement audio n'est pas disponible</p>
+    </div>
   </div>
 </template>
 
 <script>
+import StopWatch from '../UI/StopWatch';
 export default {
   name: 'AudioRecorder',
+  components: { StopWatch },
   data() {
     return {
       rec: null,
@@ -30,7 +44,13 @@ export default {
       stopRecordDisabled: true,
       stream: null,
       audioBlob: null,
+      disabled: false,
     };
+  },
+  created() {
+    if (!navigator.mediaDevices) {
+      this.disabled = true;
+    }
   },
   methods: {
     async upload() {
@@ -44,13 +64,15 @@ export default {
       }
     },
     handleAudioStream() {
-      navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      navigator.mediaDevices?.getUserMedia({ audio: true }).then((stream) => {
         this.stream = stream;
         this.handlerFunction(stream);
         this.storeData();
       });
     },
     startRecord() {
+      this.$refs.stopwatch.resetTimer();
+      this.$refs.stopwatch.start();
       this.handleAudioStream();
     },
     storeData() {
@@ -60,6 +82,7 @@ export default {
       this.rec.start();
     },
     stopRecord(e) {
+      this.$refs.stopwatch.stop();
       this.recordDisabled = false;
       this.stopRecordDisabled = true;
       this.rec.stop();
@@ -78,17 +101,65 @@ export default {
         }
       };
     },
-    blobToBase64(blob) {
-      const reader = new FileReader();
-      reader.readAsDataURL(blob);
-      return new Promise((resolve) => {
-        reader.onloadend = () => {
-          resolve(reader.result);
-        };
-      });
-    },
   },
 };
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.audio-recorder {
+  text-align: center;
+  color: $background;
+  padding: 24px 24px 40px 24px;
+  background-color: $gray-darkest;
+}
+
+.audio-recorder__btn {
+  display: block;
+  margin: auto;
+  width: 92px;
+  height: 92px;
+  padding: 4px;
+  border: 2px solid rgba($background, 0.4);
+  border-radius: 50%;
+  background-color: transparent;
+
+  button {
+    border: none;
+    background-color: transparent;
+  }
+}
+
+.record {
+  background-color: $background !important;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.stop {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+
+  &:after {
+    content: '';
+    background-color: $background !important;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 34px;
+    height: 34px;
+    border-radius: 4px;
+  }
+}
+
+.stopwatch {
+  font-size: 32px;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+</style>

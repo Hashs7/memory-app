@@ -1,32 +1,34 @@
 <template>
-  <div class="o-page">
-    <h1 class="o-page__title">Passation</h1>
-    <div class="step-container">
-      <div v-show="step === 0" class="step step-1">
-        <p class="">Racontez nous !</p>
-      </div>
-      <div v-show="step === 1" class="step step-2">
-        <img :src="illuSrc" alt="" />
-        <canvas ref="canvas"></canvas>
-        <p class="">Invitez le nouveau propriétaire</p>
-        <ClipboardCopy v-if="url" :value="url">Copier le lien</ClipboardCopy>
-      </div>
+  <div class="o-page o-page--handover o-page__container o-page__flex">
+    <ButtonBack absolute />
+    <h1 class="o-page__title">{{ title[step - 1] }}</h1>
+    <div class="step-container o-page__body">
+      <component
+        :is="`Step${i}`"
+        v-for="i in MAX_STEP"
+        v-show="step === i"
+        :key="i"
+      />
     </div>
-    <button
-      v-if="step !== 0"
-      class="u-button u-button--outline"
-      @click="stepBack"
-    >
-      Retour
-    </button>
-    <button
-      v-if="step !== MAX_STEP"
-      class="u-button u-button--primary"
-      @click="requestHandover"
-    >
-      Suivant
-    </button>
-    <button v-else class="u-button u-button--primary">Terminer</button>
+    <div class="">
+      <button
+        v-if="step !== 1"
+        class="u-button u-button--outline"
+        @click="stepBack"
+      >
+        Retour
+      </button>
+      <button
+        v-if="step !== MAX_STEP"
+        class="u-button u-button--primary"
+        @click="stepNext"
+      >
+        Suivant
+      </button>
+      <button v-else class="u-button u-button--primary" @click="redirect">
+        Terminer
+      </button>
+    </div>
   </div>
 </template>
 
@@ -35,51 +37,79 @@ path: /instrument/:id/passation
 </router>
 
 <script>
-import QRCode from 'qrcode';
-import illuSrc from '@/assets/img/illu_handover.gif';
-import ClipboardCopy from '../../components/layout/ClipboardCopy';
+import Step1 from '../../components/instrument/handover/Step1';
+import Step2 from '../../components/instrument/handover/Step2';
+import Step3 from '../../components/instrument/handover/Step3';
+import ButtonBack from '../../components/UI/ButtonBack';
 
 export default {
-  components: { ClipboardCopy },
+  components: { ButtonBack, Step1, Step2, Step3 },
+  async asyncData({ $api, store, params }) {
+    const instrument = (await $api.getInstrumentById(params.id))?.data;
+    store.commit('instrument/setInstrumentData', instrument);
+  },
   data() {
     return {
-      illuSrc,
-      MAX_STEP: 1,
-      step: 0,
-      token: null,
-      url: null,
+      MAX_STEP: 3,
+      step: 1,
+      title: [
+        'Quand a lieu l’échange ?',
+        'Bon échange !',
+        'Ce n’est qu’un au revoir',
+      ],
     };
   },
   computed: {
     instrumentId() {
       return this.$route.params.id;
     },
+    date() {
+      return this.$store.state.handover.date;
+    },
+  },
+  mounted() {
+    this.$store.commit('handover/setDate', null);
+    this.$store.commit('handover/setSenderToken', null);
   },
   methods: {
+    redirect() {
+      this.$router.push({
+        name: 'instrument',
+      });
+    },
     stepBack() {
       this.step -= 1;
     },
+    stepNext() {
+      if (this.step === 1) {
+        if (!this.date) return;
+        this.requestHandover();
+      }
+      if (this.step === this.MAX_STEP) return;
+      this.step += 1;
+    },
     async requestHandover() {
-      this.step = 1;
       try {
-        const res = await this.$api.handoverInstrument(this.instrumentId);
-        this.token = res.data.token;
-        await this.showQRCode();
+        const res = await this.$api.handoverInstrument(
+          this.instrumentId,
+          this.date
+        );
+        this.$store.commit('handover/setSenderToken', res.data.token);
       } catch (e) {
         // console.error(e);
       }
-    },
-    async showQRCode() {
-      this.url = `${window.location.href}/reception?token=${this.token}`;
-      await QRCode.toCanvas(this.$refs.canvas, this.url, {
-        color: {
-          light: '#0000',
-          dark: '#373737',
-        },
-      });
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style lang="scss">
+.o-page--handover {
+  .u-button {
+    width: 100%;
+  }
+  .u-button + .u-button {
+    margin-top: 8px;
+  }
+}
+</style>

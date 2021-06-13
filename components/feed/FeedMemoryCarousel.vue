@@ -1,6 +1,11 @@
 <template>
   <div class="feed-images-carousel o-page__outside">
-    <vue-glide ref="slider" v-model="active" :options="options">
+    <vue-glide
+      v-if="data.length"
+      ref="slider"
+      v-model="active"
+      :options="options"
+    >
       <vue-glide-slide
         v-for="(memory, i) in data"
         :key="i"
@@ -53,7 +58,7 @@ export default {
       active: 0,
       options: {
         perView: 1,
-        gap: 0,
+        gap: 10,
         rewind: false,
       },
     };
