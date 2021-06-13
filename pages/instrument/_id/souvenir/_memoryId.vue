@@ -13,9 +13,9 @@
             <audio
               ref="globalAudio"
               class="memory__sound-audio"
-              src="/misuc.mp3"
-              autoplay
+              src="/lullaby.mp3"
               loop
+              muted
             />
             <svg class="memory__sound-title" height="14">
               <text x="0" y="10">Un Super Artiste - Une musique du turfu</text>
@@ -26,7 +26,7 @@
           </button>
         </div>
         <div
-          v-if="index === 0 && memory.name"
+          v-if="index === 0 && memory.name && !(contents[0].type !== 'media')"
           ref="intro"
           class="memory__intro"
         >
@@ -54,6 +54,8 @@
             v-else-if="mediaType(c.file) === 'video'"
             :src="c.file.path"
             loop
+            muted
+            playsinline
             @click="toggleVideoMute"
           />
           <span v-else-if="c.type !== 'media'">
@@ -128,7 +130,7 @@ export default {
   watch: {
     globalAudioDiscreet(active) {
       gsap.to(this.$refs.globalAudio, {
-        volume: active ? 0.2 : 1,
+        volume: active ? 0 : 1,
         duration: 1,
       });
     },
@@ -136,7 +138,7 @@ export default {
   mounted() {
     document.body.style.overflow = 'hidden';
 
-    if (this.memory.name) {
+    if (this.memory.name && this.contents[0].type === 'media') {
       gsap.from(this.$refs.intro.children, {
         y: 30,
         alpha: 0,
@@ -187,7 +189,7 @@ export default {
     },
 
     toggleGlobalAudioMute() {
-      if (this.$refs.globalAudio && !this.globalAudioDiscreet) {
+      if (this.$refs.globalAudio) {
         this.$refs.globalAudio.muted = !this.$refs.globalAudio.muted;
         this.globalAudioMuted = this.$refs.globalAudio.muted;
       }
@@ -357,6 +359,7 @@ export default {
     width: 34px;
     height: 2px;
     background: $background;
+    pointer-events: none;
     transform: rotate(45deg);
     transform-origin: center;
     opacity: 0;
