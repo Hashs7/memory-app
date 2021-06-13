@@ -1,16 +1,10 @@
 <template>
   <div class="o-page">
-    <h1 class="o-page__title">Passation</h1>
+    <h1 class="o-page__title">{{ title }}</h1>
     <div class="step-container">
-      <div v-show="step === 0" class="step step-1">
-        <p class="">Racontez nous !</p>
-      </div>
-      <div v-show="step === 1" class="step step-2">
-        <img :src="illuSrc" alt="" />
-        <canvas ref="canvas"></canvas>
-        <p class="">Invitez le nouveau propriétaire</p>
-        <ClipboardCopy v-if="url" :value="url">Copier le lien</ClipboardCopy>
-      </div>
+      <Step1 v-show="step === 0" />
+      <Step2 v-show="step === 1" :token="token" />
+      <Step3 v-show="step === 2" />
     </div>
     <button
       v-if="step !== 0"
@@ -22,7 +16,7 @@
     <button
       v-if="step !== MAX_STEP"
       class="u-button u-button--primary"
-      @click="requestHandover"
+      @click="stepNext"
     >
       Suivant
     </button>
@@ -35,29 +29,48 @@ path: /instrument/:id/passation
 </router>
 
 <script>
-import QRCode from 'qrcode';
-import illuSrc from '@/assets/img/illu_handover.gif';
-import ClipboardCopy from '../../components/layout/ClipboardCopy';
+import Step1 from '../../components/instrument/handover/Step1';
+import Step2 from '../../components/instrument/handover/Step2';
+import Step3 from '../../components/instrument/handover/Step3';
 
 export default {
-  components: { ClipboardCopy },
+  components: { Step1, Step2, Step3 },
   data() {
     return {
-      illuSrc,
-      MAX_STEP: 1,
+      MAX_STEP: 2,
       step: 0,
       token: null,
-      url: null,
     };
   },
   computed: {
     instrumentId() {
       return this.$route.params.id;
     },
+    title() {
+      let txt;
+      switch (this.step) {
+        case 0:
+          txt = 'Quand a lieu l’échange ?';
+          break;
+        case 1:
+          txt = 'Bon échange !';
+          break;
+        case 2:
+          txt = 'Ce n’est qu’un au revoir';
+          break;
+      }
+      return txt;
+    },
   },
   methods: {
     stepBack() {
       this.step -= 1;
+    },
+    stepNext() {
+      this.step += 1;
+      if (this.step === 1) {
+        this.requestHandover();
+      }
     },
     async requestHandover() {
       this.step = 1;
@@ -68,15 +81,6 @@ export default {
       } catch (e) {
         // console.error(e);
       }
-    },
-    async showQRCode() {
-      this.url = `${window.location.href}/reception?token=${this.token}`;
-      await QRCode.toCanvas(this.$refs.canvas, this.url, {
-        color: {
-          light: '#0000',
-          dark: '#373737',
-        },
-      });
     },
   },
 };
