@@ -41,6 +41,7 @@
           ref="cards"
           :class="[c.type, mediaType(c.file), getClass(i), c.component]"
           class="memory--content"
+          :active="i === index"
           @swipe="next"
         >
           <img
@@ -61,14 +62,10 @@
         </MemoryCard>
       </div>
       <transition name="fade">
-        <div v-show="index > 0" class="memory__controls">
-          <span
-            v-for="(c, i) in contents"
-            :key="i"
-            class="memory__controls-item"
-            :class="{ 'memory__controls-item--current': i === index }"
-            @click="select(i)"
-          ></span>
+        <div v-if="index > 0" class="memory__controls">
+          <button class="memory__previous u-button--action" @click="previous">
+            <IconChevron />
+          </button>
         </div>
       </transition>
     </div>
@@ -83,11 +80,12 @@
 import MemoryCard from '@/components/memories/MemoryCard';
 import IconCross from '@/assets/svg/ic_cross.svg?inline';
 import IconSoundButton from '@/assets/svg/ic_sound-btn.svg?inline';
+import IconChevron from '@/assets/svg/ic_chevron.svg?inline';
 import dayjs from 'dayjs';
 import gsap from 'gsap';
 
 export default {
-  components: { MemoryCard, IconCross, IconSoundButton },
+  components: { MemoryCard, IconCross, IconSoundButton, IconChevron },
   props: {
     instrument: {
       type: Object,
@@ -388,22 +386,18 @@ export default {
   bottom: 60px;
   display: flex;
   justify-content: center;
+  align-items: center;
   z-index: 30;
   width: 100%;
 }
 
-.memory__controls-item {
-  width: 18px;
-  height: 4px;
-  border-radius: 4px;
-  background-color: rgba($background, 0.5);
-  border: none;
-  margin: 0 2px;
-  transition: width 0.3s ease;
+.memory__previous {
+  @include blurred-background;
 
-  &--current {
-    width: 36px;
-    background-color: rgba($background, 1);
+  svg {
+    fill: $background;
+    width: 7px;
+    height: 12px;
   }
 }
 
