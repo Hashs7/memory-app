@@ -58,9 +58,7 @@
             playsinline
             @click="toggleVideoMute"
           />
-          <span v-else-if="c.type !== 'media'">
-            <p v-html="c.content"></p>
-          </span>
+          <MemoryTextCard v-else-if="c.type !== 'media'" :data="c" />
         </MemoryCard>
       </div>
       <transition name="fade">
@@ -85,9 +83,16 @@ import IconSoundButton from '@/assets/svg/ic_sound-btn.svg?inline';
 import IconChevron from '@/assets/svg/ic_chevron.svg?inline';
 import dayjs from 'dayjs';
 import gsap from 'gsap';
+import MemoryTextCard from '@/components/memories/cards/MemoryTextCard';
 
 export default {
-  components: { MemoryCard, IconCross, IconSoundButton, IconChevron },
+  components: {
+    MemoryTextCard,
+    MemoryCard,
+    IconCross,
+    IconSoundButton,
+    IconChevron,
+  },
   props: {
     instrument: {
       type: Object,
