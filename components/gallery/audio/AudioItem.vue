@@ -59,7 +59,7 @@ export default {
   },
   computed: {
     selected() {
-      return !!this.$store.state.gallery.selected.find(
+      return !!this.$store.state.gallery.selected.audio.find(
         (el) => el === this.audio._id
       );
     },
@@ -77,10 +77,13 @@ export default {
     },
     selectMedia() {
       if (this.selected) {
-        this.$store.commit('gallery/removeSelected', this.audio._id);
+        this.$store.commit('gallery/removeSelected', {
+          type: 'audio',
+          id: this.audio._id,
+        });
         return;
       }
-      this.$store.commit('gallery/addSelected', this.audio._id);
+      this.$store.commit('gallery/addSelectedAudio', this.audio._id);
     },
   },
 };

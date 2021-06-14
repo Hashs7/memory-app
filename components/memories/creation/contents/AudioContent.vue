@@ -2,28 +2,26 @@
   <client-only>
     <div class="audio-content memory-content">
       <div class="memory-content__inner">
-        <AudioGallery v-if="!value.file" />
-        <span v-else>{{ value.file }}</span>
-        <button type="button" @click="validate">Valider</button>
+        <AudioPlayer visualizer :media="value.file" />
+        <!--        <span v-else>{{ value.file }}</span>-->
       </div>
     </div>
   </client-only>
 </template>
 
 <script>
-import AudioGallery from '../../../gallery/audio/AudioGallery';
+import AudioPlayer from '../../../gallery/audio/AudioPlayer';
 
 export default {
-  name: 'AudioCreation',
-  components: { AudioGallery },
+  name: 'AudioContent',
+  components: {
+    AudioPlayer,
+  },
   props: {
     value: {
       type: Object,
       required: true,
     },
-  },
-  mounted() {
-    console.log(this.value);
   },
   methods: {
     validate() {
@@ -35,5 +33,6 @@ export default {
 
 <style lang="scss">
 .audio-content {
+  padding: 16px;
 }
 </style>
