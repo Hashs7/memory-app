@@ -44,12 +44,7 @@
           :active="i === index"
           @swipe="next"
         >
-          <img
-            v-if="mediaType(c.file) === 'image'"
-            :src="c.file.path"
-            :alt="memory.name"
-            draggable="false"
-          />
+          <MemoryImageCard v-if="mediaType(c.file) === 'image'" :data="c" />
           <MemoryVideoCard
             v-else-if="mediaType(c.file) === 'video'"
             :data="c"
@@ -84,9 +79,11 @@ import dayjs from 'dayjs';
 import gsap from 'gsap';
 import MemoryTextCard from '@/components/memories/cards/MemoryTextCard';
 import MemoryVideoCard from '@/components/memories/cards/MemoryVideoCard';
+import MemoryImageCard from '../../../../components/memories/cards/MemoryImageCard';
 
 export default {
   components: {
+    MemoryImageCard,
     MemoryVideoCard,
     MemoryTextCard,
     MemoryCard,
@@ -227,12 +224,6 @@ export default {
         this.$refs.globalAudio.muted = !this.$refs.globalAudio.muted;
         this.globalAudioMuted = this.$refs.globalAudio.muted;
       }
-    },
-
-    select(index) {
-      this.handleMediaBeforeIndexChange();
-      this.index = index;
-      this.handleMediaAfterIndexChange();
     },
 
     getClass(contentIndex) {
