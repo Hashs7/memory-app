@@ -18,7 +18,7 @@
               muted
             />
             <svg class="memory__sound-title" height="14">
-              <text x="0" y="10">Un Super Artiste - Une musique du turfu</text>
+              <text x="0" y="10">"Lullaby" - Matthew May</text>
             </svg>
           </div>
           <button class="memory__close u-button" @click="closeMemory">
@@ -50,13 +50,10 @@
             :alt="memory.name"
             draggable="false"
           />
-          <video
+          <MemoryVideoCard
             v-else-if="mediaType(c.file) === 'video'"
-            :src="c.file.path"
-            loop
-            muted
-            playsinline
-            @click="toggleVideoMute"
+            :data="c"
+            @toggle-mute="toggleVideoMute"
           />
           <MemoryTextCard v-else-if="c.type !== 'media'" :data="c" />
         </MemoryCard>
@@ -84,9 +81,11 @@ import IconChevron from '@/assets/svg/ic_chevron.svg?inline';
 import dayjs from 'dayjs';
 import gsap from 'gsap';
 import MemoryTextCard from '@/components/memories/cards/MemoryTextCard';
+import MemoryVideoCard from '@/components/memories/cards/MemoryVideoCard';
 
 export default {
   components: {
+    MemoryVideoCard,
     MemoryTextCard,
     MemoryCard,
     IconCross,
@@ -106,6 +105,7 @@ export default {
   data() {
     return {
       index: 0,
+      videosMuted: true,
       globalAudio: null,
       globalAudioMuted: false,
       globalAudioDiscreet: false,
@@ -152,6 +152,15 @@ export default {
         stagger: 0.2,
       });
     }
+
+    if (this.$refs.globalAudio) {
+      this.$refs.globalAudio.muted = false;
+      this.$refs.globalAudio.play();
+      gsap.from(this.$refs.globalAudio, {
+        volume: 0,
+        duration: 0.5,
+      });
+    }
   },
   beforeDestroy() {
     this.removeBodyStyle();
@@ -163,7 +172,10 @@ export default {
 
     previous() {
       if (this.index === 0) return;
+
+      this.handleMediaBeforeIndexChange();
       this.index--;
+      this.handleMediaAfterIndexChange();
     },
 
     next() {
@@ -174,9 +186,7 @@ export default {
       }
 
       this.handleMediaBeforeIndexChange();
-
       this.index++;
-
       this.handleMediaAfterIndexChange();
     },
 
@@ -190,7 +200,24 @@ export default {
     },
 
     toggleVideoMute(e) {
-      e.target.muted = !e.target.muted;
+      // Bypass the iOS muted play restriction for next videos
+      if (this.videosMuted) {
+        this.$refs.cards.forEach((card, index) => {
+          if (this.mediaType(this.contents[index].file) === 'video') {
+            const video = card.$el.querySelector('video');
+            if (video !== e.target) {
+              video.play().then(() => {
+                video.pause();
+                video.muted = false;
+              });
+            }
+          }
+        });
+      }
+
+      this.globalAudioDiscreet = e.target.muted;
+
+      this.videosMuted = false;
     },
 
     toggleGlobalAudioMute() {
@@ -239,8 +266,9 @@ export default {
     handleMediaAfterIndexChange() {
       // Start video when appearing
       if (this.mediaType(this.contents[this.index].file) === 'video') {
-        this.globalAudioDiscreet = true;
-        this.$refs.cards[this.index].$el.querySelector('video')?.play();
+        const video = this.$refs.cards[this.index].$el.querySelector('video');
+        if (!video.muted) this.globalAudioDiscreet = true;
+        video.play();
       }
     },
   },
