@@ -50,6 +50,12 @@
             :data="c"
             @toggle-mute="toggleVideoMute"
           />
+          <MemoryAudioCard
+            v-else-if="c.type === 'audio'"
+            :data="c"
+            @play="globalAudioDiscreet = true"
+            @pause="globalAudioDiscreet = false"
+          />
           <MemoryTextCard v-else-if="c.type !== 'media'" :data="c" />
         </MemoryCard>
       </div>
@@ -79,10 +85,12 @@ import dayjs from 'dayjs';
 import gsap from 'gsap';
 import MemoryTextCard from '@/components/memories/cards/MemoryTextCard';
 import MemoryVideoCard from '@/components/memories/cards/MemoryVideoCard';
-import MemoryImageCard from '../../../../components/memories/cards/MemoryImageCard';
+import MemoryImageCard from '@/components/memories/cards/MemoryImageCard';
+import MemoryAudioCard from '@/components/memories/cards/MemoryAudioCard';
 
 export default {
   components: {
+    MemoryAudioCard,
     MemoryImageCard,
     MemoryVideoCard,
     MemoryTextCard,
@@ -253,6 +261,12 @@ export default {
       if (this.mediaType(this.contents[this.index].file) === 'video') {
         this.globalAudioDiscreet = false;
         this.$refs.cards[this.index].$el.querySelector('video')?.pause();
+      }
+
+      // Stop audio before next card
+      if (this.mediaType(this.contents[this.index].file) === 'audio') {
+        this.globalAudioDiscreet = false;
+        this.$refs.cards[this.index].$el.querySelector('audio')?.pause();
       }
     },
 
