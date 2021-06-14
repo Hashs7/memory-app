@@ -10,6 +10,10 @@ export const getters = {
     return state.medias.find((m) => m._id === state.preview);
   },
 
+  getSelected(state) {
+    return state.selected;
+  },
+
   getLastSelected(state) {
     if (!state.selected[0]) return;
     return state.medias.find((m) => m._id === state.selected[0]);

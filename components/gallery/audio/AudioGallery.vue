@@ -1,16 +1,20 @@
 <template>
   <div class="audio-gallery">
-    <div class="audio-container">
-      <AudioItem
-        v-for="(aud, i) in audios"
-        :key="i"
-        :audio="aud"
-        class="audio-item"
-        :show-player="current === aud._id"
-        @selected="audioSelected(aud._id)"
-      />
+    <div class="audio-view">
+      <div class="audio-container">
+        <AudioItem
+          v-for="(aud, i) in audios"
+          :key="i"
+          :audio="aud"
+          class="audio-item"
+          :show-player="current === aud._id"
+          :deletable="deleteFiles"
+          @selected="audioSelected(aud._id)"
+        />
+      </div>
     </div>
-    <div class="o-page__outside audio-gallery__recorder">
+
+    <div v-if="recorder" class="o-page__outside audio-gallery__recorder">
       <AudioRecorder />
     </div>
   </div>
@@ -25,6 +29,16 @@ export default {
   components: {
     AudioItem,
     AudioRecorder,
+  },
+  props: {
+    recorder: {
+      type: Boolean,
+      default: false,
+    },
+    deleteFiles: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -50,7 +64,6 @@ export default {
 }
 
 .audio-container {
-  overflow: scroll;
 }
 
 .audio-gallery {
@@ -60,14 +73,19 @@ export default {
 }
 
 .audio-gallery__recorder {
-  position: fixed;
-  bottom: 72px;
-  left: 0;
-  right: 0;
+  //position: fixed;
+  //bottom: 72px;
+  //left: 0;
+  //right: 0;
+}
+
+.audio-view {
+  max-height: 300px;
+  overflow: scroll;
 }
 
 .o-page--gallery {
-  padding-bottom: 200px !important;
+  //padding-bottom: 220px !important;
   /*.audio-gallery__recorder {
     position: fixed;
     left: 0;

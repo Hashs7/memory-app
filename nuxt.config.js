@@ -71,7 +71,6 @@ export default {
     { src: '~/plugins/vuex-persist.js', mode: 'client' },
     { src: '~/plugins/colors.js', mode: 'client' },
     { src: '~/plugins/hammer.js', mode: 'client' },
-    { src: '~/plugins/audio-recorder.js', mode: 'client' },
     { src: '~/plugins/wysiwyg.js', mode: 'client' },
     { src: '~/plugins/nuxt-client-init.js', mode: 'client' },
     { src: '~/plugins/vue-select.js' },
