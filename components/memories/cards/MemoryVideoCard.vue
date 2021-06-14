@@ -9,9 +9,11 @@
       playsinline
       @click="toggleMuted"
     />
-    <span v-show="muted" class="memory-video-card__muted">
-      <IconSoundMuted />
-    </span>
+    <transition name="zoom-in">
+      <span v-show="muted" class="memory-video-card__muted">
+        <IconSoundMuted />
+      </span>
+    </transition>
   </div>
 </template>
 
@@ -48,6 +50,7 @@ export default {
 .memory-video-card {
   position: relative;
   height: 100%;
+  width: 100%;
 }
 
 .memory-video-card__video {

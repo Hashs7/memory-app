@@ -1,6 +1,6 @@
 <template>
   <div class="audio-item" @click="$emit('selected')">
-    <AudioPlayer v-if="showPlayer" :media="audio" />
+    <AudioPlayer v-if="showPlayer" progress-bar :media="audio" />
     <div class="audio-item__infos">
       <div class="left">
         <p>{{ audio.name }}</p>

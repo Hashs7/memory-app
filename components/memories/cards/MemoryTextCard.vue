@@ -20,6 +20,9 @@ export default {
 
 <style lang="scss" scoped>
 .memory-text-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 100%;
   max-height: 100%;
   overflow: hidden;
@@ -29,7 +32,9 @@ export default {
 
 .memory-text-card__pattern {
   width: 100%;
-  height: 100%;
+  height: auto;
+  min-height: 30%;
+  max-height: 100%;
   overflow: hidden;
   background-image: repeating-linear-gradient(
     transparent 0px,
@@ -41,6 +46,7 @@ export default {
 
 .memory-text-card__text {
   font-size: 16px;
+  font-weight: 400;
   line-height: 41px;
 }
 </style>
