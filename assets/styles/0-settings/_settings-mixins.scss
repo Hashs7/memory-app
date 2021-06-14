@@ -31,6 +31,11 @@
   }
 }
 
+@mixin blurred-background {
+  background: rgba($background-darker, 0.4);
+  backdrop-filter: blur(4px);
+}
+
 @function strip-unit($value) {
   @return $value / ($value * 0 + 1);
 }

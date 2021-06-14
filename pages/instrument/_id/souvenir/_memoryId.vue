@@ -13,12 +13,12 @@
             <audio
               ref="globalAudio"
               class="memory__sound-audio"
-              src="/misuc.mp3"
-              autoplay
+              src="/lullaby.mp3"
               loop
+              muted
             />
             <svg class="memory__sound-title" height="14">
-              <text x="0" y="10">Un Super Artiste - Une musique du turfu</text>
+              <text x="0" y="10">"Lullaby" - Matthew May</text>
             </svg>
           </div>
           <button class="memory__close u-button" @click="closeMemory">
@@ -26,7 +26,7 @@
           </button>
         </div>
         <div
-          v-if="index === 0 && memory.name"
+          v-if="index === 0 && memory.name && !(contents[0].type !== 'media')"
           ref="intro"
           class="memory__intro"
         >
@@ -41,6 +41,7 @@
           ref="cards"
           :class="[c.type, mediaType(c.file), getClass(i), c.component]"
           class="memory--content"
+          :active="i === index"
           @swipe="next"
         >
           <img
@@ -49,26 +50,19 @@
             :alt="memory.name"
             draggable="false"
           />
-          <video
+          <MemoryVideoCard
             v-else-if="mediaType(c.file) === 'video'"
-            :src="c.file.path"
-            loop
-            @click="toggleVideoMute"
+            :data="c"
+            @toggle-mute="toggleVideoMute"
           />
-          <span v-else-if="c.type !== 'media'">
-            <p v-html="c.content"></p>
-          </span>
+          <MemoryTextCard v-else-if="c.type !== 'media'" :data="c" />
         </MemoryCard>
       </div>
       <transition name="fade">
-        <div v-show="index > 0" class="memory__controls">
-          <span
-            v-for="(c, i) in contents"
-            :key="i"
-            class="memory__controls-item"
-            :class="{ 'memory__controls-item--current': i === index }"
-            @click="select(i)"
-          ></span>
+        <div v-if="index > 0" class="memory__controls">
+          <button class="memory__previous u-button--action" @click="previous">
+            <IconChevron />
+          </button>
         </div>
       </transition>
     </div>
@@ -83,11 +77,21 @@
 import MemoryCard from '@/components/memories/MemoryCard';
 import IconCross from '@/assets/svg/ic_cross.svg?inline';
 import IconSoundButton from '@/assets/svg/ic_sound-btn.svg?inline';
+import IconChevron from '@/assets/svg/ic_chevron.svg?inline';
 import dayjs from 'dayjs';
 import gsap from 'gsap';
+import MemoryTextCard from '@/components/memories/cards/MemoryTextCard';
+import MemoryVideoCard from '@/components/memories/cards/MemoryVideoCard';
 
 export default {
-  components: { MemoryCard, IconCross, IconSoundButton },
+  components: {
+    MemoryVideoCard,
+    MemoryTextCard,
+    MemoryCard,
+    IconCross,
+    IconSoundButton,
+    IconChevron,
+  },
   props: {
     instrument: {
       type: Object,
@@ -101,6 +105,7 @@ export default {
   data() {
     return {
       index: 0,
+      videosMuted: true,
       globalAudio: null,
       globalAudioMuted: false,
       globalAudioDiscreet: false,
@@ -130,7 +135,7 @@ export default {
   watch: {
     globalAudioDiscreet(active) {
       gsap.to(this.$refs.globalAudio, {
-        volume: active ? 0.2 : 1,
+        volume: active ? 0 : 1,
         duration: 1,
       });
     },
@@ -138,13 +143,22 @@ export default {
   mounted() {
     document.body.style.overflow = 'hidden';
 
-    if (this.memory.name) {
+    if (this.memory.name && this.contents[0].type === 'media') {
       gsap.from(this.$refs.intro.children, {
         y: 30,
         alpha: 0,
         duration: 1.5,
         ease: 'power3.out',
         stagger: 0.2,
+      });
+    }
+
+    if (this.$refs.globalAudio) {
+      this.$refs.globalAudio.muted = false;
+      this.$refs.globalAudio.play();
+      gsap.from(this.$refs.globalAudio, {
+        volume: 0,
+        duration: 0.5,
       });
     }
   },
@@ -158,7 +172,10 @@ export default {
 
     previous() {
       if (this.index === 0) return;
+
+      this.handleMediaBeforeIndexChange();
       this.index--;
+      this.handleMediaAfterIndexChange();
     },
 
     next() {
@@ -169,9 +186,7 @@ export default {
       }
 
       this.handleMediaBeforeIndexChange();
-
       this.index++;
-
       this.handleMediaAfterIndexChange();
     },
 
@@ -185,11 +200,28 @@ export default {
     },
 
     toggleVideoMute(e) {
-      e.target.muted = !e.target.muted;
+      // Bypass the iOS muted play restriction for next videos
+      if (this.videosMuted) {
+        this.$refs.cards.forEach((card, index) => {
+          if (this.mediaType(this.contents[index].file) === 'video') {
+            const video = card.$el.querySelector('video');
+            if (video !== e.target) {
+              video.play().then(() => {
+                video.pause();
+                video.muted = false;
+              });
+            }
+          }
+        });
+      }
+
+      this.globalAudioDiscreet = e.target.muted;
+
+      this.videosMuted = false;
     },
 
     toggleGlobalAudioMute() {
-      if (this.$refs.globalAudio && !this.globalAudioDiscreet) {
+      if (this.$refs.globalAudio) {
         this.$refs.globalAudio.muted = !this.$refs.globalAudio.muted;
         this.globalAudioMuted = this.$refs.globalAudio.muted;
       }
@@ -234,8 +266,9 @@ export default {
     handleMediaAfterIndexChange() {
       // Start video when appearing
       if (this.mediaType(this.contents[this.index].file) === 'video') {
-        this.globalAudioDiscreet = true;
-        this.$refs.cards[this.index].$el.querySelector('video')?.play();
+        const video = this.$refs.cards[this.index].$el.querySelector('video');
+        if (!video.muted) this.globalAudioDiscreet = true;
+        video.play();
       }
     },
   },
@@ -359,6 +392,7 @@ export default {
     width: 34px;
     height: 2px;
     background: $background;
+    pointer-events: none;
     transform: rotate(45deg);
     transform-origin: center;
     opacity: 0;
@@ -388,22 +422,18 @@ export default {
   bottom: 60px;
   display: flex;
   justify-content: center;
+  align-items: center;
   z-index: 30;
   width: 100%;
 }
 
-.memory__controls-item {
-  width: 18px;
-  height: 4px;
-  border-radius: 4px;
-  background-color: rgba($background, 0.5);
-  border: none;
-  margin: 0 2px;
-  transition: width 0.3s ease;
+.memory__previous {
+  @include blurred-background;
 
-  &--current {
-    width: 36px;
-    background-color: rgba($background, 1);
+  svg {
+    fill: $background;
+    width: 7px;
+    height: 12px;
   }
 }
 
