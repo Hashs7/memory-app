@@ -79,10 +79,11 @@ export default {
       return this.data.images[0];
     },
     instrumentName() {
+      let name = '';
       if (this.data.name) {
-        return this.data.name;
+        name = this.data.name;
       }
-      return `${this.data.brand} ${this.data.specification}`;
+      return `${name} ${this.data.brand}`;
     },
   },
   methods: {
