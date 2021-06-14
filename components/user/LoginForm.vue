@@ -54,9 +54,9 @@
         >
           Me connecter
         </button>
-        <NuxtLink to="/inscription" class="u-button u-button--outline"
-          >S'inscrire</NuxtLink
-        >
+        <NuxtLink to="/inscription" class="u-button u-button--outline">
+          S'inscrire
+        </NuxtLink>
       </div>
     </form>
   </ValidationObserver>

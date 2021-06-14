@@ -114,6 +114,13 @@ export default {
       this.$store.commit('handover/setToken', this.token);
       this.$store.commit('handover/setInstrumentId', this.instrumentId);
     },
+
+    notifyError(message) {
+      this.$buefy.toast.open({
+        message,
+        type: 'is-danger',
+      });
+    },
   },
 };
 </script>

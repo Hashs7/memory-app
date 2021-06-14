@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import StopWatch from '../UI/StopWatch';
+import StopWatch from '../../UI/StopWatch';
 export default {
   name: 'AudioRecorder',
   components: { StopWatch },
@@ -55,7 +55,7 @@ export default {
   methods: {
     async upload() {
       const formData = new FormData();
-      formData.append('file', this.audioBlob, 'rot.mp3');
+      formData.append('file', this.audioBlob, 'Sans titre.mp3');
       try {
         const { data } = await this.$api.uploadFile(formData);
         this.$store.commit('gallery/addMedia', data.response);

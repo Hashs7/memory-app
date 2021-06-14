@@ -36,9 +36,7 @@ export default {
     },
   },
   methods: {
-    resetPassword() {
-      // TODO remove password field and send request to api
-    },
+    resetPassword() {},
   },
 };
 </script>

@@ -33,6 +33,9 @@ export default {
       showSummary: false,
     };
   },
+  mounted() {
+    this.$store.commit('gallery/resetSelected');
+  },
   computed: {
     ...mapState('memory', ['data']),
     instrumentId() {

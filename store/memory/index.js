@@ -10,9 +10,13 @@ export const getters = {
 };
 
 export const mutations = {
-  addContent(state, type) {
+  addContent(state, { type, file }) {
     const id = Date.now();
-    const content = { ...getContent(type), id };
+    const content = {
+      ...getContent(type),
+      id,
+      ...(file && { file }),
+    };
     state.data.contents.push(content);
   },
 
@@ -81,5 +85,15 @@ export const actions = {
       });
     }
     commit('gallery/removeSelected', selected._id, { root: true });
+  },
+
+  addSelectedAudios({ rootGetters, commit }) {
+    rootGetters['gallery/getSelected'].forEach((file) => {
+      commit('addContent', {
+        type: 'audio',
+        file,
+      });
+    });
+    commit('gallery/resetSelected', null, { root: true });
   },
 };
