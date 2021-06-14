@@ -3,6 +3,10 @@ import { getContent, emptyMemory } from '@/const/memory';
 // Add memory store
 export const state = () => ({
   data: { ...emptyMemory },
+  modal: {
+    show: false,
+    type: null,
+  },
 });
 
 export const getters = {
@@ -10,9 +14,14 @@ export const getters = {
 };
 
 export const mutations = {
-  addContent(state, type) {
+  addContent(state, { type, file }) {
+    console.log('type', type);
     const id = Date.now();
-    const content = { ...getContent(type), id };
+    const content = {
+      ...getContent(type),
+      id,
+      ...(file && { file }),
+    };
     state.data.contents.push(content);
   },
 
@@ -59,6 +68,20 @@ export const mutations = {
     state.data.contents.splice(index, 1);
   },
 
+  /**
+   * @param state
+   * @param type: ['media', 'audio']
+   */
+  showModal(state, type) {
+    state.modal.show = true;
+    state.modal.type = type;
+  },
+
+  closeModal(state) {
+    state.modal.show = false;
+    state.modal.component = null;
+  },
+
   selectTheme(state, slug) {
     state.themes.forEach((t) => (t.selected = false));
     const theme = state.themes.find((t) => t.slug === slug);
@@ -80,6 +103,32 @@ export const actions = {
         file: selected,
       });
     }
-    commit('gallery/removeSelected', selected._id, { root: true });
+    commit(
+      'gallery/removeSelected',
+      { id: selected._id, type: 'media' },
+      { root: true }
+    );
+  },
+
+  addSelectedAudios({ rootGetters, commit }) {
+    rootGetters['gallery/getSelected'].forEach((file) => {
+      commit('addContent', {
+        type: 'audio',
+        file,
+      });
+    });
+    commit('gallery/resetSelected', null, { root: true });
+  },
+
+  addContent({ commit, state, rootState, rootGetters }) {
+    console.log(rootGetters['gallery/getSelected'](state.modal.type));
+    // rootGetters[('gallery/getSelected', state.modal.type)]
+    rootGetters['gallery/getSelected'](state.modal.type).forEach((file) => {
+      commit('addContent', {
+        type: state.modal.type,
+        file,
+      });
+    });
+    commit('closeModal');
   },
 };

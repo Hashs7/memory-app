@@ -7,10 +7,18 @@
         <p v-if="audio.date" class="audio-item__date">{{ date(audio.date) }}</p>
       </div>
 
-      <button v-if="showPlayer" class="btn-delete" @click="deleteMedia">
+      <button v-if="deletable" class="btn-delete" @click="deleteMedia">
         <IconTrash />
       </button>
     </div>
+    <button
+      :class="{ selected }"
+      class="btn-select"
+      type="button"
+      @click.stop="selectMedia"
+    >
+      <span class="selected-dot"></span>
+    </button>
   </div>
 </template>
 
@@ -30,6 +38,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    deletable: {
+      type: Boolean,
+      default: false,
+    },
     audio: {
       type: Object,
       required: true,
@@ -45,6 +57,13 @@ export default {
       },
     },
   },
+  computed: {
+    selected() {
+      return !!this.$store.state.gallery.selected.audio.find(
+        (el) => el === this.audio._id
+      );
+    },
+  },
   methods: {
     date(d) {
       return dayjs(d).format('DD MMMM YYYY');
@@ -55,6 +74,16 @@ export default {
       } catch (e) {
         console.log(e);
       }
+    },
+    selectMedia() {
+      if (this.selected) {
+        this.$store.commit('gallery/removeSelected', {
+          type: 'audio',
+          id: this.audio._id,
+        });
+        return;
+      }
+      this.$store.commit('gallery/addSelectedAudio', this.audio._id);
     },
   },
 };
@@ -72,6 +101,29 @@ export default {
   .btn-delete {
     background-color: transparent;
     border: none;
+  }
+}
+
+.btn-select {
+  position: absolute;
+  bottom: 30px;
+  right: 20px;
+  width: 26px;
+  height: 26px;
+  border: 1px solid $gray-darkest;
+  background-color: transparent;
+  border-radius: 50%;
+  padding: 2px;
+
+  .selected-dot {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+  &.selected .selected-dot {
+    background-color: $gray-darkest;
   }
 }
 

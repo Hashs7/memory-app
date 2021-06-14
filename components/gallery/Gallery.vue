@@ -62,7 +62,7 @@ export default {
         this.$store.commit('gallery/setPreview', fileId);
         return;
       }
-      this.$store.commit('gallery/addSelected', fileId);
+      this.$store.commit('gallery/addSelectedMedia', fileId);
       this.$emit('selected');
     },
 
