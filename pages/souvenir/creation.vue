@@ -2,7 +2,7 @@
   <ContentForm
     v-if="!showSummary"
     @next="showSummary = true"
-    @back="$router.go('instrument')"
+    @back="$router.back()"
   />
   <Summary v-else @back="showSummary = false" @submit="submit" />
 </template>
@@ -33,11 +33,11 @@ export default {
       showSummary: false,
     };
   },
+  mounted() {
+    this.$store.commit('gallery/resetSelected');
+  },
   computed: {
     ...mapState('memory', ['data']),
-    selectedTheme() {
-      return this.themes.find((el) => el.selected)?.slug;
-    },
     instrumentId() {
       return this.$route.params.id;
     },

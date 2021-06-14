@@ -35,7 +35,7 @@ export default {
   components: { IconAudio, IconMedia },
   methods: {
     addContent(type) {
-      this.$store.commit('memory/addContent', type);
+      this.$store.commit('memory/addContent', { type });
     },
   },
 };

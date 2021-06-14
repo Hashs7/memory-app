@@ -44,27 +44,30 @@
           :active="i === index"
           @swipe="next"
         >
-          <img
-            v-if="mediaType(c.file) === 'image'"
-            :src="c.file.path"
-            :alt="memory.name"
-            draggable="false"
-          />
+          <MemoryImageCard v-if="mediaType(c.file) === 'image'" :data="c" />
           <MemoryVideoCard
             v-else-if="mediaType(c.file) === 'video'"
             :data="c"
             @toggle-mute="toggleVideoMute"
           />
+          <MemoryAudioCard
+            v-else-if="c.type === 'audio'"
+            :data="c"
+            @play="globalAudioDiscreet = true"
+            @pause="globalAudioDiscreet = false"
+          />
           <MemoryTextCard v-else-if="c.type !== 'media'" :data="c" />
         </MemoryCard>
       </div>
-      <transition name="fade">
-        <div v-if="index > 0" class="memory__controls">
-          <button class="memory__previous u-button--action" @click="previous">
-            <IconChevron />
-          </button>
-        </div>
-      </transition>
+      <div class="memory__footer">
+        <transition name="fade">
+          <div v-if="index > 0" class="memory__controls">
+            <button class="memory__previous u-button--action" @click="previous">
+              <IconChevron />
+            </button>
+          </div>
+        </transition>
+      </div>
     </div>
   </div>
 </template>
@@ -82,9 +85,13 @@ import dayjs from 'dayjs';
 import gsap from 'gsap';
 import MemoryTextCard from '@/components/memories/cards/MemoryTextCard';
 import MemoryVideoCard from '@/components/memories/cards/MemoryVideoCard';
+import MemoryImageCard from '@/components/memories/cards/MemoryImageCard';
+import MemoryAudioCard from '@/components/memories/cards/MemoryAudioCard';
 
 export default {
   components: {
+    MemoryAudioCard,
+    MemoryImageCard,
     MemoryVideoCard,
     MemoryTextCard,
     MemoryCard,
@@ -227,12 +234,6 @@ export default {
       }
     },
 
-    select(index) {
-      this.handleMediaBeforeIndexChange();
-      this.index = index;
-      this.handleMediaAfterIndexChange();
-    },
-
     getClass(contentIndex) {
       let setClass = '';
       switch (contentIndex) {
@@ -260,6 +261,12 @@ export default {
       if (this.mediaType(this.contents[this.index].file) === 'video') {
         this.globalAudioDiscreet = false;
         this.$refs.cards[this.index].$el.querySelector('video')?.pause();
+      }
+
+      // Stop audio before next card
+      if (this.mediaType(this.contents[this.index].file) === 'audio') {
+        this.globalAudioDiscreet = false;
+        this.$refs.cards[this.index].$el.querySelector('audio')?.pause();
       }
     },
 
@@ -305,17 +312,20 @@ export default {
   top: 0;
   left: 0;
   right: 0;
+  min-height: 30%;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 30px 24px 0 24px;
   z-index: 30;
-  background-image: linear-gradient(rgba(black, 0.7), rgba(black, 0));
+  pointer-events: none;
+  background-image: linear-gradient(rgba(black, 0.15), rgba(black, 0));
 }
 
 .memory__actions {
   display: flex;
   align-items: center;
+  pointer-events: auto;
 }
 
 .memory__close {
@@ -415,16 +425,26 @@ export default {
   flex-grow: 1;
 }
 
-.memory__controls {
+.memory__footer {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 60px;
+  bottom: 0;
+  display: flex;
+  align-items: flex-end;
+  min-height: 30%;
+  z-index: 30;
+  pointer-events: none;
+  background-image: linear-gradient(rgba(black, 0), rgba(black, 0.15));
+}
+
+.memory__controls {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 30;
   width: 100%;
+  margin-bottom: 50px;
+  pointer-events: auto;
 }
 
 .memory__previous {
@@ -434,12 +454,6 @@ export default {
     fill: $background;
     width: 7px;
     height: 12px;
-  }
-}
-
-// Templates
-.o-page--memory {
-  &.sardines {
   }
 }
 

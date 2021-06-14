@@ -3,40 +3,52 @@
     <div v-if="visualizer" class="visualizer">
       <canvas id="canvas" class="audio-visualizer"></canvas>
     </div>
-    <audio id="audio-element" ref="audio" :src="media.path" controls>
+    <audio id="audio-element" ref="audio" :src="media.path" muted controls>
       Sorry, your browser doesn't support embedded videos.
     </audio>
-    <div class="player__top">
-      <div class="player-controls">
-        <div class="player-controls__item -xl js-play" @click="play">
-          <p class="icon">
-            <span v-if="isTimerPlaying">pause</span>
-            <span v-else>play</span>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div ref="progress" class="progress-element">
-      <p class="progress__top">
-        <span class="progress__time">{{ currentTime }}</span>
-        <span> / </span>
-        <span class="progress__duration">{{ duration }}</span>
-      </p>
+    <div v-if="progressBar" ref="progress" class="progress-element">
       <div class="progress__bar" @click="clickProgress">
         <div class="progress__current" :style="{ width: barWidth }"></div>
       </div>
+      <p class="progress__top">
+        <span class="progress__time">{{ currentTime }}</span>
+        <span class="progress__duration">{{ duration }}</span>
+      </p>
     </div>
+    <div class="player__top">
+      <div class="player-controls">
+        <div class="player-controls__item" @click="play">
+          <span v-if="isTimerPlaying">
+            <Pause />
+          </span>
+          <span v-else>
+            <Play />
+          </span>
+        </div>
+      </div>
+    </div>
+
     <div v-cloak></div>
   </div>
 </template>
 
 <script>
+import Play from '@/assets/svg/player/ic_play.svg?inline';
+import Pause from '@/assets/svg/player/ic_pause.svg?inline';
 import Wave from '@/helpers/audio';
 
 export default {
   name: 'AudioPlayer',
+  components: {
+    Play,
+    Pause,
+  },
   props: {
     visualizer: {
+      type: Boolean,
+      default: false,
+    },
+    progressBar: {
       type: Boolean,
       default: false,
     },
@@ -59,8 +71,8 @@ export default {
     return {
       circleLeft: null,
       barWidth: null,
-      duration: null,
-      currentTime: null,
+      duration: '00:00',
+      currentTime: '00:00',
       isTimerPlaying: false,
       currentTrackIndex: 0,
       transitionName: null,
@@ -101,11 +113,14 @@ export default {
 
     play() {
       if (this.$refs.audio.paused) {
+        this.$refs.audio.muted = false;
         this.$refs.audio.play();
         this.isTimerPlaying = true;
+        this.$emit('play');
       } else {
         this.$refs.audio.pause();
         this.isTimerPlaying = false;
+        this.$emit('pause');
       }
     },
 
@@ -176,11 +191,6 @@ export default {
 
 .icon {
   display: inline-block;
-  width: 1em;
-  height: 1em;
-  stroke-width: 0;
-  stroke: currentColor;
-  fill: currentColor;
 }
 
 .wrapper {
@@ -190,67 +200,6 @@ export default {
   justify-content: center;
   min-height: 100vh;
   background-size: cover;
-  @media screen and (max-width: 700px), (max-height: 500px) {
-    flex-wrap: wrap;
-    flex-direction: column;
-  }
-}
-
-.player {
-  &-controls {
-    flex: 1;
-    padding-left: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    @media screen and (max-width: 576px), (max-height: 500px) {
-      flex-direction: row;
-      padding-left: 0;
-      width: 100%;
-      flex: unset;
-    }
-
-    &__item {
-      display: inline-flex;
-      font-size: 30px;
-      padding: 5px;
-      margin-bottom: 10px;
-      color: #acb8cc;
-      cursor: pointer;
-      width: 50px;
-      height: 50px;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      transition: all 0.3s ease-in-out;
-
-      @media screen and (max-width: 576px), (max-height: 500px) {
-        font-size: 26px;
-        padding: 5px;
-        margin-right: 10px;
-        color: #acb8cc;
-        cursor: pointer;
-        width: 40px;
-        height: 40px;
-        margin-bottom: 0;
-      }
-
-      &::before {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        background: #fff;
-        transform: scale(0.5);
-        opacity: 0;
-        box-shadow: 0px 5px 10px 0px rgba(76, 70, 124, 0.2);
-        transition: all 0.3s ease-in-out;
-        transition: all 0.4s cubic-bezier(0.35, 0.57, 0.13, 0.88);
-      }
-    }
-  }
 }
 
 [v-cloak] {
@@ -286,11 +235,24 @@ export default {
   }
 }
 
+.player-controls__item {
+  text-align: center;
+  margin: -8px 0 8px 0;
+}
+
+.progress__top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-top: 8px;
+  line-height: 1;
+}
+
 .progress__bar {
   height: 6px;
   width: 100%;
   cursor: pointer;
-  background-color: #d0d8e6;
+  background-color: rgba($gray-darkest, 0.4);
   display: inline-block;
   border-radius: 10px;
 }
@@ -298,7 +260,8 @@ export default {
 .progress__current {
   height: inherit;
   width: 0;
-  background-color: #a3b3ce;
+  background-color: $gray-darkest;
   border-radius: 10px;
+  transition: 0.5s ease;
 }
 </style>
