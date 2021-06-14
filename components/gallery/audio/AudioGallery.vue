@@ -1,25 +1,35 @@
 <template>
   <div class="audio-gallery">
     <div class="audio-container">
-      <div v-for="(aud, i) in audios" :key="i" class="audio-item">
-        <p>{{ aud.originalname }}</p>
-        <p v-if="aud.date" class="audio-item__date">{{ date(aud.date) }}</p>
-      </div>
+      <AudioItem
+        v-for="(aud, i) in audios"
+        :key="i"
+        :audio="aud"
+        class="audio-item"
+        :show-player="current === aud._id"
+        @selected="audioSelected(aud._id)"
+      />
     </div>
-    <div class="o-page__outside">
+    <div class="o-page__outside audio-gallery__recorder">
       <AudioRecorder />
     </div>
   </div>
 </template>
 
 <script>
-import dayjs from 'dayjs';
-import AudioRecorder from '../AudioRecorder';
+import AudioRecorder from './AudioRecorder';
+import AudioItem from './AudioItem';
 
 export default {
   name: 'AudioGallery',
   components: {
+    AudioItem,
     AudioRecorder,
+  },
+  data() {
+    return {
+      current: null,
+    };
   },
   computed: {
     audios() {
@@ -27,23 +37,42 @@ export default {
     },
   },
   methods: {
-    date(d) {
-      return dayjs(d).format('DD MMMM YYYY');
+    audioSelected(index) {
+      this.current = index;
     },
   },
 };
 </script>
 
-<style lang="scss" scoped>
-.audio-item {
-  padding: 20px 0;
-
-  &:not(:last-child) {
-    border-bottom: 1px solid $gray-darkest;
-  }
-}
-
+<style lang="scss">
 .audio-item__date {
   font-size: 12px;
+}
+
+.audio-container {
+  overflow: scroll;
+}
+
+.audio-gallery {
+  display: flex;
+  flex-direction: column;
+  //height: calc(100vh - 264px);
+}
+
+.audio-gallery__recorder {
+  position: fixed;
+  bottom: 72px;
+  left: 0;
+  right: 0;
+}
+
+.o-page--gallery {
+  padding-bottom: 200px !important;
+  /*.audio-gallery__recorder {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 72px;
+  }*/
 }
 </style>

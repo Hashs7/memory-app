@@ -20,7 +20,7 @@
         :class="[s.class]"
         class="tab-sections__container"
       >
-        <div v-show="selectedSection === s.name" class="">
+        <div v-show="selectedSection === s.name" class="tab-sections__sec">
           <component
             :is="s.component"
             v-for="d in s.data"
