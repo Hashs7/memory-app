@@ -14,6 +14,12 @@ import gsap from 'gsap';
 
 export default {
   name: 'MemoryCard',
+  props: {
+    active: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       SWIPE_DISTANCE: 150,
@@ -24,6 +30,13 @@ export default {
         y: null,
       },
     };
+  },
+  watch: {
+    active(newVal, oldVal) {
+      if (oldVal === false && newVal === true) {
+        gsap.to(this.$refs.card, { x: 0, y: 0, rotate: 0, duration: 0.3 });
+      }
+    },
   },
   mounted() {
     const { x, y, width, height } = this.$refs.card.getBoundingClientRect();
@@ -69,7 +82,6 @@ export default {
   right: 0;
   margin: auto;
   height: 100%;
-  padding: 32px;
   background-color: #fff;
   transform-origin: center;
   box-shadow: $shadow--first;
