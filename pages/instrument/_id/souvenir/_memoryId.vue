@@ -58,13 +58,15 @@
           <MemoryTextCard v-else-if="c.type !== 'media'" :data="c" />
         </MemoryCard>
       </div>
-      <transition name="fade">
-        <div v-if="index > 0" class="memory__controls">
-          <button class="memory__previous u-button--action" @click="previous">
-            <IconChevron />
-          </button>
-        </div>
-      </transition>
+      <div class="memory__footer">
+        <transition name="fade">
+          <div v-if="index > 0" class="memory__controls">
+            <button class="memory__previous u-button--action" @click="previous">
+              <IconChevron />
+            </button>
+          </div>
+        </transition>
+      </div>
     </div>
   </div>
 </template>
@@ -305,17 +307,20 @@ export default {
   top: 0;
   left: 0;
   right: 0;
+  min-height: 30%;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 30px 24px 0 24px;
   z-index: 30;
-  background-image: linear-gradient(rgba(black, 0.7), rgba(black, 0));
+  pointer-events: none;
+  background-image: linear-gradient(rgba(black, 0.15), rgba(black, 0));
 }
 
 .memory__actions {
   display: flex;
   align-items: center;
+  pointer-events: auto;
 }
 
 .memory__close {
@@ -415,16 +420,26 @@ export default {
   flex-grow: 1;
 }
 
-.memory__controls {
+.memory__footer {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 60px;
+  bottom: 0;
+  display: flex;
+  align-items: flex-end;
+  min-height: 30%;
+  z-index: 30;
+  pointer-events: none;
+  background-image: linear-gradient(rgba(black, 0), rgba(black, 0.15));
+}
+
+.memory__controls {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 30;
   width: 100%;
+  margin-bottom: 50px;
+  pointer-events: auto;
 }
 
 .memory__previous {
@@ -434,12 +449,6 @@ export default {
     fill: $background;
     width: 7px;
     height: 12px;
-  }
-}
-
-// Templates
-.o-page--memory {
-  &.sardines {
   }
 }
 
