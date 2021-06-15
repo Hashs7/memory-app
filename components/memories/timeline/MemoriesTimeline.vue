@@ -1,13 +1,20 @@
 <template>
   <section class="memories-timeline">
-    <div ref="slider" class="memories-timeline__slider-wrap">
+    <div class="memories-timeline__slider-wrap">
       <div ref="slider" class="memories-timeline__slider">
-        <MemoryPreview
-          v-for="memory in memories"
-          :key="memory.id"
-          :data="memory"
-          class="memories-timeline__memory"
-        />
+        <template v-for="(step, i) in timelineSteps">
+          <MemoryPreview
+            v-if="step.type === 'memory'"
+            :key="i"
+            :data="step.data"
+            class="memories-timeline__item memories-item--memory"
+          />
+          <div
+            v-else
+            :key="i"
+            class="memories-timeline__item memories-timeline__item--empty"
+          ></div>
+        </template>
       </div>
     </div>
     <div class="memories-timeline__controls">
@@ -43,9 +50,12 @@
 import IconTriangle from '@/assets/svg/ic_triangle.svg?inline';
 import gsap from 'gsap';
 import dayjs from 'dayjs';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { Draggable } from 'gsap/Draggable';
+
 import MemoryPreview from '@/components/memories/MemoryPreview';
 
+dayjs.extend(isSameOrBefore);
 gsap.registerPlugin(Draggable);
 
 export default {
@@ -74,28 +84,88 @@ export default {
   },
 
   mounted() {
+    const stripStepSize = 13;
+    const sliderStepSize = 304;
+
     Draggable.create(this.$refs.slider, {
       type: 'x',
-    });
-    Draggable.create(this.$refs.strip, {
-      type: 'x',
+      edgeResistance: 0.9,
       bounds: {
-        minX: this.$refs.strip.clientWidth * -1 + 13,
+        minX: this.$refs.slider.clientWidth * -1 + sliderStepSize,
         maxX: 0,
       },
+      onMove() {
+        const strip = document.querySelector('.memories-timeline__strip');
+        gsap.set(strip, {
+          x: gsap.utils.mapRange(
+            this.target.clientWidth * -1 + sliderStepSize,
+            0,
+            strip.clientWidth * -1 + stripStepSize,
+            0,
+            this.x
+          ),
+        });
+      },
       onDragEnd() {
+        const strip = document.querySelector('.memories-timeline__strip');
+        const xTarget = gsap.utils.snap(sliderStepSize, this.x);
         gsap.to(this.target, {
-          x: Math.round(this.x / 13) * 13,
+          x: xTarget,
+          duration: 0.5,
+          ease: 'power2.out',
+        });
+        gsap.to(strip, {
+          x: gsap.utils.mapRange(
+            this.target.clientWidth * -1 + sliderStepSize,
+            0,
+            strip.clientWidth * -1 + stripStepSize,
+            0,
+            xTarget
+          ),
           duration: 0.5,
           ease: 'power2.out',
         });
       },
-      /*
-      liveSnap: {
-        x: (value) => {
-          return Math.round(value / 13) * 13;
-        },
-      }, */
+    });
+    Draggable.create(this.$refs.strip, {
+      type: 'x',
+      edgeResistance: 0.9,
+      bounds: {
+        minX: this.$refs.strip.clientWidth * -1 + stripStepSize,
+        maxX: 0,
+      },
+      onMove() {
+        const slider = document.querySelector('.memories-timeline__slider');
+        gsap.set(slider, {
+          x: gsap.utils.mapRange(
+            this.target.clientWidth * -1 + stripStepSize,
+            0,
+            slider.clientWidth * -1 + sliderStepSize,
+            0,
+            this.x
+          ),
+        });
+      },
+      onDragEnd() {
+        const slider = document.querySelector('.memories-timeline__slider');
+        const xTarget = gsap.utils.snap(stripStepSize, this.x);
+        gsap.to(this.target, {
+          x: xTarget,
+          duration: 0.5,
+          ease: 'power2.out',
+        });
+        gsap.to(slider, {
+          x: gsap.utils.mapRange(
+            this.target.clientWidth * -1 + stripStepSize,
+            0,
+            slider.clientWidth * -1 + sliderStepSize,
+            0,
+            xTarget
+          ),
+          duration: 0.5,
+          ease: 'power2.out',
+        });
+      },
     });
   },
   methods: {
@@ -104,7 +174,7 @@ export default {
       const stopDateObject = dayjs(stopDate);
       let currentDate = dayjs(startDate);
       // Create steps array with all days
-      while (currentDate.isBefore(stopDateObject)) {
+      while (currentDate.isSameOrBefore(stopDateObject)) {
         steps.push({
           date: currentDate.toISOString(),
           type: 'empty',
@@ -126,20 +196,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$slide-width: 290px;
+$slide-margin: 7px;
 $step-width: 3px;
 $step-margin: 5px;
 
 .memories-timeline {
-  &__slider {
-    display: inline-flex;
-    overflow: hidden;
-    align-items: center;
-    flex-wrap: nowrap;
+  margin: 12px 0 0 0;
+
+  &__slider-wrap {
   }
 
-  &__memory {
-    margin: 0 7px;
+  &__slider {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    margin: 0 calc(50% - #{$slide-margin} - #{$slide-width} / 2);
+  }
+
+  &__item {
+    display: inline-block;
+    margin: 0 $slide-margin;
     flex-shrink: 0;
+    width: $slide-width;
+    height: 100%;
+
+    &--empty {
+      display: inline-block;
+      background: red;
+    }
   }
 
   &__controls {
