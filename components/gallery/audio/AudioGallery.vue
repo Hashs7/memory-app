@@ -9,6 +9,7 @@
           class="audio-item"
           :show-player="current === aud._id"
           :deletable="deleteFiles"
+          :seletable="selectFiles"
           @selected="audioSelected(aud._id)"
         />
       </div>
@@ -36,6 +37,10 @@ export default {
       default: false,
     },
     deleteFiles: {
+      type: Boolean,
+      default: false,
+    },
+    selectFiles: {
       type: Boolean,
       default: false,
     },

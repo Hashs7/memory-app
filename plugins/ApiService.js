@@ -124,6 +124,10 @@ class ApiController {
     });
   }
 
+  updateFileName(id, newName) {
+    return this.$axios.patch(`/file/${id}/${newName}`);
+  }
+
   getUserMedias() {
     return this.$axios.get('/file/user');
   }

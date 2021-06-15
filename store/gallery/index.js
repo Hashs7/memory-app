@@ -40,6 +40,15 @@ export const mutations = {
     state.medias.push(media);
   },
 
+  updateMedia(state, media) {
+    const index = state.medias.findIndex((file) => file._id === media._id);
+    console.log(index, media);
+    if (index < 0) return;
+    state.medias.splice(index, 1, media);
+    // state.medias[index] = media;
+    console.log(state.medias[index]);
+  },
+
   removeMedia(state, _id) {
     const index = state.medias.findIndex((img) => img._id === _id);
     if (index < 0) return;
@@ -76,6 +85,13 @@ export const actions = {
     try {
       const res = await this.$api.getUserMedias();
       commit('setMedias', res.data);
+    } catch (e) {}
+  },
+
+  async updateMedia({ commit }, { id, name }) {
+    try {
+      const res = await this.$api.updateFileName(id, name);
+      commit('updateMedia', res.data);
     } catch (e) {}
   },
 

@@ -42,6 +42,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    selectFiles: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     medias() {

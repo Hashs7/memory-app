@@ -3,7 +3,9 @@
     <AudioPlayer v-if="showPlayer" progress-bar :media="audio" />
     <div class="audio-item__infos">
       <div class="left">
-        <p>{{ audio.name }}</p>
+        <form @submit.prevent.stop="updateName">
+          <input v-model="name" type="text" class="audio-item__name" />
+        </form>
         <p v-if="audio.date" class="audio-item__date">{{ date(audio.date) }}</p>
       </div>
 
@@ -12,6 +14,7 @@
       </button>
     </div>
     <button
+      v-if="seletable"
       :class="{ selected }"
       class="btn-select"
       type="button"
@@ -23,6 +26,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import dayjs from 'dayjs';
 import IconTrash from '@/assets/svg/ic_trash.svg?inline';
 import AudioPlayer from './AudioPlayer';
@@ -42,6 +46,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    seletable: {
+      type: Boolean,
+      default: false,
+    },
     audio: {
       type: Object,
       required: true,
@@ -57,6 +65,11 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      name: '',
+    };
+  },
   computed: {
     selected() {
       return !!this.$store.state.gallery.selected.audio.find(
@@ -64,7 +77,11 @@ export default {
       );
     },
   },
+  mounted() {
+    this.name = this.audio.name;
+  },
   methods: {
+    ...mapActions('gallery', ['updateMedia']),
     date(d) {
       return dayjs(d).format('DD MMMM YYYY');
     },
@@ -74,6 +91,9 @@ export default {
       } catch (e) {
         console.log(e);
       }
+    },
+    async updateName() {
+      await this.updateMedia({ id: this.audio._id, name: this.name });
     },
     selectMedia() {
       if (this.selected) {
@@ -101,6 +121,16 @@ export default {
   .btn-delete {
     background-color: transparent;
     border: none;
+  }
+}
+
+.audio-item__name {
+  padding: 0;
+  font-size: 16px;
+  background-color: transparent;
+
+  &::placeholder {
+    font-size: 16px;
   }
 }
 

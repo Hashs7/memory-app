@@ -6,7 +6,7 @@
         <Gallery preview />
       </template>
       <template #section1>
-        <AudioGallery delete-files />
+        <AudioGallery delete-files recorder />
       </template>
     </TabSections>
   </div>
