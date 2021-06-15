@@ -42,6 +42,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    selectFiles: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     medias() {
@@ -62,7 +66,7 @@ export default {
         this.$store.commit('gallery/setPreview', fileId);
         return;
       }
-      this.$store.commit('gallery/addSelected', fileId);
+      this.$store.commit('gallery/addSelectedMedia', fileId);
       this.$emit('selected');
     },
 

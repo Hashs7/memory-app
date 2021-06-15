@@ -54,18 +54,9 @@
         </div>
       </form>
 
-      <form v-if="showThemes" class="o-page--full themes">
-        <div class="themes__container">
-          <h3>Choisissez votre thème</h3>
-          <div class="themes__grid">
-            <ThemeSelector v-for="(t, i) in themes" :key="i" :theme="t" />
-          </div>
-        </div>
-        <span
-          class="o-page--full themes__background"
-          @click="showThemes = false"
-        ></span>
-      </form>
+      <MediaModal v-if="modal.show">
+        <component :is="modalComponent" selectFiles @selected="addContent" />
+      </MediaModal>
 
       <div class="o-page__footer actions">
         <button
@@ -89,7 +80,7 @@
 
 <script>
 import draggable from 'vuedraggable';
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import SliderAdd from '@/components/memories/creation/slider/SliderAdd';
 import TextContent from '@/components/memories/creation/contents/TextContent';
 import AudioContent from '@/components/memories/creation/contents/AudioContent';
@@ -100,16 +91,22 @@ import IconCheck from '@/assets/svg/ic_check.svg?inline';
 import IconBrush from '@/assets/svg/ic_brush.svg?inline';
 import IconChevron from '@/assets/svg/ic_chevron.svg?inline';
 import IconVisibility from '@/assets/svg/ic_visibility.svg?inline';
-
 import { CONTENT_TYPE } from '@/const/memory';
+// eslint-disable-next-line no-unused-vars
+import AudioGallery from '../../../gallery/audio/AudioGallery';
+// eslint-disable-next-line no-unused-vars
+import Gallery from '../../../gallery/Gallery';
+import MediaModal from '../MediaModal';
 
 export default {
   name: 'ContentForm',
   components: {
+    MediaModal,
     ThemeSelector,
     SliderAdd,
     TextContent,
     AudioContent,
+    AudioGallery,
     MediaContent,
     MemoryPreview,
     IconCheck,
@@ -137,6 +134,16 @@ export default {
   },
   computed: {
     ...mapGetters('memory', ['contents']),
+    ...mapState('memory', ['modal']),
+    modalComponent() {
+      if (this.modal.type === 'audio') {
+        return 'AudioGallery';
+      }
+      if (this.modal.type === 'media') {
+        return 'Gallery';
+      }
+      return null;
+    },
     name: {
       get() {
         return this.$store.state.memory.data.name;
@@ -144,12 +151,6 @@ export default {
       set(value) {
         this.$store.commit('memory/updateName', value);
       },
-    },
-    memory: {
-      get() {
-        return this.$store.state.memory;
-      },
-      set(newValue) {},
     },
     contents: {
       get() {
@@ -161,6 +162,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions('memory', ['addContent']),
     removeItem(index) {
       this.$store.commit('memory/removeContent', index);
     },

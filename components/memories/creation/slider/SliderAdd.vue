@@ -4,14 +4,14 @@
       <button
         class="u-button u-button--round"
         type="button"
-        @click="addContent('media')"
+        @click="showModal('media')"
       >
         <IconMedia />
       </button>
       <button
         class="u-button u-button--round"
         type="button"
-        @click="addContent('audio')"
+        @click="showModal('audio')"
       >
         <IconAudio />
       </button>
@@ -20,13 +20,14 @@
         type="button"
         @click="addContent('text')"
       >
-        Txt
+        Tt
       </button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
 import IconAudio from '~/assets/svg/ic_audio.svg?inline';
 import IconMedia from '~/assets/svg/ic_media.svg?inline';
 
@@ -34,8 +35,9 @@ export default {
   name: 'SliderAdd',
   components: { IconAudio, IconMedia },
   methods: {
+    ...mapMutations('memory', ['showModal']),
     addContent(type) {
-      this.$store.commit('memory/addContent', type);
+      this.$store.commit('memory/addContent', { type });
     },
   },
 };

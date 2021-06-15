@@ -19,7 +19,7 @@
           </h2>
         </div>
 
-        <div class="instrument__owner">
+        <div v-if="!isOwner" class="instrument__owner">
           <UserPreview :user="instrument.owner" />
         </div>
 

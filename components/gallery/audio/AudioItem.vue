@@ -1,20 +1,32 @@
 <template>
   <div class="audio-item" @click="$emit('selected')">
-    <AudioPlayer v-if="showPlayer" :media="audio" />
+    <AudioPlayer v-if="showPlayer" progress-bar :media="audio" />
     <div class="audio-item__infos">
       <div class="left">
-        <p>{{ audio.name }}</p>
+        <form @submit.prevent.stop="updateName">
+          <input v-model="name" type="text" class="audio-item__name" />
+        </form>
         <p v-if="audio.date" class="audio-item__date">{{ date(audio.date) }}</p>
       </div>
 
-      <button v-if="showPlayer" class="btn-delete" @click="deleteMedia">
+      <button v-if="deletable" class="btn-delete" @click="deleteMedia">
         <IconTrash />
       </button>
     </div>
+    <button
+      v-if="seletable"
+      :class="{ selected }"
+      class="btn-select"
+      type="button"
+      @click.stop="selectMedia"
+    >
+      <span class="selected-dot"></span>
+    </button>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import dayjs from 'dayjs';
 import IconTrash from '@/assets/svg/ic_trash.svg?inline';
 import AudioPlayer from './AudioPlayer';
@@ -27,6 +39,14 @@ export default {
   },
   props: {
     showPlayer: {
+      type: Boolean,
+      default: false,
+    },
+    deletable: {
+      type: Boolean,
+      default: false,
+    },
+    seletable: {
       type: Boolean,
       default: false,
     },
@@ -45,7 +65,23 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      name: '',
+    };
+  },
+  computed: {
+    selected() {
+      return !!this.$store.state.gallery.selected.audio.find(
+        (el) => el === this.audio._id
+      );
+    },
+  },
+  mounted() {
+    this.name = this.audio.name;
+  },
   methods: {
+    ...mapActions('gallery', ['updateMedia']),
     date(d) {
       return dayjs(d).format('DD MMMM YYYY');
     },
@@ -55,6 +91,19 @@ export default {
       } catch (e) {
         console.log(e);
       }
+    },
+    async updateName() {
+      await this.updateMedia({ id: this.audio._id, name: this.name });
+    },
+    selectMedia() {
+      if (this.selected) {
+        this.$store.commit('gallery/removeSelected', {
+          type: 'audio',
+          id: this.audio._id,
+        });
+        return;
+      }
+      this.$store.commit('gallery/addSelectedAudio', this.audio._id);
     },
   },
 };
@@ -72,6 +121,39 @@ export default {
   .btn-delete {
     background-color: transparent;
     border: none;
+  }
+}
+
+.audio-item__name {
+  padding: 0;
+  font-size: 16px;
+  background-color: transparent;
+
+  &::placeholder {
+    font-size: 16px;
+  }
+}
+
+.btn-select {
+  position: absolute;
+  bottom: 30px;
+  right: 20px;
+  width: 26px;
+  height: 26px;
+  border: 1px solid $gray-darkest;
+  background-color: transparent;
+  border-radius: 50%;
+  padding: 2px;
+
+  .selected-dot {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+  &.selected .selected-dot {
+    background-color: $gray-darkest;
   }
 }
 

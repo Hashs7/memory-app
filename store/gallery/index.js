@@ -1,6 +1,9 @@
 export const state = () => ({
   medias: [],
-  selected: [],
+  selected: {
+    audio: [],
+    media: [],
+  },
   preview: null,
 });
 
@@ -10,9 +13,13 @@ export const getters = {
     return state.medias.find((m) => m._id === state.preview);
   },
 
+  getSelected: (state) => (type) => {
+    return state.medias.filter((m) => state.selected[type].includes(m._id));
+  },
+
   getLastSelected(state) {
-    if (!state.selected[0]) return;
-    return state.medias.find((m) => m._id === state.selected[0]);
+    if (!state.selected.media[0]) return;
+    return state.medias.find((m) => m._id === state.selected.media[0]);
   },
 
   getAudios(state) {
@@ -33,6 +40,15 @@ export const mutations = {
     state.medias.push(media);
   },
 
+  updateMedia(state, media) {
+    const index = state.medias.findIndex((file) => file._id === media._id);
+    console.log(index, media);
+    if (index < 0) return;
+    state.medias.splice(index, 1, media);
+    // state.medias[index] = media;
+    console.log(state.medias[index]);
+  },
+
   removeMedia(state, _id) {
     const index = state.medias.findIndex((img) => img._id === _id);
     if (index < 0) return;
@@ -40,19 +56,26 @@ export const mutations = {
   },
 
   resetSelected(state) {
-    state.selected = [];
+    state.selected = {
+      audio: [],
+      media: [],
+    };
   },
 
-  addSelected(state, media) {
-    state.selected.push(media);
+  addSelectedMedia(state, media) {
+    state.selected.media.push(media);
+  },
+
+  addSelectedAudio(state, media) {
+    state.selected.audio.push(media);
   },
 
   setPreview(state, id) {
     state.preview = id;
   },
 
-  removeSelected(state, _id) {
-    const index = state.selected.indexOf(_id);
+  removeSelected(state, { id, type }) {
+    const index = state.selected[type].indexOf(id);
     state.selected.splice(index, 1);
   },
 };
@@ -65,8 +88,14 @@ export const actions = {
     } catch (e) {}
   },
 
+  async updateMedia({ commit }, { id, name }) {
+    try {
+      const res = await this.$api.updateFileName(id, name);
+      commit('updateMedia', res.data);
+    } catch (e) {}
+  },
+
   async deleteMedia({ commit }, id) {
-    console.log('looo');
     try {
       await this.$api.deleteMedia(id);
       commit('removeMedia', id);

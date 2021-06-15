@@ -174,7 +174,10 @@ export default {
       const selected = this.$store.getters['gallery/getLastSelected'];
       if (!selected) return;
       this.$store.commit('instrument/addImage', selected);
-      this.$store.commit('gallery/removeSelected', selected._id);
+      this.$store.commit('gallery/removeSelected', {
+        id: selected._id,
+        type: 'media',
+      });
     },
 
     updateDate(date) {

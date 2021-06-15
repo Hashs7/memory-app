@@ -3,10 +3,10 @@
     <div v-if="visualizer" class="visualizer">
       <canvas id="canvas" class="audio-visualizer"></canvas>
     </div>
-    <audio id="audio-element" ref="audio" :src="media.path" controls>
+    <audio id="audio-element" ref="audio" :src="media.path" muted controls>
       Sorry, your browser doesn't support embedded videos.
     </audio>
-    <div ref="progress" class="progress-element">
+    <div v-if="progressBar" ref="progress" class="progress-element">
       <div class="progress__bar" @click="clickProgress">
         <div class="progress__current" :style="{ width: barWidth }"></div>
       </div>
@@ -45,6 +45,10 @@ export default {
   },
   props: {
     visualizer: {
+      type: Boolean,
+      default: false,
+    },
+    progressBar: {
       type: Boolean,
       default: false,
     },
@@ -109,11 +113,14 @@ export default {
 
     play() {
       if (this.$refs.audio.paused) {
+        this.$refs.audio.muted = false;
         this.$refs.audio.play();
         this.isTimerPlaying = true;
+        this.$emit('play');
       } else {
         this.$refs.audio.pause();
         this.isTimerPlaying = false;
+        this.$emit('pause');
       }
     },
 
