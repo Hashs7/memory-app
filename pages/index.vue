@@ -17,7 +17,7 @@
       >
       <NuxtLink
         v-if="!$auth.loggedIn"
-        to="/inscription"
+        to="/onboarding"
         class="u-button u-button--primary half"
         >S'inscrire</NuxtLink
       >
@@ -72,10 +72,10 @@ export default {
 
 .logo {
   position: absolute;
-  top: 64px;
+  top: 120px;
   left: 0;
   right: 0;
-  width: 64px;
+  width: 135px;
   margin: auto;
 }
 
