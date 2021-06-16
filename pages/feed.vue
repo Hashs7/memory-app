@@ -98,9 +98,6 @@ export default {
       memoriesCat: {},
     };
   },
-  created() {
-    this.fetchMemoriesCat();
-  },
   computed: {
     ...mapState('search', { searchActive: 'active' }),
     profilePicture() {
@@ -133,6 +130,10 @@ export default {
       });
       return selectedCats.map((s) => s._id);
     },
+  },
+  created() {
+    this.fetchMemoriesCat();
+    this.$auth.fetchUser();
   },
   methods: {
     ...mapMutations('search', {
