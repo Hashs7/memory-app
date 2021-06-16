@@ -41,9 +41,9 @@ export default {
     IconPartition,
   },
   layout: 'none',
-  created() {
-    if (!this.$auth.loggedIn) return;
-    this.$router.push({
+  asyncData({ $auth, redirect }) {
+    if (!$auth.loggedIn) return;
+    redirect({
       name: 'feed',
     });
   },

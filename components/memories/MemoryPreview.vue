@@ -60,7 +60,6 @@ export default {
       if (!id) {
         id = this.data.instrumentId;
       }
-      console.log(id, this.data);
       return `/instrument/${id}/souvenir/${this.data.id}`;
     },
     editLinkUrl() {

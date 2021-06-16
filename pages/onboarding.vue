@@ -96,9 +96,11 @@ export default {
     background-color: $gray-darkest;
   }
 }
+
 .onboarding__image-container .glide__track {
   height: 85vh;
 }
+
 .onboarding__content-container {
   position: absolute;
   width: 100vw;
@@ -109,6 +111,7 @@ export default {
   height: 100vh;
   background-repeat: no-repeat;
   background-position-x: 50%;
+
   &:nth-child(even) {
     .onboarding__content-title {
       color: $background;
@@ -118,6 +121,11 @@ export default {
     }
   }
 }
+
+.onboarding__image-preview[data-glide-index='0'] {
+  background-position-y: 22px;
+}
+
 .onboarding__control {
   width: 18px;
   height: 4px;
@@ -146,7 +154,7 @@ export default {
 }
 
 .onboarding__content-text {
-  font-family: 'Apercu Pro';
+  font-family: $font-primary;
   margin-top: 30px;
   color: $gray-darkest;
 }

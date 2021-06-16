@@ -47,9 +47,6 @@ export default {
       return this.value?.file?.path;
     },
   },
-  mounted() {
-    console.log(this.value);
-  },
   methods: {
     previewImg() {
       this.$store.dispatch('memory/addSelectedMedia', {
