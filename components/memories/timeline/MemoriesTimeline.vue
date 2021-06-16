@@ -108,11 +108,29 @@ export default {
       },
       onDragEnd() {
         const strip = document.querySelector('.memories-timeline__strip');
-        const xTarget = gsap.utils.snap(sliderStepSize, this.x);
+        const xTarget = gsap.utils.snap(
+          sliderStepSize,
+          gsap.utils.clamp(
+            this.target.clientWidth * -1 + sliderStepSize,
+            0,
+            this.x * (this.deltaX * 0.1 + 1) * -1
+          )
+        );
         gsap.to(this.target, {
           x: xTarget,
           duration: 0.5,
           ease: 'power2.out',
+          onUpdate: () => {
+            gsap.set(strip, {
+              x: gsap.utils.mapRange(
+                this.target.clientWidth * -1 + sliderStepSize,
+                0,
+                strip.clientWidth * -1 + stripStepSize,
+                0,
+                this.x
+              ),
+            });
+          },
         });
         gsap.to(strip, {
           x: gsap.utils.mapRange(
