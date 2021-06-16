@@ -19,6 +19,7 @@
                 autocomplete="username"
                 placeholder="Email"
                 type="email"
+                class="form__input"
                 :class="{ error: errors.length }"
               />
               <span class="form__error">{{ errors[0] }}</span>

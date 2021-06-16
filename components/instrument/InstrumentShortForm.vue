@@ -5,28 +5,49 @@
     </div>
 
     <div class="form__group">
-      <b-field label="Nom">
-        <b-input v-model="name" name="name" type="text"></b-input>
-      </b-field>
-    </div>
-    <div class="form__group">
-      <b-field label="Type">
-        <b-input v-model="type" name="type" type="text"></b-input>
-      </b-field>
-    </div>
-    <div class="form__group">
-      <b-field label="Spécification">
-        <b-input
-          v-model="specification"
-          name="specification"
+      <label>
+        <input
+          v-model="name"
+          placeholder="Nom"
+          class="form__input"
+          name="name"
           type="text"
-        ></b-input>
-      </b-field>
+        />
+      </label>
     </div>
     <div class="form__group">
-      <b-field label="Marque">
-        <b-input v-model="brand" name="brand" type="text" required></b-input>
-      </b-field>
+      <label>
+        <input
+          v-model="type"
+          placeholder="Type"
+          class="form__input"
+          name="type"
+          type="text"
+        />
+      </label>
+    </div>
+    <div class="form__group">
+      <label>
+        <input
+          v-model="specification"
+          placeholder="Spécification"
+          name="specification"
+          class="form__input"
+          type="text"
+        />
+      </label>
+    </div>
+    <div class="form__group">
+      <label>
+        <input
+          v-model="brand"
+          placeholder="Marque"
+          class="form__input"
+          name="brand"
+          type="text"
+          required
+        />
+      </label>
     </div>
   </form>
 </template>

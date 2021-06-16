@@ -164,10 +164,13 @@ export default {
   .o-page__title {
     margin-top: 0;
   }
+
   .o-section__head.actu {
     margin: 0 16px;
   }
+
   .o-page__header {
+    height: 72px;
     padding: 16px 0 0 0;
   }
 

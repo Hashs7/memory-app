@@ -18,6 +18,7 @@
               v-model="name"
               name="name"
               type="text"
+              class="form__input"
               placeholder="Nom du souvenir"
               required
             ></b-input>

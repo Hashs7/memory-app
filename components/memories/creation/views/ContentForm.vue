@@ -190,20 +190,6 @@ export default {
   justify-content: space-between;
 }
 
-.form__group {
-  max-width: 300px;
-  margin: 0 auto 16px auto;
-
-  label {
-    text-align: left;
-    display: block;
-  }
-
-  input {
-    width: 100%;
-  }
-}
-
 .memory__infos {
   text-align: center;
 }

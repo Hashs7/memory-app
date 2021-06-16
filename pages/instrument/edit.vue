@@ -1,5 +1,5 @@
 <template>
-  <div class="o-page o-page--instrument-edit">
+  <div class="o-page o-page--instrument-edit o-page__container">
     <h1 class="o-page__title">Modifier {{ name }}</h1>
     <InstrumentForm :data="instrument" />
   </div>

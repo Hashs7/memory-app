@@ -1,10 +1,5 @@
 <template>
-  <ValidationObserver
-    v-if="!$auth.loggedIn"
-    v-slot="{ invalid }"
-    tag="div"
-    class="form-observer"
-  >
+  <ValidationObserver v-slot="{ invalid }" tag="div" class="form-observer">
     <form class="register__form" @submit.prevent="submit">
       <div class="register__container">
         <div class="form__group">
@@ -18,6 +13,7 @@
                 v-model="username"
                 placeholder="Surnom"
                 type="text"
+                class="form__input"
                 :class="{ error: errors.length }"
               />
               <span class="form__error">{{ errors[0] }}</span>
@@ -35,6 +31,7 @@
                 v-model="firstName"
                 placeholder="Prénom"
                 type="text"
+                class="form__input"
                 :class="{ error: errors.length }"
               />
               <span class="form__error">{{ errors[0] }}</span>
@@ -48,6 +45,7 @@
             >
               <input
                 v-model="lastName"
+                class="form__input"
                 placeholder="Nom"
                 type="text"
                 :class="{ error: errors.length }"
@@ -67,6 +65,7 @@
                 v-model="email"
                 autocomplete="username"
                 placeholder="Email"
+                class="form__input"
                 type="email"
                 :class="{ error: errors.length }"
               />
