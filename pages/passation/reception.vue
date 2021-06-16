@@ -108,6 +108,8 @@ export default {
         this.error.hasError = true;
         this.validated = false;
       }
+      this.$store.commit('handover/setToken', null);
+      this.$store.commit('handover/setInstrumentId', null);
     },
 
     storeToken() {

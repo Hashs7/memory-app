@@ -1,5 +1,5 @@
 <template>
-  <div :class="[memory.template]" class="o-page--memory">
+  <div v-if="memory" :class="[memory.template]" class="o-page--memory">
     <div class="o-page__container">
       <div class="memory__head">
         <div class="memory__actions">
@@ -117,6 +117,12 @@ export default {
       globalAudioMuted: false,
       globalAudioDiscreet: false,
     };
+  },
+  created() {
+    if (this.memory) return;
+    this.$router.push({
+      name: 'feed',
+    });
   },
   computed: {
     memory() {

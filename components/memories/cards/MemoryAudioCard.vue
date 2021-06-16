@@ -7,6 +7,7 @@
       class="memory-audio-card__player"
       :media="data.file"
       visualizer
+      controls
       @play="$emit('play')"
       @pause="$emit('pause')"
     />

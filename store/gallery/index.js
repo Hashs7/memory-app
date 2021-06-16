@@ -42,11 +42,8 @@ export const mutations = {
 
   updateMedia(state, media) {
     const index = state.medias.findIndex((file) => file._id === media._id);
-    console.log(index, media);
     if (index < 0) return;
     state.medias.splice(index, 1, media);
-    // state.medias[index] = media;
-    console.log(state.medias[index]);
   },
 
   removeMedia(state, _id) {

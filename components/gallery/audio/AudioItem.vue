@@ -1,6 +1,6 @@
 <template>
   <div class="audio-item" @click="$emit('selected')">
-    <AudioPlayer v-if="showPlayer" progress-bar :media="audio" />
+    <AudioPlayer v-if="showPlayer" controls progress-bar :media="audio" />
     <div class="audio-item__infos">
       <div class="left">
         <form @submit.prevent.stop="updateName">

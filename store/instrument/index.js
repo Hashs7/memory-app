@@ -21,7 +21,7 @@ export const getters = {
 
 export const mutations = {
   resetState(state) {
-    state = { ...emptyState };
+    state.data = { ...emptyState.data };
   },
 
   setInstrumentData(state, payload) {

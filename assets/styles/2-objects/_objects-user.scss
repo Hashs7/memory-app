@@ -89,14 +89,15 @@
   font-weight: 500;
   color: #7b7b7b;
 }
+
 .btn-edit {
   display: block;
   font-size: 14px;
   height: 34px;
   line-height: 32px;
   padding: 0 14px;
-  color: $background;
-  border: 2px solid $background;
+  color: $gray-darkest;
+  border: 2px solid $gray-darkest;
   background-color: transparent;
   border-radius: 34px;
   font-weight: 500;

@@ -90,7 +90,7 @@ export default {
     },
     isFavorite() {
       if (this.isOwner) return false;
-      return this.$auth.$state.user?.wishList?.includes(this.instrument._id);
+      return this.$auth.$state.user?.wishList?.includes(this.instrument.id);
     },
     thumbnail() {
       return this.instrument.images[0]?.path;
@@ -100,7 +100,7 @@ export default {
     async addToWish() {
       try {
         const res = await this.$api.toggleInstrumentToWishlist(
-          this.instrument._id
+          this.instrument.id
         );
         this.$auth.setUser(res.data);
       } catch (e) {

@@ -1,6 +1,6 @@
 <template>
   <component
-    :is="link ? 'nuxt-link' : 'div'"
+    :is="linkUrl ? 'nuxt-link' : 'div'"
     :to="linkUrl"
     class="memory-preview"
     @click="$emit('click')"
@@ -56,7 +56,11 @@ export default {
   },
   computed: {
     linkUrl() {
-      const { id } = this.$route.params;
+      let { id } = this.$route.params;
+      if (!id) {
+        id = this.data.instrumentId;
+      }
+      console.log(id, this.data);
       return `/instrument/${id}/souvenir/${this.data.id}`;
     },
     editLinkUrl() {

@@ -11,19 +11,17 @@
     </div>
     <p class="">Faites-lui scanner !</p>
     <p class="">Faites scanner ce code unique au nouveau propriétaire</p>
-    <ClipboardCopy v-if="url" :value="url">Copier le lien</ClipboardCopy>
+    <!--<ClipboardCopy v-if="url" :value="url">Copier le lien</ClipboardCopy>-->
   </div>
 </template>
 
 <script>
 import QRCode from 'qrcode';
-import ClipboardCopy from '../../layout/ClipboardCopy';
 import Background from '~/assets/svg/qrcode-background.svg?inline';
 
 export default {
   name: 'Step2',
   components: {
-    ClipboardCopy,
     Background,
   },
   data() {

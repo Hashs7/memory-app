@@ -108,7 +108,7 @@ export default {
 
 .search__input {
   width: 100%;
-  height: 100%;
+  height: 42px;
   background-color: $background-darker;
 
   &::placeholder {

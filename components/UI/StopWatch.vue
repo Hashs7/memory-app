@@ -9,7 +9,7 @@ export default {
     return {
       min: 0,
       sec: 0,
-      timer: '',
+      timer: '00:00',
       stopTime: true,
     };
   },

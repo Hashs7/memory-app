@@ -2,7 +2,8 @@
   <div class="audio-recorder">
     <div v-if="!disabled" class="container">
       <div class="stopwatch">
-        <StopWatch ref="stopwatch" />
+        <StopWatch v-show="!hasAudio" ref="stopwatch" />
+        <AudioPlayer v-show="hasAudio" ref="recordedAudio" light progress-bar />
       </div>
       <div class="audio-recorder__btn">
         <button
@@ -20,10 +21,8 @@
           @click="stopRecord"
         ></button>
       </div>
-      <button @click="upload">Upload</button>
-      <p>
-        <audio ref="recordedAudio"></audio>
-      </p>
+      <button v-if="hasAudio" @click="upload">Upload</button>
+      <button v-if="hasAudio" @click="deleteRecord">Supprimer</button>
     </div>
     <div v-else>
       <p>L'enregistrement audio n'est pas disponible</p>
@@ -33,14 +32,17 @@
 
 <script>
 import StopWatch from '../../UI/StopWatch';
+import AudioPlayer from './AudioPlayer';
+
 export default {
   name: 'AudioRecorder',
-  components: { StopWatch },
+  components: { StopWatch, AudioPlayer },
   data() {
     return {
       rec: null,
       audioChunks: null,
       recordDisabled: false,
+      hasAudio: false,
       stopRecordDisabled: true,
       stream: null,
       audioBlob: null,
@@ -68,11 +70,19 @@ export default {
         this.stream = stream;
         this.handlerFunction(stream);
         this.storeData();
+        this.$refs.stopwatch.resetTimer();
+        this.$refs.stopwatch.start();
       });
     },
-    startRecord() {
+    deleteRecord() {
       this.$refs.stopwatch.resetTimer();
-      this.$refs.stopwatch.start();
+      this.recordDisabled = false;
+      this.stopRecordDisabled = true;
+      this.hasAudio = false;
+      this.audioChunks = [];
+    },
+    startRecord() {
+      this.hasAudio = false;
       this.handleAudioStream();
     },
     storeData() {
@@ -85,6 +95,7 @@ export default {
       this.$refs.stopwatch.stop();
       this.recordDisabled = false;
       this.stopRecordDisabled = true;
+      this.hasAudio = true;
       this.rec.stop();
       this.stream.getTracks().forEach((track) => track.stop());
     },
@@ -94,9 +105,7 @@ export default {
         this.audioChunks.push(e.data);
         if (this.rec.state === 'inactive') {
           const blob = new Blob(this.audioChunks, { type: 'audio/mp3' });
-          this.$refs.recordedAudio.src = URL.createObjectURL(blob);
-          this.$refs.recordedAudio.controls = true;
-          // this.$refs.recordedAudio.autoplay = true;
+          this.$refs.recordedAudio.$refs.audio.src = URL.createObjectURL(blob);
           this.audioBlob = blob;
         }
       };
@@ -158,6 +167,8 @@ export default {
 }
 
 .stopwatch {
+  height: 32px;
+  line-height: 1;
   font-size: 32px;
   font-weight: 400;
   margin-bottom: 20px;

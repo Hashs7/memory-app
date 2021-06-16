@@ -1,11 +1,18 @@
 <template>
-  <div class="player">
+  <div :class="{ light }" class="player">
     <div v-if="visualizer" class="visualizer">
       <canvas id="canvas" class="audio-visualizer"></canvas>
     </div>
-    <audio id="audio-element" ref="audio" :src="media.path" muted controls>
+    <audio
+      id="audio-element"
+      ref="audio"
+      :src="media ? media.path : ''"
+      muted
+      controls
+    >
       Sorry, your browser doesn't support embedded videos.
     </audio>
+
     <div v-if="progressBar" ref="progress" class="progress-element">
       <div class="progress__bar" @click="clickProgress">
         <div class="progress__current" :style="{ width: barWidth }"></div>
@@ -15,7 +22,8 @@
         <span class="progress__duration">{{ duration }}</span>
       </p>
     </div>
-    <div class="player__top">
+
+    <div v-if="controls" class="player__top">
       <div class="player-controls">
         <div class="player-controls__item" @click="play">
           <span v-if="isTimerPlaying">
@@ -52,18 +60,21 @@ export default {
       type: Boolean,
       default: false,
     },
+    light: {
+      type: Boolean,
+      default: false,
+    },
+    controls: {
+      type: Boolean,
+      default: false,
+    },
     media: {
       type: Object,
-      required: true,
+      default: () => {},
 
       src: {
         type: Object,
-        required: true,
-      },
-
-      mimetype: {
-        type: Object,
-        required: true,
+        default: () => {},
       },
     },
   },
@@ -79,19 +90,19 @@ export default {
     };
   },
   mounted() {
+    console.log(this.$refs.audio);
     this.$refs.audio.loadedmetadata = () => {
       this.generateTime();
     };
 
-    this.$refs.audio.addEventListener('durationchange', (e) => {
+    this.$refs.audio?.addEventListener('durationchange', (e) => {
       this.generateTime();
     });
-
     this.$refs.audio.ontimeupdate = () => {
       this.generateTime();
     };
 
-    this.$refs.audio.addEventListener('ended', () => {
+    this.$refs.audio?.addEventListener('ended', () => {
       this.isTimerPlaying = false;
     });
 
@@ -263,5 +274,20 @@ export default {
   background-color: $gray-darkest;
   border-radius: 10px;
   transition: 0.5s ease;
+}
+
+.player.light {
+  .progress__bar {
+    background-color: rgba(#faf4de, 0.4);
+  }
+
+  .progress__current {
+    background-color: #faf4de;
+  }
+
+  path,
+  rect {
+    fill: #faf4de;
+  }
 }
 </style>

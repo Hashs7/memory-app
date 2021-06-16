@@ -1,6 +1,6 @@
 <template>
   <div class="o-page o-page--handover o-page__container o-page__flex">
-    <ButtonBack absolute />
+    <ButtonBack absolute emit @back="stepBack" />
     <h1 class="o-page__title">{{ title[step - 1] }}</h1>
     <div class="step-container o-page__body">
       <component
@@ -8,16 +8,10 @@
         v-for="i in MAX_STEP"
         v-show="step === i"
         :key="i"
+        :show="step === i"
       />
     </div>
     <div class="">
-      <button
-        v-if="step !== 1"
-        class="u-button u-button--outline"
-        @click="stepBack"
-      >
-        Retour
-      </button>
       <button
         v-if="step !== MAX_STEP"
         class="u-button u-button--primary"
@@ -33,7 +27,7 @@
 </template>
 
 <router>
-path: /instrument/:id/passation
+  path: /instrument/:id/passation
 </router>
 
 <script>
@@ -78,6 +72,10 @@ export default {
       });
     },
     stepBack() {
+      if (this.step === 1) {
+        this.$router.go(-1);
+        return;
+      }
       this.step -= 1;
     },
     stepNext() {

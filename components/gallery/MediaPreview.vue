@@ -5,7 +5,7 @@
       <div>
         <img v-if="isImage" class="" :src="media.path" alt="" />
         <div v-if="isAudio" class="">
-          <AudioPlayer :media="media" progress-bar visualizer />
+          <AudioPlayer :media="media" controls progress-bar visualizer />
         </div>
         <video v-if="isVideo" controls>
           <source :src="media.path" :type="media.mimetype" />

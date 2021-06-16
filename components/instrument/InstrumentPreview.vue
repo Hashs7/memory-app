@@ -66,7 +66,7 @@ export default {
       };
     },
     isFavorite() {
-      return this.$auth.$state.user.wishList.includes(this.data._id);
+      return this.$auth.$state.user.wishList.includes(this.data.id);
     },
     date() {
       const date = new Date(this.data.createdAt);
@@ -89,7 +89,7 @@ export default {
   methods: {
     async toggleFav() {
       try {
-        const res = await this.$api.toggleInstrumentToWishlist(this.data._id);
+        const res = await this.$api.toggleInstrumentToWishlist(this.data.id);
         this.$auth.setUser(res.data);
       } catch (e) {
         throw new Error(e);
@@ -171,7 +171,7 @@ export default {
 
   &.selected {
     path {
-      fill: $background;
+      fill: #ff8181;
     }
   }
 }

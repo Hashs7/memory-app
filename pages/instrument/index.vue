@@ -1,8 +1,6 @@
 <template>
-  <div class="o-page">
-    <div class="o-page__header">
-      <h1>Mon motel</h1>
-    </div>
+  <div class="o-page o-page__container">
+    <h1 class="o-page__title">Mon motel</h1>
     <div class="o-page__body">
       <section class="view view--instrument-list">
         <nav class="o-section__head tab-nav">
@@ -18,13 +16,12 @@
         </nav>
 
         <div class="instrument-sections">
-          <section
-            v-for="(s, i) in sections"
-            :key="i"
-            :class="[s.class]"
-            class="instruments-container"
-          >
-            <div v-if="selectedSection === s.name" class="">
+          <section v-for="(s, i) in sections" :key="i" class="">
+            <div
+              v-if="selectedSection === s.name"
+              :class="[s.class]"
+              class="instruments-container"
+            >
               <NuxtLink
                 v-if="selectedSection === 'user'"
                 to="/instrument/creation"
@@ -111,6 +108,7 @@ export default {
 .instruments-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-gap: 8px;
 
   &.user-instrument {
     display: block;

@@ -4,6 +4,7 @@
   // Remove navbar height
   min-height: calc(100vh - 72px);
   margin: auto;
+  width: 100%;
   background-color: $background;
   max-width: 688px;
 }
@@ -79,7 +80,7 @@
 }
 
 .o-page__header {
-  padding: 25px;
+  height: 72px;
 }
 
 .o-page__title {
@@ -170,6 +171,10 @@
       left: 0;
       right: 0;
       margin: auto;
+
+      &.front {
+        z-index: 5;
+      }
     }
   }
 

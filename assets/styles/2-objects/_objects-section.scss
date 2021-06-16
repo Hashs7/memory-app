@@ -14,7 +14,7 @@
   display: flex;
   justify-content: space-between;
   padding-bottom: 8px;
-  margin-bottom: 16px;
+  //margin-bottom: 16px;
 
   &:after {
     content: '';
@@ -28,7 +28,8 @@
 }
 
 .o-section__title {
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 400;
   font-family: $font-primary;
 }
 

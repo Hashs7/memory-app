@@ -2,7 +2,7 @@
   <client-only>
     <div class="audio-content memory-content">
       <div class="memory-content__inner">
-        <AudioPlayer visualizer :media="value.file" />
+        <AudioPlayer visualizer controls :media="value.file" />
         <!--        <span v-else>{{ value.file }}</span>-->
       </div>
     </div>
