@@ -36,7 +36,7 @@ export default {
       {
         name: 'viewport',
         content:
-          'width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0',
+          'width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0, viewport-fit=cover',
       },
       {
         name: 'theme-color',

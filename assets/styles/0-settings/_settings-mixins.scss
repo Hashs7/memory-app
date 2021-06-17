@@ -33,7 +33,7 @@
 
 @mixin blurred-background {
   background: rgba($background-darker, 0.4);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(2px);
 }
 
 @function strip-unit($value) {

@@ -1,18 +1,17 @@
 <template>
   <div class="gallery-element">
-    <CustomButton outline>
-      <span>Importer une photo</span>
-      <input
-        ref="file"
-        class="u-button__input-file"
-        type="file"
-        accept="audio/*,video/*,image/*"
-        style="opacity: 0"
-        @change="previewImg"
-      />
-    </CustomButton>
-
     <div class="gallery__container">
+      <div class="gallery__import">
+        <IconCamera />
+        <input
+          ref="file"
+          class="u-button__input-file"
+          type="file"
+          accept="audio/*,video/*,image/*"
+          style="opacity: 0"
+          @change="previewImg"
+        />
+      </div>
       <GalleryMedia
         v-for="m in medias"
         :key="m._id"
@@ -26,16 +25,16 @@
 </template>
 
 <script>
-import CustomButton from '../UI/CustomButton';
+import IconCamera from '@/assets/svg/ic_camera.svg?inline';
 import MediaPreview from './MediaPreview';
 import GalleryMedia from './GalleryMedia';
 
 export default {
   name: 'Gallery',
   components: {
-    CustomButton,
     GalleryMedia,
     MediaPreview,
+    IconCamera,
   },
   props: {
     preview: {
@@ -98,19 +97,29 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .gallery-element {
   width: 100%;
   height: 100%;
+  padding-top: 20px;
 }
 
 .gallery-element .media-content {
   margin-bottom: 20px;
 }
 
+.gallery__import {
+  position: relative;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #cdc8b6 !important;
+}
+
 .gallery__container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   grid-auto-rows: 1fr;
   grid-column-gap: 4px;
   grid-row-gap: 4px;

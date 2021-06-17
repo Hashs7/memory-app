@@ -83,10 +83,11 @@ export default {
   //left: 0;
   //right: 0;
 }
-
-.audio-view {
-  max-height: 300px;
-  overflow: scroll;
+.o-page--gallery {
+  .audio-view {
+    max-height: calc(100vh - 404px);
+    overflow: scroll;
+  }
 }
 
 .o-page--gallery {

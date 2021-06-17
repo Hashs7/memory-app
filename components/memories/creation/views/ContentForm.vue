@@ -55,7 +55,7 @@
       </form>
 
       <MediaModal v-if="modal.show">
-        <component :is="modalComponent" selectFiles @selected="addContent" />
+        <component :is="modalComponent" select-files @selected="addContent" />
       </MediaModal>
 
       <div class="o-page__footer actions">

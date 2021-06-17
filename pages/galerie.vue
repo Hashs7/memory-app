@@ -3,7 +3,7 @@
     <h1 class="o-page__title">Galerie</h1>
     <TabSections :sections="sections" class="o-page__body">
       <template #section0>
-        <Gallery preview />
+        <Gallery select-files preview />
       </template>
       <template #section1>
         <AudioGallery delete-files recorder />
@@ -46,8 +46,16 @@ export default {
     flex-direction: column;
   }
 
+  .o-section__head {
+    margin-bottom: 0;
+  }
+
   .tab-sections {
     flex-grow: 1;
   }
+}
+
+.o-page--gallery.o-page__flex {
+  padding-bottom: 0;
 }
 </style>

@@ -21,8 +21,10 @@
 </template>
 
 <script>
-import IconMotel from '@/assets/svg/ic_nav-motel.svg?inline';
-import IconDiscover from '@/assets/svg/ic_nav-discover.svg?inline';
+import IconMotel from '@/assets/svg/nav/ic_nav-motel.svg?inline';
+import IconGallery from '@/assets/svg/nav/ic_nav-gallery.svg?inline';
+import IconDiscover from '@/assets/svg/nav/ic_nav-discover.svg?inline';
+import IconProfile from '@/assets/svg/nav/ic_nav-profile.svg?inline';
 import IconAdd from '@/assets/svg/ic_add.svg?inline';
 
 export default {
@@ -30,6 +32,8 @@ export default {
   components: {
     IconMotel,
     IconDiscover,
+    IconProfile,
+    IconGallery,
     IconAdd,
   },
   data() {
@@ -45,7 +49,7 @@ export default {
           slug: 'gallery',
           label: 'Galerie',
           path: '/galerie',
-          icon: 'IconMotel',
+          icon: 'IconGallery',
         },
         {
           slug: 'add',
@@ -63,7 +67,7 @@ export default {
           slug: 'profile',
           label: 'Profil',
           path: '/profil',
-          icon: 'IconDiscover',
+          icon: 'IconProfile',
         },
       ],
     };
@@ -95,11 +99,11 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 72px;
   display: flex;
-  padding: 0 0 env(safe-area-inset-bottom, 0) 0; // Avoid iOS notch
+  padding-bottom: env(safe-area-inset-bottom, 0);
   background-color: $background;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  // TODO fix height
 
   &__item {
     display: inline-flex;
@@ -110,6 +114,9 @@ export default {
     svg {
       opacity: 0.5;
     }
+    path {
+      fill: rgb(55, 55, 55);
+    }
 
     &--current:not(.add) {
       position: relative;
@@ -117,7 +124,7 @@ export default {
         content: '';
         height: 2px;
         position: absolute;
-        top: -12px;
+        top: -14px;
         left: 0;
         right: 0;
         margin: auto;
@@ -131,8 +138,8 @@ export default {
   }
 
   &__icon {
-    width: 1.6rem;
-    height: 1.6rem;
+    width: 22px;
+    height: 22px;
     margin-bottom: 8px;
 
     svg {
@@ -149,14 +156,19 @@ export default {
 }
 
 .tabbar__container {
-  margin: auto;
+  //margin: auto;
   width: 100%;
   position: relative;
   display: flex;
   justify-content: space-around;
+  padding: 14px 0 8px 0;
 }
 
-.tabbar__item.add {
+.tabbar__item {
+  width: 56px;
+}
+
+/*.tabbar__item.add {
   opacity: 1;
 
   .tabbar__icon {
@@ -179,5 +191,5 @@ export default {
       fill: $background;
     }
   }
-}
+}*/
 </style>

@@ -1,13 +1,16 @@
 <template>
   <div class="media-modal o-page--full">
-    <div class="media-modal__head">
-      <ButtonBack emit @back="closeModal" />
-      <p class="media-modal__head">Galerie Memory Motel</p>
-      <button @click="addContent">valider</button>
+    <div class="media-modal__container">
+      <div class="media-modal__head">
+        <ButtonBack emit @back="closeModal" />
+        <p class="">Galerie Memory Motel</p>
+        <button @click="addContent">valider</button>
+      </div>
+      <div class="media-modal__body">
+        <slot />
+      </div>
     </div>
-    <div class="media-modal__body">
-      <slot />
-    </div>
+    <div class="media-modal__background o-page--full" @click="closeModal"></div>
   </div>
 </template>
 
@@ -32,7 +35,33 @@ export default {
 <style lang="scss" scoped>
 .media-modal {
   z-index: 10;
-  top: 60px;
+  padding-top: 60px;
+}
+
+.media-modal__background {
+  z-index: 1;
+  @include blurred-background;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.media-modal__container {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  border-radius: 22px 22px 0 0;
   background-color: $background;
+}
+
+.media-modal__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.media-modal .gallery-element {
+  padding-top: 4px;
+  //margin-top: -1px;
 }
 </style>

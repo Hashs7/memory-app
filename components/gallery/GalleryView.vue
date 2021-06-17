@@ -3,7 +3,7 @@
     <div class="media-preview">
       <button @click="$emit('close')">Retour</button>
       <div class="o-page__outside">
-        <Gallery @selected="$emit('close')" />
+        <Gallery select-files @selected="$emit('close')" />
       </div>
     </div>
   </div>

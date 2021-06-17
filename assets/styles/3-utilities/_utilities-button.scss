@@ -114,6 +114,7 @@
 }
 
 .u-button--back {
+  margin-top: env(safe-area-inset-top, 0);
   position: relative;
   display: block;
   padding: 0;

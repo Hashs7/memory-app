@@ -80,6 +80,7 @@ export default {
   cursor: pointer;
   width: 100%;
   height: 100%;
+  border-radius: 4px;
 
   &.selected:after {
     content: '';
