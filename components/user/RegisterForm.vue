@@ -144,6 +144,7 @@ export default {
           email: this.email,
           password: this.password,
         });
+
         const response = await this.$auth.loginWith('local', {
           data: {
             username: this.email,
@@ -164,7 +165,7 @@ export default {
       }
       // Redirect to personal instruments
       this.$router.push({
-        name: 'instrument',
+        name: 'instrument-creation-tunnel',
       });
     },
 

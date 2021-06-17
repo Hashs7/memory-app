@@ -26,6 +26,10 @@ export const getters = {
     return state.medias.filter((m) => m.mimetype.split('/')[0] === 'audio');
   },
 
+  getLastAudio(state) {
+    return state.medias[state.medias.length - 1];
+  },
+
   getImgAndVideos(state) {
     return state.medias.filter((m) => m.mimetype.split('/')[0] !== 'audio');
   },

@@ -1,11 +1,12 @@
 <template>
-  <div class="o-page o-page--register">
+  <div class="o-page o-container o-page--register">
     <div class="o-page__header">
       <div class="logo"><IconLogo /></div>
       <span class="o-page__title">Création de compte</span>
       <h1 class="o-page__subtitle">Commençons par vous !</h1>
     </div>
     <RegisterForm />
+    <NuxtChild />
   </div>
 </template>
 
@@ -22,3 +23,9 @@ export default {
   layout: 'none',
 };
 </script>
+
+<style lang="scss">
+.logo {
+  width: 85px;
+}
+</style>

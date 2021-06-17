@@ -27,7 +27,7 @@
       <template slot="control" class="onboarding__controls o-container">
         <NuxtLink
           v-if="!$auth.loggedIn"
-          to="/connexion"
+          to="/inscription"
           class="u-button u-button--primary half onboarding__begin-button"
           :class="{ visible: active === boards.length - 1 }"
           >Commencer</NuxtLink
