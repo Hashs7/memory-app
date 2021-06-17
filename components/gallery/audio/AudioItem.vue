@@ -125,6 +125,7 @@ export default {
 }
 
 .audio-item__name {
+  width: 100%;
   padding: 0;
   font-size: 16px;
   background-color: transparent;
@@ -158,8 +159,8 @@ export default {
 }
 
 .audio-item__infos {
-  display: flex;
-  justify-content: space-between;
+  //display: flex;
+  //justify-content: space-between;
   .left {
     max-width: calc(100% - 40px);
   }

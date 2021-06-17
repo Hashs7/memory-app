@@ -116,8 +116,12 @@ export const actions = {
         type: 'audio',
         file,
       });
+      commit(
+        'gallery/resetSelected',
+        { id: file._id, type: 'audio' },
+        { root: true }
+      );
     });
-    commit('gallery/resetSelected', null, { root: true });
   },
 
   addContent({ commit, state, rootState, rootGetters }) {

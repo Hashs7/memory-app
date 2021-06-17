@@ -131,13 +131,16 @@
     left: 0;
     right: 0;
     margin: auto;
-    width: 8px;
-    height: 12px;
   }
 
   path {
     fill: $background;
   }
+}
+
+.u-button--back.chevron svg {
+  width: 8px;
+  height: 12px;
 }
 
 .u-button--back.light {
@@ -155,6 +158,10 @@
 
 .u-button--back.transparent {
   background-color: transparent;
+
+  path {
+    fill: $gray-darkest;
+  }
 }
 
 .u-button__input-file {

@@ -73,7 +73,7 @@ export const mutations = {
 
   removeSelected(state, { id, type }) {
     const index = state.selected[type].indexOf(id);
-    state.selected.splice(index, 1);
+    state.selected[type].splice(index, 1);
   },
 };
 

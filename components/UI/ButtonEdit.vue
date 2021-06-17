@@ -1,20 +1,20 @@
 <template>
   <button
-    class="u-button--back chevron"
+    class="u-button--back edit"
     :class="{ light, absolute }"
     @click="back"
   >
-    <IconChevron />
+    <IconEdit />
   </button>
 </template>
 
 <script>
-import IconChevron from '@/assets/svg/ic_chevron.svg?inline';
+import IconEdit from '@/assets/svg/ic_edit.svg?inline';
 
 export default {
-  name: 'ButtonBack',
+  name: 'ButtonEdit',
   components: {
-    IconChevron,
+    IconEdit,
   },
   props: {
     emit: {
@@ -50,4 +50,13 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style>
+.u-button--back.edit {
+  padding: 8px;
+}
+.u-button--back.edit svg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+</style>

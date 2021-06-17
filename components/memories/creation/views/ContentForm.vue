@@ -2,7 +2,7 @@
   <div class="o-page--create-content">
     <div class="o-page">
       <div class="o-page__header o-page__header-nav">
-        <button class="u-button--back" @click="$emit('back')">
+        <button class="u-button--back chevron" @click="$emit('back')">
           <IconChevron />
         </button>
         <button class="u-button--back transparent">
@@ -11,17 +11,10 @@
       </div>
 
       <div class="memory__infos">
-        <label class="memory__title">
-          <input
-            v-model="name"
-            type="text"
-            class="memory__title-input"
-            placeholder="Ajouter un titre"
-          />
-        </label>
+        <p class="memory__title-input">Elektra de feu</p>
       </div>
 
-      <form class="o-page__body o-page__outside">
+      <form class="o-page__body">
         <div class="slider">
           <draggable
             v-model="contents"
@@ -179,6 +172,12 @@ export default {
   .o-page {
     background-color: transparent;
   }
+
+  .o-page__body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .o-layout--none .o-page--create-content {
@@ -236,6 +235,7 @@ export default {
   //min-width: calc(100vw - 60px);
   //height: calc((100vw - 60px) * (16 / 9));
   min-width: 300px;
+  width: 300px;
   height: calc(300px * (16 / 9));
   //margin: 20px 12px;
   margin-right: 12px;

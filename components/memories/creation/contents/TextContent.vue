@@ -1,11 +1,11 @@
 <template>
-  <client-only>
-    <div class="text-content memory-content">
-      <div class="memory-content__inner">
-        <wysiwyg v-model="html" />
+  <div class="text-content memory-content">
+    <div class="memory-text-card">
+      <div class="memory-text-card__pattern">
+        <textarea v-model="html" class="memory-text-card__text"></textarea>
       </div>
     </div>
-  </client-only>
+  </div>
 </template>
 
 <script>

@@ -42,7 +42,8 @@
 }
 
 .o-page__header-nav {
-  position: relative;
+  margin-top: env(safe-area-inset-top, 0);
+  padding: 18px 18px 4px 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -116,7 +117,7 @@
 }
 
 .o-page--summary .o-page__body {
-  padding: 0 8px;
+  padding: 0 20px;
 }
 
 // Specific

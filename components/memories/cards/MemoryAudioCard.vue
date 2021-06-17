@@ -45,4 +45,7 @@ export default {
   background: $background;
   overflow: hidden;
 }
+.memory-audio-card__player {
+  width: 100%;
+}
 </style>

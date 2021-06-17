@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ light }" class="player">
+  <div :class="{ light }" ref="player" class="player">
     <div v-if="visualizer" class="visualizer">
       <canvas id="canvas" class="audio-visualizer"></canvas>
     </div>
@@ -111,8 +111,9 @@ export default {
   methods: {
     enableVisualizer() {
       const canvas = document.getElementById('canvas');
-      canvas.width = window.innerWidth;
-      canvas.height = (9 / 16) * window.innerWidth;
+      const { width } = this.$refs.player.getBoundingClientRect();
+      canvas.width = width;
+      canvas.height = (9 / 16) * width;
 
       this.wave = new Wave();
       this.wave.fromElement('audio-element', 'canvas', {

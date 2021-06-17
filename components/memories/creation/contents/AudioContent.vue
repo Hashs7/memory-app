@@ -33,6 +33,11 @@ export default {
 
 <style lang="scss">
 .audio-content {
-  padding: 16px;
+  //padding: 16px;
+
+  .memory-content__inner {
+    display: flex;
+    align-items: center;
+  }
 }
 </style>
