@@ -6,9 +6,7 @@
         <p>Ajoute une photo de ton instrument préféré</p>
       </div>
 
-      <button
-        class="u-button u-button--round instru-tunnel__photo instru-tunnel__input"
-      >
+      <button class="u-button u-button--round instru-tunnel__photo">
         <input
           ref="file"
           class="u-button__input-file"
@@ -25,7 +23,11 @@
         <h2>Nomme ton instrument</h2>
         <p>Quel petit nom pour ton instrument ?</p>
       </div>
-
+      <img
+        class="instru-tunnel__img"
+        src="~/assets/img/tunnel_name.png"
+        alt="Nom instrument"
+      />
       <b-input
         v-model="instrument.name"
         name="name"
@@ -39,9 +41,14 @@
         <h2>Année de rencontre</h2>
         <p>Quand est-ce que cet instrument est devenu le votre ?</p>
       </div>
+      <img
+        class="instru-tunnel__img"
+        src="~/assets/img/tunnel_calendar.png"
+        alt="Date instrument"
+      />
       <input
         v-model="instrument.buyDate"
-        class="slider__date-input"
+        class="slider__date-input instru-tunnel__input"
         type="date"
         name="date"
         placeholder="Sélectionner une date"
@@ -55,6 +62,11 @@
           Enregistre le son que fait ton instrument sur un accord de ton choix !
         </p>
       </div>
+      <img
+        class="instru-tunnel__img"
+        src="~/assets/img/tunnel_sonority.png"
+        alt="Sonority instrument"
+      />
       <AudioRecorder />
     </section>
 
@@ -166,9 +178,13 @@ export default {
     margin-top: 20px;
   }
 }
+.instru-tunnel__img {
+  margin-top: 50px;
+}
 
 .instru-tunnel__input {
   margin-top: 50px;
+  width: 100%;
 }
 .instru-tunnel__button {
   padding: 0 52px;
@@ -189,5 +205,6 @@ export default {
 .instru-tunnel__photo {
   background-color: $background-darker;
   border: none;
+  margin-top: 50px;
 }
 </style>
