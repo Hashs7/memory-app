@@ -19,7 +19,7 @@
     "@nuxtjs/pwa": "^3.3.5",
     "core-js": "^3.9.1",
     "dayjs": "^1.10.5",
-    "gsap": "file:vendor/gsap-bonus.tgz",
+    "gsap": "^3.7.0",
     "imagesloaded": "^4.1.4",
     "nuxt": "^2.15.3",
     "nuxt-buefy": "^0.4.4",
