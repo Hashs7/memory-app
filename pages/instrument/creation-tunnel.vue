@@ -153,14 +153,23 @@ export default {
       this.index += 1;
     },
 
-    async submitInstrument() {
+    redirect(id) {
+      this.$router.push({
+        name: 'instrument-id',
+        params: { id },
+      });
+    },
+
+    submitInstrument() {
       const isEmpty = !Object.values(this.instrument).some(
         (x) => x !== null && x !== '' && x.length > 0
       );
 
       if (!isEmpty) {
         try {
-          return await this.$api.newInstrument(this.instrument);
+          return this.$api.newInstrument(this.instrument).then((res) => {
+            this.redirect(res.data.id);
+          });
         } catch (e) {
           throw new Error(e);
         }
