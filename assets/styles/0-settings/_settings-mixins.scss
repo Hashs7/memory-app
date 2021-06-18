@@ -36,6 +36,14 @@
   backdrop-filter: blur(2px);
 }
 
+@mixin button-background {
+    background-color: transparent;
+    background-image: url('~assets/svg/button/btn_background.svg');
+    background-size: 100% 100%;
+    border: 0;
+    color: white;
+}
+
 @function strip-unit($value) {
   @return $value / ($value * 0 + 1);
 }
