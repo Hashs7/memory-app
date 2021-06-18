@@ -6,16 +6,21 @@
         <p>Ajoute une photo de ton instrument préféré</p>
       </div>
 
-      <button class="u-button u-button--round instru-tunnel__photo">
+      <div
+        class="photo-placeholder instru-tunnel__img"
+        :style="{
+          backgroundImage: `url(${imagePath})`,
+        }"
+      >
         <input
           ref="file"
           class="u-button__input-file"
           type="file"
-          name="image"
-          accept="image/*"
+          accept="audio/*,video/*,image/*"
           style="opacity: 0"
+          @change="previewImg"
         />
-      </button>
+      </div>
     </section>
 
     <section v-if="index === 1" class="instru-tunnel__section">
@@ -109,6 +114,7 @@ export default {
         sonority: null,
         images: [],
       },
+      imagePath: '/img/background_addimg.png',
       index: 0,
       sections: ['images', 'name', 'buyDate', 'sonority'],
     };
@@ -149,8 +155,9 @@ export default {
 
     async submitInstrument() {
       const isEmpty = !Object.values(this.instrument).some(
-        (x) => x !== null && x !== ''
+        (x) => x !== null && x !== '' && x.length > 0
       );
+
       if (!isEmpty) {
         try {
           return await this.$api.newInstrument(this.instrument);
@@ -160,7 +167,26 @@ export default {
       }
     },
 
-    path() {},
+    previewImg() {
+      const fileReader = new FileReader();
+      [...this.$refs.file.files].forEach((f) => {
+        fileReader.readAsDataURL(f);
+        fileReader.addEventListener('loadend', (e) => this.uploadImg(e, f));
+      });
+    },
+
+    async uploadImg(event, file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      try {
+        const { data } = await this.$api.uploadFile(formData);
+        this.instrument.images.push(data.response._id);
+        this.imagePath = data.response.path;
+        this.$store.commit('gallery/addMedia', data.response);
+      } catch (e) {
+        console.error(e);
+      }
+    },
   },
 };
 </script>
@@ -168,12 +194,12 @@ export default {
 <style lang="scss">
 .buttons_container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  margin-top: 40px;
+  margin-top: 20px;
 }
 .instru-tunnel__text {
-  margin-top: 100px;
+  margin-top: 70px;
   & p {
     margin-top: 20px;
   }
@@ -194,9 +220,20 @@ export default {
   padding: 0 52px;
 }
 .instru-tunnel__section {
+  height: 615px;
   display: flex;
   align-items: center;
   flex-direction: column;
+  & .audio-recorder {
+    background-color: transparent;
+  }
+  .record {
+    background-color: #9b988c !important;
+  }
+  .audio-recorder__btn {
+    padding: 0;
+    border: 7px solid #f3ecd4;
+  }
 }
 .instru-tunnel__container {
   text-align: center;
@@ -206,5 +243,14 @@ export default {
   background-color: $background-darker;
   border: none;
   margin-top: 50px;
+}
+.photo-placeholder {
+  position: relative;
+  height: 408px;
+  width: 290px;
+  border-radius: 5px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 </style>
