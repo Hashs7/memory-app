@@ -37,3 +37,21 @@ export const throttle = (f, t) =>
  */
 export const randomBetween = (start, end) =>
   Math.floor(Math.random() * (end - start + 1)) + start;
+
+/**
+ * @param {[number]} array
+ * @param {number} value
+ * @return {number}
+ */
+export const findIndexOfClosest = (array, value) => {
+  let finalIndex = 0;
+  array.reduce((prev, curr, index) => {
+    if (value <= curr) {
+      finalIndex = index;
+      return curr;
+    } else {
+      return prev;
+    }
+  });
+  return finalIndex;
+};
