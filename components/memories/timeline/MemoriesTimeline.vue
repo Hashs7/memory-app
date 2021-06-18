@@ -2,7 +2,7 @@
   <section class="memories-timeline">
     <div class="memories-timeline__slider-wrap">
       <div ref="slider" class="memories-timeline__slider">
-        <template v-for="(step, i) in timelineSteps">
+        <template v-for="(step, i) in memorySteps">
           <MemoryPreview
             v-if="step.type === 'memory'"
             :key="i"
@@ -61,9 +61,9 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import Duration from 'dayjs/plugin/duration';
 import { Draggable } from 'gsap/Draggable';
 import { InertiaPlugin } from 'gsap/InertiaPlugin';
-import { bindDraggable } from '@/helpers/timeline';
 
 import MemoryPreview from '@/components/memories/MemoryPreview';
+import { findIndexOfClosest } from '../../../helpers';
 
 dayjs.extend(isSameOrBefore);
 dayjs.extend(Duration);
@@ -86,31 +86,59 @@ export default {
     };
   },
   computed: {
-    firstMemory() {
-      return this.memories.reduce((memo, val) => {
-        return dayjs(val.date).isBefore(dayjs(memo.date)) ? val : memo;
-      });
-    },
-    lastMemory() {
-      return this.memories.reduce((memo, val) => {
-        return dayjs(val.date).isAfter(dayjs(memo.date)) ? val : memo;
+    sortedMemories() {
+      return this.memories.slice().sort((a, b) => {
+        if (dayjs(a.date).isBefore(b.date)) return -1;
+        if (dayjs(a.date).isAfter(b.date)) return 1;
+        return 0;
       });
     },
     timelineSteps() {
-      return this.memories.map((m) => {
-        return {
-          date: m.date,
-          type: 'memory',
-          data: m,
-        };
-      });
-      // return this.getTimelineSteps(this.firstMemory.date, this.lastMemory.date);
+      return this.getTimelineSteps();
+    },
+    memorySteps() {
+      return this.timelineSteps.filter((s) => s.type !== 'empty');
     },
   },
 
   mounted() {
-    const stripStepSize = 13;
-    const sliderStepSize = 304;
+    const sliderStep = this.$refs.slider.childNodes[0];
+    const sliderStepSize =
+      sliderStep.clientWidth +
+      parseInt(window.getComputedStyle(sliderStep)?.marginLeft) +
+      parseInt(window.getComputedStyle(sliderStep)?.marginRight);
+    const stripStep = this.$refs.steps[0];
+    const stripStepSize =
+      stripStep.clientWidth +
+      parseInt(window.getComputedStyle(stripStep)?.marginLeft) +
+      parseInt(window.getComputedStyle(stripStep)?.marginRight);
+
+    const stripPositions = this.memorySteps.map(
+      (s) => stripStepSize * s.position * -1
+    );
+    const sliderPositions = this.memorySteps.map(
+      (s, i) => sliderStepSize * i * -1
+    );
+
+    const bindSliderPositionToStrip = (sliderPosition) => {
+      const position = sliderPosition / sliderStepSize;
+      const positionIndex = Math.floor(position * -1);
+      const offsetPercentage = Math.abs(position % 1) || 0;
+      const offset =
+        (stripPositions[positionIndex + 1] - stripPositions[positionIndex]) *
+          offsetPercentage || 0;
+      return stripPositions[positionIndex] + offset;
+    };
+
+    const bindStripPositionToSlider = (stripPosition) => {
+      const positionIndex = findIndexOfClosest(stripPositions, stripPosition);
+      const offsetPercentage =
+        (stripPosition /
+          (stripPositions[positionIndex + 1] - stripPositions[positionIndex])) %
+          1 || 0;
+      const offset = sliderStepSize * offsetPercentage;
+      return sliderPositions[positionIndex] - offset;
+    };
 
     // Initiate slider draggable
     this.sliderDraggable = Draggable.create(this.$refs.slider, {
@@ -127,22 +155,14 @@ export default {
         return gsap.utils.snap(sliderStepSize, value);
       },
       onDrag() {
-        bindDraggable(
-          this.target,
-          document.querySelector('.memories-timeline__strip'),
-          sliderStepSize,
-          stripStepSize,
-          this.x
-        );
+        gsap.set(document.querySelector('.memories-timeline__strip'), {
+          x: bindSliderPositionToStrip(this.x),
+        });
       },
       onThrowUpdate() {
-        bindDraggable(
-          this.target,
-          document.querySelector('.memories-timeline__strip'),
-          sliderStepSize,
-          stripStepSize,
-          this.x
-        );
+        gsap.set(document.querySelector('.memories-timeline__strip'), {
+          x: bindSliderPositionToStrip(this.x),
+        });
       },
     });
 
@@ -155,26 +175,16 @@ export default {
         maxX: 0,
       },
       inertia: true,
-      snap: (value) => {
-        return gsap.utils.snap(stripStepSize, value);
-      },
+      snap: stripPositions,
       onDrag() {
-        bindDraggable(
-          this.target,
-          document.querySelector('.memories-timeline__slider'),
-          stripStepSize,
-          sliderStepSize,
-          this.x
-        );
+        gsap.set(document.querySelector('.memories-timeline__slider'), {
+          x: bindStripPositionToSlider(this.x),
+        });
       },
       onThrowUpdate() {
-        bindDraggable(
-          this.target,
-          document.querySelector('.memories-timeline__slider'),
-          stripStepSize,
-          sliderStepSize,
-          this.x
-        );
+        gsap.set(document.querySelector('.memories-timeline__slider'), {
+          x: bindStripPositionToSlider(this.x),
+        });
       },
     });
 
@@ -187,47 +197,64 @@ export default {
     });
   },
   methods: {
-    /*
-    getTimelineSteps(startDate, stopDate) {
+    getTimelineSteps() {
       const steps = [];
-      const stopDateObject = dayjs(stopDate);
-      let currentDate = dayjs(startDate);
-      // Create steps array with all days
-      while (currentDate.isSameOrBefore(stopDateObject)) {
-        steps.push({
-          date: currentDate.toISOString(),
-          type: 'empty',
-          data: null,
-        });
-        currentDate = currentDate.add(1, 'day');
-      }
       let previousMemory = this.memories[0];
-      let previousStepIndex = 0;
-      this.memories.forEach((memory, index) => {
-        const stepIndex = steps.findIndex((s) => s.date === memory.date);
-        if (stepIndex > -1) {
-          steps[stepIndex].type = 'memory';
-          steps[stepIndex].data = memory;
+
+      const addToSteps = (step, repeat = 1) => {
+        for (let i = 0; i < repeat; i++) {
+          steps.push({
+            ...step,
+            position: steps.length,
+          });
         }
+      };
+
+      const emptyStep = (unit) => {
+        return {
+          type: 'empty',
+          unit,
+          data: null,
+        };
+      };
+
+      this.sortedMemories.forEach((memory, index) => {
         if (index > 0) {
           const daysBetween = dayjs(memory.date).diff(previousMemory.date, 'd');
-          const betweenSteps = steps.slice(previousStepIndex + 1, stepIndex);
-
-          console.log('réduire les périodes');
-          console.log(
-            'Nombre de mois : ',
-            Math.floor(betweenSteps.length / 30)
-          );
-          console.log(betweenSteps);
-          // while()
-          console.log(daysBetween);
-          previousMemory = memory;
-          previousStepIndex = stepIndex;
+          // plus performant que le switch : https://stackoverflow.com/a/12259830
+          if (daysBetween < 7) {
+            addToSteps(emptyStep('day'), daysBetween);
+          } else if (daysBetween < 30) {
+            addToSteps(emptyStep('day'));
+            addToSteps(emptyStep('week'), Math.floor(daysBetween / 7));
+            addToSteps(emptyStep('day'));
+          } else if (daysBetween < 365) {
+            addToSteps(emptyStep('day'));
+            addToSteps(emptyStep('week'));
+            addToSteps(emptyStep('month'), Math.floor(daysBetween / 30));
+            addToSteps(emptyStep('week'));
+            addToSteps(emptyStep('day'));
+          } else {
+            addToSteps(emptyStep('day'));
+            addToSteps(emptyStep('week'));
+            addToSteps(emptyStep('month'));
+            addToSteps(emptyStep('year'), Math.floor(daysBetween / 365));
+            addToSteps(emptyStep('month'));
+            addToSteps(emptyStep('week'));
+            addToSteps(emptyStep('day'));
+          }
         }
+        addToSteps({
+          date: memory.date,
+          type: 'memory',
+          data: memory,
+        });
+
+        previousMemory = memory;
       });
+
       return steps;
     },
-     */
   },
 };
 </script>
@@ -316,8 +343,17 @@ $step-margin: 5px;
       opacity: 1;
     }
 
-    &--empty {
-      height: 20%;
+    &--day {
+      height: 70%;
+    }
+    &--week {
+      height: 50%;
+    }
+    &--month {
+      height: 30%;
+    }
+    &--year {
+      height: 10%;
     }
   }
 }
