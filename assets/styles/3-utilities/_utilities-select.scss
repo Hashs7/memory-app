@@ -7,7 +7,8 @@
 .u-select {
   .vs__dropdown-toggle {
     display: flex;
-    padding: 20px 26px;
+    padding: 12px 26px;
+    border: none
   }
 
   .vs__selected {
@@ -17,13 +18,22 @@
   .vs__selected-options {
     display: flex;
     width: 100%;
+    font-weight: 500;
+
+    input::placeholder {
+      font-weight: 500;
+    }
+  }
+
+  .vs__actions {
+    padding: 0;
   }
 
   .vs__search {
     background: none;
     border: none;
     width: 100%;
-    padding: 0;
+    padding: 0 !important;
 
     &::placeholder {
       color: #7C7C7B;

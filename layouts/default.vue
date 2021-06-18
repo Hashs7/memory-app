@@ -11,6 +11,7 @@
 import Tabbar from '@/components/layout/Tabbar';
 
 export default {
+  name: 'LayoutDefault',
   components: {
     Tabbar,
   },
@@ -19,6 +20,6 @@ export default {
 
 <style>
 .o-layout--default {
-  margin: 0 0 72px 0;
+  margin: 0 0 calc(66px + env(safe-area-inset-bottom, 0)) 0;
 }
 </style>

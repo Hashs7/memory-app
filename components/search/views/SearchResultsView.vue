@@ -1,7 +1,7 @@
 <template>
   <div class="o-page search-results-view">
     <div class="o-page__body">
-      <h1>Résultats</h1>
+      <h1 class="o-page__title">Résultats</h1>
       <TabSections
         :sections="[
           {

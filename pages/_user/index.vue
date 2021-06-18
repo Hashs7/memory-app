@@ -1,14 +1,12 @@
 <template>
   <div class="o-page o-page--user">
     <div class="user__header">
-      <ButtonBack light class="user-back" />
+      <ButtonBack v-show="!isOwner" light class="user-back" />
       <div v-if="isOwner" class="owner">
         <NuxtLink to="profil/edit" class="btn-edit">Modifier</NuxtLink>
       </div>
     </div>
-    <div class="user-banner">
-      <img src="http://seb-mbp.local:3000/file/guitar1975.jpg" alt="" />
-    </div>
+    <!--    <div class="user-banner"></div>-->
     <div class="user-infos">
       <div v-if="user.thumbnail" class="user-thumbnail">
         <img
@@ -45,11 +43,12 @@ export default {
   async asyncData({ $api, params, redirect }) {
     try {
       const user = await $api.getUserByUsername(params.user);
-      const instruments = await $api.getUserInstrumentsByUsername(params.user);
+      const res = await $api.getUserInstrumentsByUsername(params.user);
 
       return {
         user: user.data,
-        instruments: instruments.data.userInstruments,
+        instruments: res.data.userInstruments,
+        memories: res.data.memories,
       };
     } catch (e) {
       redirect(404, '/');
@@ -100,10 +99,7 @@ export default {
     );
     const memoriesSection = this.sections.find((s) => s.name === 'memories');
     instrumentSection.data = this.instruments;
-    memoriesSection.data = this.instruments.reduce(
-      (acc, cur) => [...acc, ...cur.memories],
-      []
-    );
+    memoriesSection.data = this.memories;
   },
 };
 </script>

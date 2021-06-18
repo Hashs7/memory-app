@@ -1,5 +1,9 @@
 <template>
-  <button class="u-button--back" :class="{ light, absolute }" @click="back">
+  <button
+    class="u-button--back chevron"
+    :class="{ light, absolute }"
+    @click="back"
+  >
     <IconChevron />
   </button>
 </template>

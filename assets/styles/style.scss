@@ -1,11 +1,12 @@
 @import
-'0-settings/settings-mixins',
 '0-settings/settings-variable',
+'0-settings/settings-mixins',
 '0-settings/settings-typography',
 '0-settings/settings-media',
 '0-settings/settings-base',
 '0-settings/settings-helpers',
-'0-settings/settings-index';
+'0-settings/settings-index',
+'0-settings/settings-transitions';
 
 @import
 '1-elements/elements-form',
@@ -34,4 +35,6 @@
 '4-modules/modules-tab';
 
 @import
+'5-components/memory-card',
+'5-components/memory-preview',
 '5-components/memory-content';

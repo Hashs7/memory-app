@@ -1,12 +1,12 @@
 <template>
-  <div class="feed-images-carousel o-page__outside">
+  <div class="feed-images-carousel">
     <vue-glide ref="slider" v-model="active" :options="options">
       <vue-glide-slide
         v-for="(memory, i) in data"
         :key="i"
-        class="memory-preview"
+        class="memory-slide"
       >
-        <NuxtLink :to="getLinkUrl(memory)" class="instrument-preview">
+        <NuxtLink :to="getLinkUrl(memory)" class="memory-preview">
           <div class="memory-preview__image-container">
             <img
               class="memory-preview__image"
@@ -17,10 +17,10 @@
           <div class="memory-preview__body">
             <h4 class="memory-preview__name">{{ memory.name }}</h4>
             <p class="memory-preview__date">{{ getMemoryDate(memory.date) }}</p>
-            <div class="instrument-preview-container">
+            <div class="memory-preview-container">
               <img
                 :src="getInstrumentThumbnail(memory)"
-                class="instrument-preview__img"
+                class="memory-preview__img"
                 alt="Image de l'instrument"
               />
               <div>
@@ -53,7 +53,7 @@ export default {
       active: 0,
       options: {
         perView: 1,
-        gap: 0,
+        gap: 10,
         rewind: false,
       },
     };
@@ -82,16 +82,20 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .feed-images-carousel {
   display: block;
   width: 100%;
-  margin: 20px 0;
-  padding: 16px;
-  background-color: $white;
+  //margin: 20px 0;
+  //padding: 16px;
+  //background-color: $white;
   border-radius: 4px;
   overflow-wrap: break-word;
-  box-shadow: $shadow--second;
+  //box-shadow: $shadow--second;
+
+  .glide__slides {
+    //padding: 0 16px;
+  }
 }
 [data-glide-el='controls'] {
   z-index: 5;
@@ -103,8 +107,20 @@ export default {
   right: 0;
 }
 
+.memory-slide {
+  padding: 16px;
+}
+
+.memory-preview {
+  display: block;
+  padding: 10px 10px 10px 10px;
+  background-color: #fff;
+  box-shadow: $shadow--third;
+  border-radius: 4px;
+}
+
 .memory-preview__image-container {
-  height: 232px;
+  height: 348px;
   overflow: hidden;
   border-radius: 4px;
 }
@@ -128,18 +144,18 @@ export default {
   text-transform: capitalize;
 }
 
-.instrument-preview-container {
+.memory-preview-container {
   display: flex;
   align-items: center;
   margin-top: 15px;
 }
-.instrument-preview-container p {
+.memory-preview-container p {
   font-size: 12px;
 }
-.instrument-preview-container p:first-child {
+.memory-preview-container p:first-child {
   font-weight: bold;
 }
-.instrument-preview__img {
+.memory-preview__img {
   margin-right: 10px;
   border-radius: 50%;
   width: 40px;

@@ -19,7 +19,7 @@
           </h2>
         </div>
 
-        <div class="instrument__owner">
+        <div v-if="!isOwner" class="instrument__owner">
           <UserPreview :user="instrument.owner" />
         </div>
 
@@ -40,6 +40,8 @@
         </div>
       </div>
 
+      <MemoriesTimeline :memories="instrument.memories" />
+
       <MemorySection
         :memories="instrument.memories"
         class="o-page__container"
@@ -51,14 +53,16 @@
 </template>
 
 <script>
-import UserPreview from '../../components/user/UserPreview';
-import MemorySection from '../../components/memories/MemorySection';
-import ImagesCarousel from '../../components/instrument/ImagesCarousel';
-import OwnerActions from '../../components/instrument/OwnerActions';
-import ButtonBack from '../../components/UI/ButtonBack';
+import UserPreview from '@/components/user/UserPreview';
+import MemorySection from '@/components/memories/MemorySection';
+import ImagesCarousel from '@/components/instrument/ImagesCarousel';
+import OwnerActions from '@/components/instrument/OwnerActions';
+import ButtonBack from '@/components/UI/ButtonBack';
+import MemoriesTimeline from '@/components/memories/timeline/MemoriesTimeline';
 
 export default {
   components: {
+    MemoriesTimeline,
     ButtonBack,
     OwnerActions,
     ImagesCarousel,
@@ -90,7 +94,7 @@ export default {
     },
     isFavorite() {
       if (this.isOwner) return false;
-      return this.$auth.$state.user?.wishList?.includes(this.instrument._id);
+      return this.$auth.$state.user?.wishList?.includes(this.instrument.id);
     },
     thumbnail() {
       return this.instrument.images[0]?.path;
@@ -100,7 +104,7 @@ export default {
     async addToWish() {
       try {
         const res = await this.$api.toggleInstrumentToWishlist(
-          this.instrument._id
+          this.instrument.id
         );
         this.$auth.setUser(res.data);
       } catch (e) {

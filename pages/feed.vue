@@ -1,50 +1,51 @@
 <template>
-  <div class="o-page">
+  <div class="o-page o-page--feed">
     <div class="o-page__header">
-      <SearchBar />
-      <transition name="fade" mode="out-in">
-        <NuxtLink v-if="!searchActive" :to="profileLink" class="profile">
-          <IconUser v-if="!$auth.loggedIn || !profilePicture" />
-          <img
-            v-if="profilePicture"
-            :src="profilePicture"
-            alt="photo de profil"
-          />
-        </NuxtLink>
-        <button
-          v-else
-          class="u-button u-button--text"
-          @click="setSearchActive(false)"
-        >
-          Annuler
-        </button>
-      </transition>
-      <SearchModal v-if="searchActive" />
+      <div class="o-page__container">
+        <SearchBar />
+        <transition name="fade" mode="out-in">
+          <NuxtLink v-if="!searchActive" :to="profileLink" class="profile">
+            <IconUser v-if="!$auth.loggedIn || !profilePicture" />
+            <img
+              v-if="profilePicture"
+              :src="profilePicture"
+              alt="photo de profil"
+            />
+          </NuxtLink>
+          <button
+            v-else
+            class="u-button u-button--text"
+            @click="setSearchActive(false)"
+          >
+            Annuler
+          </button>
+        </transition>
+        <SearchModal v-if="searchActive" />
+      </div>
     </div>
 
+    <h1 class="o-page__title o-page__container">{{ title }}</h1>
     <div class="o-page__body">
-      <h1 class="o-page__title">Explorer</h1>
-
-      <section>
+      <section class="">
         <ul class="categories-filters">
-          <li
-            v-for="category in categories"
-            :key="category.id"
-            :class="{ selected: category.selected }"
-            @click="toggleCategory(category)"
-          >
-            {{ category.name }}
-          </li>
+          <vue-scroll>
+            <li
+              v-for="category in categories"
+              :key="category.id"
+              :class="{ selected: category.selected }"
+              @click="toggleCategory(category)"
+            >
+              {{ category.name }}
+            </li>
+          </vue-scroll>
         </ul>
       </section>
       <section class="o-section">
-        <div class="o-section__head">
+        <div class="o-section__head actu">
           <h4 class="o-section__title">Actualités des instruments favoris</h4>
           <button class="u-link">Voir tout</button>
         </div>
-      </section>
 
-      <section>
         <FeedMemorySection
           :memories-cat="memoriesCat"
           :memories-fav-instru="results"
@@ -84,7 +85,8 @@ export default {
         categories: categories.data,
       };
     } catch (e) {
-      throw new Error(e);
+      // throw new Error(e);
+      console.log(e);
     }
   },
   data() {
@@ -93,17 +95,23 @@ export default {
         instruments: [],
         memories: [],
       },
-
       memoriesCat: {},
     };
   },
   computed: {
     ...mapState('search', { searchActive: 'active' }),
     profilePicture() {
+      console.log(this.$auth.user);
       return this.$auth.user?.thumbnail?.path;
     },
     username() {
       return this.$auth.$state.user.username;
+    },
+    title() {
+      if (this.$auth.$state.user.firstName) {
+        return `Cher ${this.$auth.$state.user.firstName},`;
+      }
+      return 'Explorer';
     },
     profileLink() {
       if (this.$auth.loggedIn) {
@@ -117,16 +125,21 @@ export default {
       };
     },
     selectedCategoriesMapped() {
-      const selectedCats = this.categories.filter((c) => {
+      const selectedCats = this.categories?.filter((c) => {
         return c.selected;
       });
       return selectedCats.map((s) => s._id);
     },
   },
+  created() {
+    this.fetchMemoriesCat();
+    this.$auth.fetchUser();
+  },
   methods: {
     ...mapMutations('search', {
       setSearchActive: 'setActive',
     }),
+
     toggleCategory(category) {
       category.selected = !category.selected;
       this.fetchMemoriesCat();
@@ -146,41 +159,66 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.categories-filters {
-  display: flex;
-  flex-wrap: wrap;
-}
-.categories-filters li {
-  border: solid 1px $background-darker;
-  padding: 2px 12px;
-  border-radius: 6px;
-  margin-right: 5px;
-  margin-bottom: 5px;
-}
-.categories-filters li.selected {
-  background-color: $background-darker;
-}
+<style lang="scss">
+.o-page--feed {
+  .o-page__title {
+    margin-top: 0;
+  }
 
-.o-page__header {
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-}
+  .o-section__head.actu {
+    margin: 0 16px;
+  }
 
-.o-page__title {
-  margin-top: 20px;
-}
+  .o-page__header {
+    height: 72px;
+    padding: 16px 0 0 0;
+  }
 
-.profile {
-  width: 36px;
-  height: 36px;
-  margin-left: 12px;
-  background-color: $background-darker;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+  .categories-filters .__view {
+    display: flex;
+    padding: 0 16px 8px 16px;
+  }
+
+  .categories-filters li {
+    white-space: nowrap;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 12px;
+    margin-right: 4px;
+    font-size: 14px;
+    font-weight: 400;
+    border: solid 1px $background-darker;
+    border-radius: 6px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .categories-filters li.selected {
+    background-color: $background-darker;
+  }
+
+  .o-page__header {
+    position: relative;
+    z-index: 100;
+
+    .o-page__container {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .profile {
+      width: 42px;
+      height: 42px;
+      margin-left: 12px;
+      background-color: $background-darker;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+  }
 }
 </style>

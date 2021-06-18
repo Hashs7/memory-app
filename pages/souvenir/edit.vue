@@ -18,7 +18,7 @@
 </router>
 
 <script>
-import { mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 import ContentForm from '@/components/memories/creation/views/ContentForm';
 import Summary from '@/components/memories/creation/views/Summary';
 
@@ -44,7 +44,13 @@ export default {
       return this.$route.params.id;
     },
   },
+  created() {
+    this.resetSelected();
+    this.closeModal();
+  },
   methods: {
+    ...mapMutations('memory', ['closeModal']),
+    ...mapMutations('gallery', ['resetSelected']),
     onBack() {
       this.$router.push({
         name: 'instrument-id',

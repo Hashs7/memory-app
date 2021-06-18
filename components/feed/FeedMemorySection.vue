@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <FeedMemoryCarousel :data="memoriesFavInstru"> </FeedMemoryCarousel>
+  <section>
+    <FeedMemoryCarousel
+      v-if="memoriesFavInstru.length"
+      :data="memoriesFavInstru"
+    />
 
     <section
       v-for="categoryId in memoriesCat"
@@ -13,7 +16,7 @@
 
       <FeedMemoryCarousel :data="categoryId.memories"> </FeedMemoryCarousel>
     </section>
-  </div>
+  </section>
 </template>
 
 <script>

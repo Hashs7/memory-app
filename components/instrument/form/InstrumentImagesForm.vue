@@ -42,9 +42,6 @@ export default {
         vuescroll: {
           locking: true,
         },
-        scrollPanel: {},
-        rail: {},
-        bar: {},
       },
       draggableOptions: {
         animation: 200,

@@ -973,6 +973,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@foobar404/wave@^1.2.7":
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@foobar404/wave/-/wave-1.2.7.tgz#d17160c495f9fac9ba2139190349f4586b8882fc"
+  integrity sha512-ynWWvfP4Dw1dUe4IupRiJGrh0nSfiYtBnY2ZU4CzGYUMvT9LVWMmpSvDjptgkl5whcwNBjGhVM1Gq1b1J/Z3TA==
+
 "@glidejs/glide@^3.2.4":
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/@glidejs/glide/-/glide-3.4.1.tgz#8ad21f3169076e32bbfd75ed0753807662c25e90"
@@ -4729,10 +4734,10 @@ gray-matter@^4.0.2:
     section-matter "^1.0.0"
     strip-bom-string "^1.0.0"
 
-gsap@^3.6.1:
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/gsap/-/gsap-3.6.1.tgz#618f2338044d2b78b8cbced8ea8bf246d1cf6407"
-  integrity sha512-hCkjk7UVbeEmlpFbiy7lIsh742bwVlMhdCnnQ1CvVOAdURyPX8hXjFZGh/0YzUyAcWPyJPE0/paMhSYtLhGlfA==
+gsap@^3.7.0:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/gsap/-/gsap-3.7.0.tgz#ebadf467898ddf25011030090f0399cb0e292309"
+  integrity sha512-8JI7pcFj0pgMzwqChARiHf7EIIZp1QrQBP74M2p2NpQLiAeIhQsrJWIRiwmA2JWkkNe0I2BiQF5ZhJvpyJVJDA==
 
 gzip-size@^6.0.0:
   version "6.0.0"
@@ -9567,6 +9572,11 @@ vary@^1.1.2, vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
+
+vee-validate@^3.4.9:
+  version "3.4.9"
+  resolved "https://registry.yarnpkg.com/vee-validate/-/vee-validate-3.4.9.tgz#786c9e76a9ab963c4d534b466b35cdbe6c2a35d8"
+  integrity sha512-4hFh0GY4joKCLLzWIYADXyyMr91Pqrz833Wh1cBWEHJ8mofOlRlEjvIfLRsOcXIxNp2Ft5O123bKO5PgmYM2QQ==
 
 vendors@^1.0.0:
   version "1.0.4"

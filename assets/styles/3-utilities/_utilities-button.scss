@@ -69,7 +69,6 @@
   background: none;
   border: none;
   padding: 0 12px;
-  height: inherit;
   line-height: 36px;
 }
 
@@ -115,6 +114,7 @@
 }
 
 .u-button--back {
+  margin-top: env(safe-area-inset-top, 0);
   position: relative;
   display: block;
   padding: 0;
@@ -138,6 +138,11 @@
   }
 }
 
+.u-button--back.chevron svg {
+  width: 8px;
+  height: 12px;
+}
+
 .u-button--back.light {
   background-color: $background;
   path {
@@ -153,6 +158,10 @@
 
 .u-button--back.transparent {
   background-color: transparent;
+
+  path {
+    fill: $gray-darkest;
+  }
 }
 
 .u-button__input-file {

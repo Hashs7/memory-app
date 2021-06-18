@@ -1,5 +1,5 @@
 <template>
-  <div class="search-modal">
+  <div class="search-modal o-page__container">
     <SearchResultsView v-if="showResults && query.length > 0" />
     <SearchHistoryView v-else />
   </div>

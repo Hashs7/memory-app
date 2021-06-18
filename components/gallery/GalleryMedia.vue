@@ -42,7 +42,8 @@ export default {
   },
   computed: {
     path() {
-      return `${this.media.path}?w=100`;
+      // return `${this.media.path}?w=100`;
+      return `${this.media.path}`;
     },
     isImage() {
       return this.media.mimetype.split('/')[0] === 'image';
@@ -79,6 +80,7 @@ export default {
   cursor: pointer;
   width: 100%;
   height: 100%;
+  border-radius: 4px;
 
   &.selected:after {
     content: '';

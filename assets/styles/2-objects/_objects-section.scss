@@ -7,6 +7,12 @@
 .o-section {
   padding-top: 32px;
   padding-bottom: 32px;
+
+  .u-link {
+    font-size: 14px;
+    color: #BCBCBC;
+    text-decoration: none;
+  }
 }
 
 .o-section__head {
@@ -28,7 +34,8 @@
 }
 
 .o-section__title {
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 400;
   font-family: $font-primary;
 }
 

@@ -13,7 +13,7 @@
         <h4 class="o-section__title">Informations</h4>
       </div>
       <div class="">
-        <div class="">
+        <div class="form__group">
           <v-select
             :value="type"
             :options="options"
@@ -21,19 +21,20 @@
           ></v-select>
         </div>
         <div class="form__group">
-          <b-field>
-            <b-input
+          <label>
+            <input
               v-model="brand"
               name="brand"
               type="text"
+              class="form__input"
               placeholder="Marque"
               required
-            ></b-input>
-          </b-field>
+            />
+          </label>
         </div>
         <div class="form__group">
           <client-only>
-            <b-field>
+            <label>
               <b-datepicker
                 :value="new Date(data.buyDate)"
                 locale="fr"
@@ -43,28 +44,30 @@
                 @input="updateDate($event.toISOString())"
               >
               </b-datepicker>
-            </b-field>
+            </label>
           </client-only>
         </div>
         <div class="form__group">
-          <b-field>
-            <b-input
+          <label>
+            <input
               v-model="name"
               name="name"
               type="text"
+              class="form__input"
               placeholder="Surnom (optionel)"
-            ></b-input>
-          </b-field>
+            />
+          </label>
         </div>
         <div class="form__group">
-          <b-field>
-            <b-input
+          <label>
+            <input
+              class="form__input"
               v-model="specification"
               name="specification"
               type="text"
               placeholder="Modèle (optionnel)"
-            ></b-input>
-          </b-field>
+            />
+          </label>
         </div>
       </div>
     </section>
@@ -174,7 +177,10 @@ export default {
       const selected = this.$store.getters['gallery/getLastSelected'];
       if (!selected) return;
       this.$store.commit('instrument/addImage', selected);
-      this.$store.commit('gallery/removeSelected', selected._id);
+      this.$store.commit('gallery/removeSelected', {
+        id: selected._id,
+        type: 'media',
+      });
     },
 
     updateDate(date) {

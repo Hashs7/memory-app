@@ -4,20 +4,37 @@
       <FileUpload ref="files" :multiple="false" />
     </div>
     <div class="form__group">
-      <b-field label="Prénom">
-        <b-input v-model="user.firstName" name="firstName" type="text">
-        </b-input>
-      </b-field>
+      <label>
+        <input
+          v-model="user.firstName"
+          class="form__input"
+          placeholder="Prénom"
+          name="firstName"
+          type="text"
+        />
+      </label>
     </div>
     <div class="form__group">
-      <b-field label="Nom">
-        <b-input v-model="user.lastName" name="lastName" type="text"> </b-input>
-      </b-field>
+      <label>
+        <input
+          v-model="user.lastName"
+          placeholder="Nom"
+          class="form__input"
+          name="lastName"
+          type="text"
+        />
+      </label>
     </div>
     <div class="form__group">
-      <b-field label="Pseudo">
-        <b-input v-model="user.username" name="username" type="text"> </b-input>
-      </b-field>
+      <label>
+        <input
+          v-model="user.username"
+          class="form__input"
+          placeholder="Pseudo"
+          name="username"
+          type="text"
+        />
+      </label>
     </div>
     <button type="submit" class="u-button u-button--primary">Valider</button>
   </form>

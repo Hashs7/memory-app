@@ -1,9 +1,12 @@
 .o-page {
+  position: relative;
+  padding-top: env(safe-area-inset-top, 0);
   display: flex;
   flex-direction: column;
   // Remove navbar height
   min-height: calc(100vh - 72px);
   margin: auto;
+  width: 100%;
   background-color: $background;
   max-width: 688px;
 }
@@ -18,9 +21,14 @@
   padding-right: 16px;
 }
 
+.o-page__container {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
 .o-page--full {
   z-index: 50;
-  position: fixed;
+  position: absolute;
   max-width: none;
   top: 0;
   bottom: 0;
@@ -28,13 +36,14 @@
   right: 0;
 
   &.with-nav {
-    height: calc(100% - 72px);
-    bottom: auto;
+    height: calc(100vh - 72px);
+    //bottom: auto;
   }
 }
 
 .o-page__header-nav {
-  position: relative;
+  margin-top: env(safe-area-inset-top, 0);
+  padding: 18px 18px 4px 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -59,7 +68,7 @@
   }
 
   &.primary {
-    color: #FEC26F;
+    color: #fec26f;
     font-weight: 600;
   }
 
@@ -73,16 +82,12 @@
   }
 }
 
-.o-page__header {
-  padding: 25px;
-}
 
 .o-page__title {
-  font-size: 24px;
-  //font-size: 16px;
-  font-weight: 300;
-  margin-bottom: 20px;
   display: block;
+  margin: 32px 0 20px 0;
+  font-size: 24px;
+  font-weight: 300;
 }
 
 .o-page__subtitle {
@@ -97,18 +102,29 @@
 
 .o-page__body {
   flex-grow: 1;
-  padding: 0 25px;
+  //padding: 0 25px;
 }
 
+.o-page__flex {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 48px;
+
+  .o-page__body {
+    padding: 0;
+  }
+}
 
 .o-page--summary .o-page__body {
-  padding: 0 8px;
+  padding: 0 20px;
 }
 
 // Specific
 .o-page--register,
 .o-page--login {
   .o-page__header {
+    text-align: center;
     margin: 144px 0 64px 0;
     padding: 0 72px;
   }
@@ -135,6 +151,46 @@
   .form__actions {
     .u-button {
       width: 100%;
+    }
+  }
+}
+
+// Handover page
+.o-page--handover {
+  .instrument-container {
+    position: relative;
+    width: 232px;
+    height: 232px;
+    padding: 16px;
+    margin: 48px auto;
+
+    .background {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+
+      &.front {
+        z-index: 5;
+      }
+    }
+  }
+
+  .instrument__thumbnail {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
     }
   }
 }

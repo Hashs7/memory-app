@@ -10,7 +10,7 @@ const serverConfig = {
 
 if (process.env.NODE_ENV === 'development') {
   serverConfig.server = {
-    ...serverConfig,
+    ...serverConfig.server,
     https: {
       key: fs.readFileSync(path.resolve(__dirname, 'cert/key.pem')),
       cert: fs.readFileSync(path.resolve(__dirname, 'cert/cert.pem')),
@@ -35,7 +35,8 @@ export default {
       { charset: 'utf-8' },
       {
         name: 'viewport',
-        content: 'width=device-width, initial-scale=1, user-scalable=no',
+        content:
+          'width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=0, viewport-fit=cover',
       },
       {
         name: 'theme-color',
@@ -66,10 +67,10 @@ export default {
     { src: '~/plugins/vue-scroll.js' },
     { src: '~/plugins/carousel.js' /* mode: 'client' */ },
     { src: '~/plugins/vue-lazyload.js', mode: 'client' },
+    { src: '~/plugins/vee-validate.js', mode: 'client' },
     { src: '~/plugins/vuex-persist.js', mode: 'client' },
     { src: '~/plugins/colors.js', mode: 'client' },
     { src: '~/plugins/hammer.js', mode: 'client' },
-    { src: '~/plugins/audio-recorder.js', mode: 'client' },
     { src: '~/plugins/wysiwyg.js', mode: 'client' },
     { src: '~/plugins/nuxt-client-init.js', mode: 'client' },
     { src: '~/plugins/vue-select.js' },
@@ -219,7 +220,9 @@ export default {
   ...serverConfig,
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    transpile: ['vee-validate/dist/rules'],
+  },
 
   generate: {
     exclude: [

@@ -2,81 +2,42 @@
   <client-only>
     <div class="audio-content memory-content">
       <div class="memory-content__inner">
-        <audio-recorder
-          upload-url="apiUrl"
-          :attempts="3"
-          :time="2"
-          :headers="headers"
-          :before-recording="callback"
-          :pause-recording="callback"
-          :after-recording="callback"
-          :select-record="callback"
-          :before-upload="callback"
-          :successful-upload="callback"
-          :failed-upload="callback"
-        />
+        <AudioPlayer visualizer controls :media="value.file" />
+        <!--        <span v-else>{{ value.file }}</span>-->
       </div>
     </div>
   </client-only>
 </template>
 
 <script>
+import AudioPlayer from '../../../gallery/audio/AudioPlayer';
+
 export default {
-  name: 'AudioCreation',
-  computed: {
-    headers() {
-      return {};
-    },
-    apiUrl() {
-      return '';
+  name: 'AudioContent',
+  components: {
+    AudioPlayer,
+  },
+  props: {
+    value: {
+      type: Object,
+      required: true,
     },
   },
   methods: {
-    callback() {},
+    validate() {
+      this.$store.dispatch('memory/addSelectedAudios');
+    },
   },
 };
 </script>
 
 <style lang="scss">
-.ar {
-  width: 100% !important;
-  height: 100% !important;
-  font-family: $font-primary !important;
-  background-color: transparent !important;
-  box-shadow: none !important;
-}
+.audio-content {
+  //padding: 16px;
 
-.ar-player {
-  display: none !important;
-  width: 100%;
-}
-
-.ar-content {
-  height: 100%;
-  justify-content: center;
-}
-
-.ar-icon {
-  border-color: $secondary !important;
-}
-
-.ar-recorder__time-limit {
-  display: none !important;
-}
-
-.ar-recorder__records-limit {
-  display: none !important;
-}
-
-.ar-volume {
-  display: none !important;
-}
-
-.ar-records {
-  width: 100% !important;
-}
-
-.ar-records__record {
-  width: 100% !important;
+  .memory-content__inner {
+    display: flex;
+    align-items: center;
+  }
 }
 </style>

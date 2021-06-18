@@ -2,7 +2,7 @@
   <div class="o-page--create-content">
     <div class="o-page">
       <div class="o-page__header o-page__header-nav">
-        <button class="u-button--back" @click="$emit('back')">
+        <button class="u-button--back chevron" @click="$emit('back')">
           <IconChevron />
         </button>
         <button class="u-button--back transparent">
@@ -11,19 +11,11 @@
       </div>
 
       <div class="memory__infos">
-        <label class="memory__title">
-          <input
-            v-model="name"
-            type="text"
-            class="memory__title-input"
-            placeholder="Ajouter un titre"
-          />
-        </label>
+        <p class="memory__title-input">Elektra de feu</p>
       </div>
 
-      <form class="o-page__body o-page__outside">
+      <form class="o-page__body">
         <div class="slider">
-          <SlideIntro />
           <draggable
             v-model="contents"
             class="slider__draggable"
@@ -55,18 +47,9 @@
         </div>
       </form>
 
-      <form v-if="showThemes" class="o-page--full themes">
-        <div class="themes__container">
-          <h3>Choisissez votre thème</h3>
-          <div class="themes__grid">
-            <ThemeSelector v-for="(t, i) in themes" :key="i" :theme="t" />
-          </div>
-        </div>
-        <span
-          class="o-page--full themes__background"
-          @click="showThemes = false"
-        ></span>
-      </form>
+      <MediaModal v-if="modal.show">
+        <component :is="modalComponent" select-files @selected="addContent" />
+      </MediaModal>
 
       <div class="o-page__footer actions">
         <button
@@ -90,8 +73,7 @@
 
 <script>
 import draggable from 'vuedraggable';
-import { mapGetters } from 'vuex';
-import SlideIntro from '@/components/memories/creation/slider/SlideIntro';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import SliderAdd from '@/components/memories/creation/slider/SliderAdd';
 import TextContent from '@/components/memories/creation/contents/TextContent';
 import AudioContent from '@/components/memories/creation/contents/AudioContent';
@@ -102,17 +84,22 @@ import IconCheck from '@/assets/svg/ic_check.svg?inline';
 import IconBrush from '@/assets/svg/ic_brush.svg?inline';
 import IconChevron from '@/assets/svg/ic_chevron.svg?inline';
 import IconVisibility from '@/assets/svg/ic_visibility.svg?inline';
-
 import { CONTENT_TYPE } from '@/const/memory';
+// eslint-disable-next-line no-unused-vars
+import AudioGallery from '../../../gallery/audio/AudioGallery';
+// eslint-disable-next-line no-unused-vars
+import Gallery from '../../../gallery/Gallery';
+import MediaModal from '../MediaModal';
 
 export default {
   name: 'ContentForm',
   components: {
+    MediaModal,
     ThemeSelector,
-    SlideIntro,
     SliderAdd,
     TextContent,
     AudioContent,
+    AudioGallery,
     MediaContent,
     MemoryPreview,
     IconCheck,
@@ -140,6 +127,16 @@ export default {
   },
   computed: {
     ...mapGetters('memory', ['contents']),
+    ...mapState('memory', ['modal']),
+    modalComponent() {
+      if (this.modal.type === 'audio') {
+        return 'AudioGallery';
+      }
+      if (this.modal.type === 'media') {
+        return 'Gallery';
+      }
+      return null;
+    },
     name: {
       get() {
         return this.$store.state.memory.data.name;
@@ -147,12 +144,6 @@ export default {
       set(value) {
         this.$store.commit('memory/updateName', value);
       },
-    },
-    memory: {
-      get() {
-        return this.$store.state.memory;
-      },
-      set(newValue) {},
     },
     contents: {
       get() {
@@ -164,6 +155,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions('memory', ['addContent']),
     removeItem(index) {
       this.$store.commit('memory/removeContent', index);
     },
@@ -180,6 +172,12 @@ export default {
   .o-page {
     background-color: transparent;
   }
+
+  .o-page__body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .o-layout--none .o-page--create-content {
@@ -189,20 +187,6 @@ export default {
 .o-page__footer {
   display: flex;
   justify-content: space-between;
-}
-
-.form__group {
-  max-width: 300px;
-  margin: 0 auto 16px auto;
-
-  label {
-    text-align: left;
-    display: block;
-  }
-
-  input {
-    width: 100%;
-  }
 }
 
 .memory__infos {
@@ -251,6 +235,7 @@ export default {
   //min-width: calc(100vw - 60px);
   //height: calc((100vw - 60px) * (16 / 9));
   min-width: 300px;
+  width: 300px;
   height: calc(300px * (16 / 9));
   //margin: 20px 12px;
   margin-right: 12px;
