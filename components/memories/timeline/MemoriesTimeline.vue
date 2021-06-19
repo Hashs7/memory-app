@@ -102,6 +102,7 @@ export default {
   },
 
   mounted() {
+    if (!this.memories.length) return;
     const sliderStep = this.$refs.slider.childNodes[0];
     const sliderStepSize =
       sliderStep.clientWidth +
