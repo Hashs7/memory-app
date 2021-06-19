@@ -11,6 +11,20 @@
             class="memories-timeline__item memories-item--memory"
           />
           <div
+            v-else-if="step.type === 'add'"
+            :key="i"
+            :class="[
+              'memories-timeline__item',
+              `memories-timeline__item--${step.type}`,
+            ]"
+          >
+            <NuxtLink :to="addMemoryRoute" class="memories-timeline__add">
+              <span class="memories-timeline__add-text">
+                Ajoutes un memory !
+              </span>
+            </NuxtLink>
+          </div>
+          <div
             v-else
             :key="i"
             :class="[
@@ -98,6 +112,10 @@ export default {
     },
     memorySteps() {
       return this.timelineSteps.filter((s) => s.type !== 'empty');
+    },
+    addMemoryRoute() {
+      const { id } = this.$route.params;
+      return `/instrument/${id}/souvenir/creation`;
     },
   },
 
@@ -223,7 +241,7 @@ export default {
           const daysBetween = dayjs(memory.date).diff(previousMemory.date, 'd');
           // plus performant que le switch : https://stackoverflow.com/a/12259830
           if (daysBetween < 7) {
-            addToSteps(emptyStep('day'), daysBetween);
+            if (daysBetween > 0) addToSteps(emptyStep('day'), daysBetween - 1);
           } else if (daysBetween < 30) {
             addToSteps(emptyStep('day'));
             addToSteps(emptyStep('week'), Math.floor(daysBetween / 7));
@@ -253,6 +271,12 @@ export default {
         previousMemory = memory;
       });
 
+      addToSteps({
+        date: Date.now(),
+        type: 'add',
+        data: null,
+      });
+
       return steps;
     },
   },
@@ -277,19 +301,38 @@ $step-margin: 5px;
     align-items: stretch;
     flex-wrap: nowrap;
     margin: 0 calc(50% - #{$slide-margin} - #{$slide-width} / 2);
+    height: 360px;
   }
 
   &__item {
-    display: inline-block;
     margin: 0 $slide-margin;
     flex-shrink: 0;
+    flex-grow: 1;
     width: $slide-width;
     height: 100%;
 
     &--empty {
       display: inline-block;
-      background: red;
     }
+  }
+
+  &__add {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: $background;
+    border: 8px solid white;
+    border-radius: 3px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &__add-text {
+    font-family: $font-secondary;
+    font-size: 20px;
+    text-align: center;
   }
 
   &__controls {
@@ -311,6 +354,7 @@ $step-margin: 5px;
     &--top {
       margin-bottom: 2px;
     }
+
     &--bottom {
       margin-top: 2px;
       .memories-timeline__cursor-icon {
@@ -341,6 +385,10 @@ $step-margin: 5px;
 
     &--memory {
       opacity: 1;
+    }
+
+    &--add {
+      opacity: 0.2;
     }
 
     &--day {

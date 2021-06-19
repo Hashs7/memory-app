@@ -1,5 +1,8 @@
 .memory-preview {
-  display: block;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: self-start;
+  justify-content: flex-start;
   width: 100%;
   margin: 20px 0;
   padding: 8px;
@@ -9,7 +12,8 @@
   box-shadow: $shadow--second;
 }
 .memory-preview__image-container {
-  height: 232px;
+  flex: 1;
+  min-height: 232px;
   overflow: hidden;
   border-radius: 4px;
 }
