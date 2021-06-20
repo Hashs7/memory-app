@@ -11,6 +11,12 @@
             editable
             class="memories-timeline__item memories-item--memory"
           />
+          <TimelineHandoverCard
+            v-else-if="step.type === 'handover'"
+            :key="i"
+            :data="step.data"
+            class="memories-timeline__item memories-item--handover"
+          />
           <div
             v-else-if="step.type === 'birth'"
             :key="i"
@@ -100,6 +106,7 @@ import { InertiaPlugin } from '@/vendor/gsap/InertiaPlugin';
 
 import MemoryPreview from '@/components/memories/MemoryPreview';
 import { findIndexOfClosest } from '../../../helpers';
+import TimelineHandoverCard from './cards/TimelineHandoverCard';
 
 dayjs.extend(isSameOrBefore);
 dayjs.extend(Duration);
@@ -108,7 +115,7 @@ gsap.registerPlugin(InertiaPlugin);
 
 export default {
   name: 'MemoriesTimeline',
-  components: { MemoryPreview, IconTriangle, IconAdd },
+  components: { TimelineHandoverCard, MemoryPreview, IconTriangle, IconAdd },
   props: {
     buyDate: {
       type: String,
@@ -331,7 +338,7 @@ $step-width: 3px;
 $step-margin: 5px;
 
 .memories-timeline {
-  margin: 12px 0 0 0;
+  margin: 12px 0 20px 0;
 
   &__slider-wrap {
   }
