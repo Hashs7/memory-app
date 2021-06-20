@@ -8,8 +8,49 @@
             :key="i"
             link
             :data="step.data"
+            editable
             class="memories-timeline__item memories-item--memory"
           />
+          <TimelineHandoverCard
+            v-else-if="step.type === 'handover'"
+            :key="i"
+            :data="step.data"
+            class="memories-timeline__item memories-item--handover"
+          />
+          <div
+            v-else-if="step.type === 'birth'"
+            :key="i"
+            class="memories-timeline__item memories-timeline__item--birth"
+          >
+            <div class="memories-timeline__birth">
+              <div class="memories-timeline__birth-image-container">
+                <img
+                  v-if="step.data.image"
+                  class="memories-timeline__birth-image"
+                  :src="step.data.image.path"
+                />
+              </div>
+              <div class="memories-timeline__birth-body">
+                <h4 class="memories-timeline__birth-text">Naissance</h4>
+              </div>
+            </div>
+          </div>
+          <div
+            v-else-if="step.type === 'add'"
+            :key="i"
+            :class="[
+              'memories-timeline__item',
+              `memories-timeline__item--${step.type}`,
+            ]"
+          >
+            <NuxtLink :to="addMemoryRoute" class="memories-timeline__add">
+              <IconAdd class="memories-timeline__add-icon" />
+              <h4 class="memories-timeline__add-title">Ajoutes un memory !</h4>
+              <span class="memories-timeline__add-text">
+                Cliques sur cette carte et crée un nouveau memory.
+              </span>
+            </NuxtLink>
+          </div>
           <div
             v-else
             :key="i"
@@ -55,6 +96,7 @@
 
 <script>
 import IconTriangle from '@/assets/svg/ic_triangle.svg?inline';
+import IconAdd from '@/assets/svg/ic_add.svg?inline';
 import gsap from 'gsap';
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
@@ -64,6 +106,7 @@ import { InertiaPlugin } from '@/vendor/gsap/InertiaPlugin';
 
 import MemoryPreview from '@/components/memories/MemoryPreview';
 import { findIndexOfClosest } from '../../../helpers';
+import TimelineHandoverCard from './cards/TimelineHandoverCard';
 
 dayjs.extend(isSameOrBefore);
 dayjs.extend(Duration);
@@ -72,9 +115,21 @@ gsap.registerPlugin(InertiaPlugin);
 
 export default {
   name: 'MemoriesTimeline',
-  components: { MemoryPreview, IconTriangle },
+  components: { TimelineHandoverCard, MemoryPreview, IconTriangle, IconAdd },
   props: {
-    memories: {
+    buyDate: {
+      type: String,
+      required: true,
+    },
+    instrumentImage: {
+      type: Object,
+      default: null,
+    },
+    allowAdd: {
+      type: Boolean,
+      default: false,
+    },
+    data: {
       type: Array,
       required: true,
     },
@@ -86,23 +141,20 @@ export default {
     };
   },
   computed: {
-    sortedMemories() {
-      return this.memories.slice().sort((a, b) => {
-        if (dayjs(a.date).isBefore(b.date)) return -1;
-        if (dayjs(a.date).isAfter(b.date)) return 1;
-        return 0;
-      });
-    },
     timelineSteps() {
       return this.getTimelineSteps();
     },
     memorySteps() {
       return this.timelineSteps.filter((s) => s.type !== 'empty');
     },
+    addMemoryRoute() {
+      const { id } = this.$route.params;
+      return `/instrument/${id}/souvenir/creation`;
+    },
   },
 
   mounted() {
-    if (!this.memories.length) return;
+    if (!this.data.length) return;
     const sliderStep = this.$refs.slider.childNodes[0];
     const sliderStepSize =
       sliderStep.clientWidth +
@@ -200,7 +252,7 @@ export default {
   methods: {
     getTimelineSteps() {
       const steps = [];
-      let previousMemory = this.memories[0];
+      let previousEvent = this.data[0];
 
       const addToSteps = (step, repeat = 1) => {
         for (let i = 0; i < repeat; i++) {
@@ -219,12 +271,23 @@ export default {
         };
       };
 
-      this.sortedMemories.forEach((memory, index) => {
+      addToSteps({
+        date: this.buyDate,
+        type: 'birth',
+        data: {
+          image: this.instrumentImage,
+        },
+      });
+
+      this.data.forEach((event, index) => {
         if (index > 0) {
-          const daysBetween = dayjs(memory.date).diff(previousMemory.date, 'd');
+          const daysBetween = dayjs(event.data.date).diff(
+            previousEvent.data.date,
+            'd'
+          );
           // plus performant que le switch : https://stackoverflow.com/a/12259830
           if (daysBetween < 7) {
-            addToSteps(emptyStep('day'), daysBetween);
+            if (daysBetween > 0) addToSteps(emptyStep('day'), daysBetween - 1);
           } else if (daysBetween < 30) {
             addToSteps(emptyStep('day'));
             addToSteps(emptyStep('week'), Math.floor(daysBetween / 7));
@@ -246,13 +309,21 @@ export default {
           }
         }
         addToSteps({
-          date: memory.date,
-          type: 'memory',
-          data: memory,
+          date: event.data.date,
+          type: event.type,
+          data: event.data,
         });
 
-        previousMemory = memory;
+        previousEvent = event;
       });
+
+      if (this.allowAdd) {
+        addToSteps({
+          date: Date.now(),
+          type: 'add',
+          data: null,
+        });
+      }
 
       return steps;
     },
@@ -267,7 +338,7 @@ $step-width: 3px;
 $step-margin: 5px;
 
 .memories-timeline {
-  margin: 12px 0 0 0;
+  margin: 12px 0 20px 0;
 
   &__slider-wrap {
   }
@@ -278,19 +349,86 @@ $step-margin: 5px;
     align-items: stretch;
     flex-wrap: nowrap;
     margin: 0 calc(50% - #{$slide-margin} - #{$slide-width} / 2);
+    height: 360px;
   }
 
   &__item {
-    display: inline-block;
     margin: 0 $slide-margin;
     flex-shrink: 0;
+    flex-grow: 1;
     width: $slide-width;
     height: 100%;
 
     &--empty {
       display: inline-block;
-      background: red;
     }
+  }
+
+  &__birth {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: self-start;
+    justify-content: flex-start;
+    height: 100%;
+    padding: 8px;
+    background-color: #ffffff;
+    border-radius: 4px;
+    word-wrap: break-word;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+
+    &-image-container {
+      flex: 1;
+      min-height: 232px;
+      overflow: hidden;
+      border-radius: 4px;
+    }
+
+    &-image {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    &-body {
+      margin-top: 12px;
+    }
+
+    &-text {
+      font-family: YoungSerif, 'serif';
+      font-size: 16px;
+    }
+  }
+
+  &__add {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: $background;
+    border: 8px solid white;
+    border-radius: 3px;
+    padding: 20px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &__add-title {
+    font-family: $font-secondary;
+    font-size: 20px;
+    text-align: center;
+  }
+
+  &__add-text {
+    margin-top: 12px;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  &__add-icon {
+    margin-bottom: 30px;
+    height: 40px;
+    width: 40px;
   }
 
   &__controls {
@@ -312,6 +450,7 @@ $step-margin: 5px;
     &--top {
       margin-bottom: 2px;
     }
+
     &--bottom {
       margin-top: 2px;
       .memories-timeline__cursor-icon {
@@ -342,6 +481,10 @@ $step-margin: 5px;
 
     &--memory {
       opacity: 1;
+    }
+
+    &--add {
+      opacity: 0.2;
     }
 
     &--day {

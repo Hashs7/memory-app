@@ -40,20 +40,11 @@
         </div>
       </div>
 
-      <MemoriesTimeline :memories="instrument.memories" />
-
-      <div class="">
-        <img :src="illu" alt="" />
-        <p>C'est bien calme par ici</p>
-        <p v-if="isOwner">
-          Ajoute un Memory et remplie l'histoire de ton instrument
-        </p>
-      </div>
-
-      <NuxtChild
-        v-if="instrument"
-        :is-owner="isOwner"
-        :instrument="instrument"
+      <MemoriesTimeline
+        :data="instrument.timeline"
+        :buy-date="instrument.buyDate"
+        :instrument-image="instrument.images[0]"
+        :allow-add="isOwner"
       />
     </div>
   </div>
