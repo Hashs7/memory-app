@@ -11,6 +11,24 @@
             class="memories-timeline__item memories-item--memory"
           />
           <div
+            v-else-if="step.type === 'birth'"
+            :key="i"
+            class="memories-timeline__item memories-timeline__item--birth"
+          >
+            <div class="memories-timeline__birth">
+              <div class="memories-timeline__birth-image-container">
+                <img
+                  v-if="step.data.image"
+                  class="memories-timeline__birth-image"
+                  :src="step.data.image.path"
+                />
+              </div>
+              <div class="memories-timeline__birth-body">
+                <h4 class="memories-timeline__birth-text">Naissance</h4>
+              </div>
+            </div>
+          </div>
+          <div
             v-else-if="step.type === 'add'"
             :key="i"
             :class="[
@@ -88,7 +106,19 @@ export default {
   name: 'MemoriesTimeline',
   components: { MemoryPreview, IconTriangle },
   props: {
-    memories: {
+    buyDate: {
+      type: String,
+      required: true,
+    },
+    instrumentImage: {
+      type: Object,
+      default: null,
+    },
+    allowAdd: {
+      type: Boolean,
+      default: false,
+    },
+    data: {
       type: Array,
       required: true,
     },
@@ -100,13 +130,6 @@ export default {
     };
   },
   computed: {
-    sortedMemories() {
-      return this.memories.slice().sort((a, b) => {
-        if (dayjs(a.date).isBefore(b.date)) return -1;
-        if (dayjs(a.date).isAfter(b.date)) return 1;
-        return 0;
-      });
-    },
     timelineSteps() {
       return this.getTimelineSteps();
     },
@@ -120,7 +143,7 @@ export default {
   },
 
   mounted() {
-    if (!this.memories.length) return;
+    if (!this.data.length) return;
     const sliderStep = this.$refs.slider.childNodes[0];
     const sliderStepSize =
       sliderStep.clientWidth +
@@ -218,7 +241,7 @@ export default {
   methods: {
     getTimelineSteps() {
       const steps = [];
-      let previousMemory = this.memories[0];
+      let previousEvent = this.data[0];
 
       const addToSteps = (step, repeat = 1) => {
         for (let i = 0; i < repeat; i++) {
@@ -237,9 +260,20 @@ export default {
         };
       };
 
-      this.sortedMemories.forEach((memory, index) => {
+      addToSteps({
+        date: this.buyDate,
+        type: 'birth',
+        data: {
+          image: this.instrumentImage,
+        },
+      });
+
+      this.data.forEach((event, index) => {
         if (index > 0) {
-          const daysBetween = dayjs(memory.date).diff(previousMemory.date, 'd');
+          const daysBetween = dayjs(event.data.date).diff(
+            previousEvent.data.date,
+            'd'
+          );
           // plus performant que le switch : https://stackoverflow.com/a/12259830
           if (daysBetween < 7) {
             if (daysBetween > 0) addToSteps(emptyStep('day'), daysBetween - 1);
@@ -264,19 +298,21 @@ export default {
           }
         }
         addToSteps({
-          date: memory.date,
-          type: 'memory',
-          data: memory,
+          date: event.data.date,
+          type: event.type,
+          data: event.data,
         });
 
-        previousMemory = memory;
+        previousEvent = event;
       });
 
-      addToSteps({
-        date: Date.now(),
-        type: 'add',
-        data: null,
-      });
+      if (this.allowAdd) {
+        addToSteps({
+          date: Date.now(),
+          type: 'add',
+          data: null,
+        });
+      }
 
       return steps;
     },
@@ -314,6 +350,41 @@ $step-margin: 5px;
 
     &--empty {
       display: inline-block;
+    }
+  }
+
+  &__birth {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: self-start;
+    justify-content: flex-start;
+    height: 100%;
+    padding: 8px;
+    background-color: #ffffff;
+    border-radius: 4px;
+    word-wrap: break-word;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+
+    &-image-container {
+      flex: 1;
+      min-height: 232px;
+      overflow: hidden;
+      border-radius: 4px;
+    }
+
+    &-image {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    &-body {
+      margin-top: 12px;
+    }
+
+    &-text {
+      font-family: YoungSerif, 'serif';
+      font-size: 16px;
     }
   }
 

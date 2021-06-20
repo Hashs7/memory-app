@@ -40,7 +40,12 @@
         </div>
       </div>
 
-      <MemoriesTimeline :memories="instrument.memories" />
+      <MemoriesTimeline
+        :data="instrument.timeline"
+        :buy-date="instrument.buyDate"
+        :instrument-image="instrument.images[0]"
+        :allow-add="isOwner"
+      />
 
       <MemorySection
         :memories="instrument.memories"
