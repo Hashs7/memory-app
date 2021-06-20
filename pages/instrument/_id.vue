@@ -46,6 +46,12 @@
         :instrument-image="instrument.images[0]"
         :allow-add="isOwner"
       />
+
+      <NuxtChild
+        v-if="instrument"
+        :is-owner="isOwner"
+        :instrument="instrument"
+      />
     </div>
   </div>
 </template>
