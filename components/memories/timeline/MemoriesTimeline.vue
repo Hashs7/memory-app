@@ -45,7 +45,7 @@
           >
             <NuxtLink :to="addMemoryRoute" class="memories-timeline__add">
               <IconAdd class="memories-timeline__add-icon" />
-              <h4 class="memories-timeline__add-title">Ajoutes un memory !</h4>
+              <h4 class="memories-timeline__add-title">Ajoute un memory !</h4>
               <span class="memories-timeline__add-text">
                 Cliques sur cette carte et crée un nouveau memory.
               </span>
@@ -349,7 +349,7 @@ $step-margin: 5px;
     align-items: stretch;
     flex-wrap: nowrap;
     margin: 0 calc(50% - #{$slide-margin} - #{$slide-width} / 2);
-    height: 360px;
+    height: 420px;
   }
 
   &__item {
