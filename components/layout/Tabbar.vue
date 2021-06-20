@@ -98,7 +98,8 @@ export default {
   methods: {
     updateMemoryPath() {
       if (!this.$store.state.motel.user.length) return;
-      const { id } = this.$store.state.motel.user[0];
+      const last = this.$store.state.motel.user.length - 1;
+      const { id } = this.$store.state.motel.user[last];
       const motelNav = this.nav.find((n) => n.slug === 'motel');
       motelNav.path = `/instrument/${id}`;
     },

@@ -24,7 +24,7 @@
             >
               <NuxtLink
                 v-if="selectedSection === 'user'"
-                to="/instrument/creation"
+                to="/instrument/creation-tunnel"
                 class="u-button u-button--background create-instrument"
               >
                 <div class="u-button__content">
