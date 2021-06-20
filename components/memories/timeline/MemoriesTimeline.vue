@@ -8,6 +8,7 @@
             :key="i"
             link
             :data="step.data"
+            editable
             class="memories-timeline__item memories-item--memory"
           />
           <div
@@ -37,8 +38,10 @@
             ]"
           >
             <NuxtLink :to="addMemoryRoute" class="memories-timeline__add">
+              <IconAdd class="memories-timeline__add-icon" />
+              <h4 class="memories-timeline__add-title">Ajoutes un memory !</h4>
               <span class="memories-timeline__add-text">
-                Ajoutes un memory !
+                Cliques sur cette carte et crée un nouveau memory.
               </span>
             </NuxtLink>
           </div>
@@ -87,6 +90,7 @@
 
 <script>
 import IconTriangle from '@/assets/svg/ic_triangle.svg?inline';
+import IconAdd from '@/assets/svg/ic_add.svg?inline';
 import gsap from 'gsap';
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
@@ -104,7 +108,7 @@ gsap.registerPlugin(InertiaPlugin);
 
 export default {
   name: 'MemoriesTimeline',
-  components: { MemoryPreview, IconTriangle },
+  components: { MemoryPreview, IconTriangle, IconAdd },
   props: {
     buyDate: {
       type: String,
@@ -398,13 +402,26 @@ $step-margin: 5px;
     background: $background;
     border: 8px solid white;
     border-radius: 3px;
+    padding: 20px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
   }
 
-  &__add-text {
+  &__add-title {
     font-family: $font-secondary;
     font-size: 20px;
     text-align: center;
+  }
+
+  &__add-text {
+    margin-top: 12px;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  &__add-icon {
+    margin-bottom: 30px;
+    height: 40px;
+    width: 40px;
   }
 
   &__controls {

@@ -5,6 +5,15 @@
     class="memory-preview"
     @click="$emit('click')"
   >
+    <client-only>
+      <nuxt-link
+        v-if="editable && isOwner"
+        :to="editLinkUrl"
+        class="memory-preview__edit u-button--action"
+      >
+        <IconEdit />
+      </nuxt-link>
+    </client-only>
     <div v-if="thumbnail" class="memory-preview__image-container">
       <img
         class="memory-preview__image"
@@ -15,22 +24,17 @@
     <div class="memory-preview__body">
       <h4 class="memory-preview__name">{{ data.name }}</h4>
       <p class="memory-preview__date">{{ date }}</p>
-      <client-only>
-        <nuxt-link v-if="editable && isOwner" :to="editLinkUrl" class="u-link">
-          Modifier
-        </nuxt-link>
-      </client-only>
     </div>
   </component>
 </template>
 
 <script>
 import dayjs from 'dayjs';
-import IconBrush from '@/assets/svg/ic_brush.svg?inline';
+import IconEdit from '@/assets/svg/ic_edit.svg?inline';
 
 export default {
   name: 'MemoryPreview',
-  components: { IconBrush },
+  components: { IconEdit },
   props: {
     link: {
       type: Boolean,
