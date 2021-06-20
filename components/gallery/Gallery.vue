@@ -70,10 +70,8 @@ export default {
     },
 
     previewImg() {
-      console.log('preview');
       const fileReader = new FileReader();
       [...this.$refs.file.files].forEach((f) => {
-        console.log('file', f);
         fileReader.readAsDataURL(f);
         fileReader.addEventListener('loadend', (e) => this.uploadImg(e, f));
       });

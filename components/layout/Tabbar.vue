@@ -1,21 +1,40 @@
 <template>
   <nav class="tabbar">
     <div class="tabbar__container">
-      <nuxt-link
+      <div
         v-for="(navItem, i) in nav"
         :key="i"
-        :to="navItem.path"
         class="tabbar__item"
         :class="[
           navItem.slug,
           { 'tabbar__item--current': $route.path === navItem.path },
         ]"
       >
-        <span class="tabbar__icon">
-          <component :is="navItem.icon" />
-        </span>
-        <span class="tabbar__text">{{ navItem.label }}</span>
-      </nuxt-link>
+        <nuxt-link
+          v-if="navItem.slug !== 'add'"
+          :to="navItem.path"
+          class="tabbar__item"
+        >
+          <span class="tabbar__icon">
+            <component :is="navItem.icon" />
+          </span>
+          <span class="tabbar__text">{{ navItem.label }}</span>
+        </nuxt-link>
+        <div v-else class="tabbar__item">
+          <span class="tabbar__icon">
+            <component :is="navItem.icon" />
+          </span>
+          <span class="tabbar__text">{{ navItem.label }}</span>
+          <input
+            ref="file"
+            type="file"
+            class="file"
+            capture="environment"
+            accept="video/*,image/*"
+            @change="previewImg"
+          />
+        </div>
+      </div>
     </div>
   </nav>
 </template>
@@ -78,16 +97,35 @@ export default {
   },
   methods: {
     updateMemoryPath() {
-      console.log(this.$store.state.motel.user);
       if (!this.$store.state.motel.user.length) return;
       const { id } = this.$store.state.motel.user[0];
       const motelNav = this.nav.find((n) => n.slug === 'motel');
       motelNav.path = `/instrument/${id}`;
     },
+
     updateProfilePath() {
       if (!this.$auth.loggedIn) return;
       const motelNav = this.nav.find((n) => n.slug === 'profile');
       motelNav.path = `/${this.$auth.$state.user.username}`;
+    },
+
+    previewImg(event) {
+      const fileReader = new FileReader();
+      [...event.target.files].forEach((f) => {
+        fileReader.readAsDataURL(f);
+        fileReader.addEventListener('loadend', (e) => this.uploadImg(e, f));
+      });
+    },
+
+    async uploadImg(event, file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      try {
+        const { data } = await this.$api.uploadFile(formData);
+        this.$store.commit('gallery/addMedia', data.response);
+      } catch (e) {
+        console.error(e);
+      }
     },
   },
 };
@@ -167,6 +205,16 @@ export default {
 
 .tabbar__item {
   width: 56px;
+  position: relative;
+
+  .file {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+  }
 }
 
 /*.tabbar__item.add {
