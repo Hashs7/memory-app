@@ -33,9 +33,6 @@ export default {
       showSummary: false,
     };
   },
-  mounted() {
-    this.$store.commit('gallery/resetSelected');
-  },
   computed: {
     ...mapState('memory', ['data']),
     instrumentId() {
@@ -44,6 +41,10 @@ export default {
   },
   created() {
     this.$store.commit('memory/resetState');
+  },
+  mounted() {
+    console.log(this.instrument);
+    this.$store.commit('gallery/resetSelected');
   },
   methods: {
     // Form submitted event

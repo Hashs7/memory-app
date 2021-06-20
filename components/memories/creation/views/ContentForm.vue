@@ -11,7 +11,7 @@
       </div>
 
       <div class="memory__infos">
-        <p class="memory__title-input">Elektra de feu</p>
+        <p class="memory__title-input">{{ instrumentName }}</p>
       </div>
 
       <form class="o-page__body">
@@ -116,6 +116,7 @@ export default {
   },
   data() {
     return {
+      instrument: null,
       contentType: CONTENT_TYPE,
       showThemes: false,
       draggableOptions: {
@@ -124,6 +125,11 @@ export default {
         delay: 200,
       },
     };
+  },
+  async fetch() {
+    this.instrument = (
+      await this.$api.getInstrumentById(this.$route.params.id)
+    )?.data;
   },
   computed: {
     ...mapGetters('memory', ['contents']),
@@ -152,6 +158,9 @@ export default {
       set(newValue) {
         this.$store.commit('memory/setContents', newValue);
       },
+    },
+    instrumentName() {
+      return this.instrument?.name;
     },
   },
   methods: {
