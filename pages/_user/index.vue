@@ -1,7 +1,8 @@
 <template>
   <div class="o-page o-page--user">
     <div class="user__header">
-      <ButtonBack v-show="!isOwner" light class="user-back" />
+      <ButtonBack v-if="!isOwner" light class="user-back" />
+      <span v-else></span>
       <div v-if="isOwner" class="owner">
         <NuxtLink to="profil/edit" class="btn-edit">Modifier</NuxtLink>
       </div>
@@ -25,6 +26,12 @@
       </p>
     </div>
 
+    <div class="o-page__container user__actions">
+      <Logout v-if="isOwner" type="submit" class="button">
+        Me déconnecter
+      </Logout>
+    </div>
+
     <section class="o-page__container">
       <TabSections :sections="sections" :show-index="true" />
     </section>
@@ -35,10 +42,11 @@
 import TabSections from '@/components/layout/TabSections';
 import ButtonBack from '../../components/UI/ButtonBack';
 import { router } from '../../mixins/router';
+import Logout from '../../components/user/Logout';
 
 export default {
   name: 'UserProfile',
-  components: { ButtonBack, TabSections },
+  components: { Logout, ButtonBack, TabSections },
   mixins: [router],
   async asyncData({ $api, params, redirect }) {
     try {
@@ -104,4 +112,9 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.user__actions {
+  margin: 20px auto;
+  text-align: center;
+}
+</style>

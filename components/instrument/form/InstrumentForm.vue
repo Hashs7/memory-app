@@ -81,13 +81,6 @@
       </div>
     </section>
 
-    <section class="o-section">
-      <div class="o-section__head">
-        <h4 class="o-section__title">Anciens propriétaires</h4>
-      </div>
-      <div class=""></div>
-    </section>
-
     <button type="submit" class="u-button u-button--primary">
       {{ newInstrument ? 'Ajouter' : 'Modifier' }}
     </button>
@@ -225,3 +218,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.u-button {
+  margin: auto auto 20px auto !important;
+}
+</style>

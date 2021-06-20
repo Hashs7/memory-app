@@ -3,7 +3,7 @@
     v-if="!$auth.loggedIn"
     v-slot="{ invalid }"
     tag="div"
-    class="form-observer"
+    class="form-observer o-page__container"
   >
     <form class="register__form" @submit.prevent="submit">
       <div class="register__container">
@@ -22,7 +22,7 @@
                 class="form__input"
                 :class="{ error: errors.length }"
               />
-              <span class="form__error">{{ errors[0] }}</span>
+              <!--              <span class="form__error">{{ errors[0] }}</span>-->
             </ValidationProvider>
           </label>
         </div>
@@ -41,7 +41,7 @@
                 autocomplete="current-password"
                 :class="{ error: errors.length }"
               />
-              <span class="form__error">{{ errors[0] }}</span>
+              <!--              <span class="form__error">{{ errors[0] }}</span>-->
             </ValidationProvider>
           </label>
         </div>

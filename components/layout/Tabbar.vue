@@ -53,7 +53,7 @@ export default {
         },
         {
           slug: 'add',
-          label: 'Ajouter',
+          label: 'Capturer',
           path: '/capture',
           icon: 'IconAdd',
         },

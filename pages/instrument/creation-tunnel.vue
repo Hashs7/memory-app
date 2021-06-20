@@ -1,5 +1,5 @@
 <template>
-  <div class="o-container instru-tunnel__container">
+  <div class="o-page o-page__container instru-tunnel__container o-page__flex">
     <section v-if="index === 0" class="instru-tunnel__section">
       <div class="instru-tunnel__text">
         <h2>Cheeeese !</h2>
@@ -37,13 +37,15 @@
         src="~/assets/img/tunnel_name.png"
         alt="Nom instrument"
       />
-      <b-input
-        v-model="instrument.name"
-        name="name"
-        type="text"
-        class="instru-tunnel__input"
-        placeholder="Son p'tit nom"
-      />
+      <div class="form__group">
+        <input
+          v-model="instrument.name"
+          name="name"
+          type="text"
+          class="instru-tunnel__input form__input"
+          placeholder="Son p'tit nom"
+        />
+      </div>
     </section>
     <section v-if="index === 2" class="instru-tunnel__section">
       <div class="instru-tunnel__text">
@@ -55,13 +57,15 @@
         src="~/assets/img/tunnel_calendar.png"
         alt="Date instrument"
       />
-      <input
-        v-model="instrument.buyDate"
-        class="slider__date-input instru-tunnel__input"
-        type="date"
-        name="date"
-        placeholder="Sélectionner une date"
-      />
+      <div class="form__group">
+        <input
+          v-model="instrument.buyDate"
+          class="slider__date-input instru-tunnel__input form__input"
+          type="date"
+          name="date"
+          placeholder="Sélectionner une date"
+        />
+      </div>
     </section>
 
     <section v-if="index === 3" class="instru-tunnel__section">
@@ -79,24 +83,25 @@
       <AudioRecorder />
     </section>
 
-    <div class="buttons_container">
-      <div v-if="index !== 0" class="o-page__actions">
-        <p class="btn-pass" @click="skip">Retour</p>
-      </div>
+    <div class="buttons_container o-page__actions">
+      <button v-if="index !== 0" class="btn-pass">
+        <span @click="skip">Retour</span>
+      </button>
 
-      <div v-if="index < sections.length - 1" class="o-page__actions">
-        <button class="u-button instru-tunnel__button" @click="next">
-          Suivant
-        </button>
-      </div>
-      <div v-if="index === sections.length - 1" class="o-page__actions">
-        <button
-          class="u-button instru-tunnel__button"
-          @click="submitInstrument"
-        >
-          Terminer
-        </button>
-      </div>
+      <button
+        v-if="index < sections.length - 1"
+        class="u-button instru-tunnel__button"
+        @click="next"
+      >
+        Suivant
+      </button>
+      <button
+        v-if="index === sections.length - 1"
+        class="u-button instru-tunnel__button"
+        @click="submitInstrument"
+      >
+        Terminer
+      </button>
     </div>
   </div>
 </template>
@@ -162,26 +167,32 @@ export default {
     },
 
     redirect(id) {
+      if (!id) {
+        this.$router.push({
+          name: 'instrument',
+        });
+        return;
+      }
       this.$router.push({
         name: 'instrument-id',
         params: { id },
       });
     },
 
-    submitInstrument() {
+    async submitInstrument() {
       const isEmpty = !Object.values(this.instrument).some(
         (x) => x !== null && x !== '' && x.length > 0
       );
 
       if (!isEmpty) {
         try {
-          return this.$api.newInstrument(this.instrument).then((res) => {
-            this.redirect(res.data.id);
-          });
+          const res = await this.$api.newInstrument(this.instrument);
+          this.redirect(res.data.id);
         } catch (e) {
-          throw new Error(e);
+          console.log(e);
         }
       }
+      this.redirect();
     },
 
     previewImg() {
@@ -210,32 +221,42 @@ export default {
 </script>
 
 <style lang="scss">
-.buttons_container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
+.instru-tunnel__container {
+  .buttons_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .u-button {
+    margin: 0 2px;
+    width: calc(50% - 4px);
+  }
 }
+
 .instru-tunnel__text {
   margin-top: 70px;
   & p {
     margin-top: 20px;
   }
 }
+
 .instru-tunnel__img {
   margin-top: 50px;
+  height: 200px;
 }
 
 .instru-tunnel__input {
-  margin-top: 50px;
+  margin: 50px auto auto auto;
   width: 100%;
 }
 .instru-tunnel__button {
-  padding: 0 52px;
   @include button-background;
 }
 .btn-pass {
   padding: 0 52px;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
 }
 .instru-tunnel__section {
   height: 615px;
@@ -255,10 +276,6 @@ export default {
 }
 
 .instru-tunnel__container {
-  height: 100vh;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
   text-align: center;
 }
 
@@ -266,9 +283,6 @@ export default {
   background-color: $background-darker;
   border: none;
   margin-top: 50px;
-
-  .photo-help {
-  }
 }
 .photo-placeholder {
   position: relative;

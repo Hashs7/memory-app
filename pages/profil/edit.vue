@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="user-infos">
-      <div v-if="user.thumbnail" class="user-thumbnail">
+      <div class="user-thumbnail">
         <div class="user-thumbnail__container">
           <input
             ref="file"
@@ -18,7 +18,11 @@
             @change="previewImg"
           />
           <IconEdit class="edit-icon" />
-          <img :src="thumbnail" :alt="`Photo de profil de ${user.firstName}`" />
+          <img
+            v-if="thumbnail"
+            :src="thumbnail"
+            :alt="`Photo de profil de ${user.firstName}`"
+          />
         </div>
       </div>
       <div class="o-page__container">

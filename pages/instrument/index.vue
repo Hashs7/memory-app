@@ -42,19 +42,7 @@
                   :show-favorite="s.name === 'wish'"
                 />
               </div>
-              <div v-else-if="s.name === 'wish'">
-                <img
-                  src="~/assets/img/illu_face-mer.png"
-                  alt="Face à la mere"
-                />
-                <h3>"Face à la mer !"</h3>
-                <p>Calogero</p>
-                <p>
-                  C’est bien vide ici...<br />
-                  Ajoute un instrument en favoris en cliquant sur le coeur d’un
-                  instrument qui te plaît !
-                </p>
-              </div>
+              <EmptyInstrument v-else />
             </div>
           </section>
         </div>
@@ -72,9 +60,10 @@
 import IconRectangle from '@/assets/svg/ic_rectangle.svg?inline';
 import IconAdd from '@/assets/svg/ic_add.svg?inline';
 import InstrumentPreview from '@/components/instrument/InstrumentPreview';
+import EmptyInstrument from '../../components/instrument/EmptyInstrument';
 
 export default {
-  components: { InstrumentPreview, IconRectangle, IconAdd },
+  components: { EmptyInstrument, InstrumentPreview, IconRectangle, IconAdd },
   middleware: 'auth',
   data() {
     return {
@@ -120,24 +109,7 @@ export default {
 .create-instrument {
   margin-bottom: 8px;
 }
-.empty-instrument {
-  display: flex !important;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  margin: 70px auto 0;
-  width: 90%;
 
-  & h3 {
-    margin-top: 50px;
-  }
-  & p {
-    margin-top: 5px;
-  }
-  & p:last-child {
-    margin-top: 35px;
-  }
-}
 .instruments-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
