@@ -42,23 +42,30 @@
 
       <MemoriesTimeline :memories="instrument.memories" />
 
-      <MemorySection
-        :memories="instrument.memories"
-        class="o-page__container"
+      <div class="">
+        <img :src="illu" alt="" />
+        <p>C'est bien calme par ici</p>
+        <p v-if="isOwner">
+          Ajoute un Memory et remplie l'histoire de ton instrument
+        </p>
+      </div>
+
+      <NuxtChild
+        v-if="instrument"
+        :is-owner="isOwner"
+        :instrument="instrument"
       />
     </div>
-
-    <NuxtChild v-if="instrument" :is-owner="isOwner" :instrument="instrument" />
   </div>
 </template>
 
 <script>
 import UserPreview from '@/components/user/UserPreview';
-import MemorySection from '@/components/memories/MemorySection';
 import ImagesCarousel from '@/components/instrument/ImagesCarousel';
 import OwnerActions from '@/components/instrument/OwnerActions';
 import ButtonBack from '@/components/UI/ButtonBack';
 import MemoriesTimeline from '@/components/memories/timeline/MemoriesTimeline';
+import illu from '~/assets/img/illu_spiderweb.png';
 
 export default {
   components: {
@@ -66,7 +73,6 @@ export default {
     ButtonBack,
     OwnerActions,
     ImagesCarousel,
-    MemorySection,
     UserPreview,
   },
   layout(ctx) {
@@ -86,6 +92,11 @@ export default {
     } catch (e) {
       redirect('/404/');
     }
+  },
+  data() {
+    return {
+      illu,
+    };
   },
   fetchOnServer: false,
   computed: {

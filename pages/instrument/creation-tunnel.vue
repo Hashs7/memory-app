@@ -12,6 +12,10 @@
           backgroundImage: `url(${imagePath})`,
         }"
       >
+        <div v-if="!hasImg" class="photo-help">
+          <IconMedia />
+          <p>Ajoutez une photo</p>
+        </div>
         <input
           ref="file"
           class="u-button__input-file"
@@ -76,16 +80,16 @@
     </section>
 
     <div class="buttons_container">
-      <div v-if="index < sections.length" class="o-page__actions">
-        <p class="btn-pass" @click="skip">Passer</p>
+      <div v-if="index !== 0" class="o-page__actions">
+        <p class="btn-pass" @click="skip">Retour</p>
       </div>
 
-      <div v-if="index < sections.length" class="o-page__actions">
+      <div v-if="index < sections.length - 1" class="o-page__actions">
         <button class="u-button instru-tunnel__button" @click="next">
           Suivant
         </button>
       </div>
-      <div v-if="index === sections.length" class="o-page__actions">
+      <div v-if="index === sections.length - 1" class="o-page__actions">
         <button
           class="u-button instru-tunnel__button"
           @click="submitInstrument"
@@ -99,12 +103,15 @@
 
 <script>
 import AudioRecorder from '../../components/gallery/audio/AudioRecorder';
+import IconMedia from '~/assets/svg/ic_camera.svg?inline';
 
 export default {
   name: 'NewInstrumentTunnel',
   components: {
     AudioRecorder,
+    IconMedia,
   },
+  layout: 'none',
   data() {
     return {
       instrument: {
@@ -114,6 +121,7 @@ export default {
         sonority: null,
         images: [],
       },
+      hasImg: false,
       imagePath: '/img/background_addimg.png',
       index: 0,
       sections: ['images', 'name', 'buyDate', 'sonority'],
@@ -150,7 +158,7 @@ export default {
     },
 
     skip() {
-      this.index += 1;
+      this.index -= 1;
     },
 
     redirect(id) {
@@ -191,6 +199,7 @@ export default {
         const { data } = await this.$api.uploadFile(formData);
         this.instrument.images.push(data.response._id);
         this.imagePath = data.response.path;
+        this.hasImg = true;
         this.$store.commit('gallery/addMedia', data.response);
       } catch (e) {
         console.error(e);
@@ -205,7 +214,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin-bottom: 20px;
 }
 .instru-tunnel__text {
   margin-top: 70px;
@@ -244,7 +253,12 @@ export default {
     border: 7px solid #f3ecd4;
   }
 }
+
 .instru-tunnel__container {
+  height: 100vh;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
   text-align: center;
 }
 
@@ -252,14 +266,28 @@ export default {
   background-color: $background-darker;
   border: none;
   margin-top: 50px;
+
+  .photo-help {
+  }
 }
 .photo-placeholder {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 408px;
   width: 290px;
   border-radius: 5px;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+
+  .photo-help {
+    font-size: 14px;
+    color: #928f82;
+    p {
+      margin-top: 16px;
+    }
+  }
 }
 </style>

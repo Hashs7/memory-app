@@ -78,6 +78,7 @@ export default {
   },
   methods: {
     updateMemoryPath() {
+      console.log(this.$store.state.motel.user);
       if (!this.$store.state.motel.user.length) return;
       const { id } = this.$store.state.motel.user[0];
       const motelNav = this.nav.find((n) => n.slug === 'motel');

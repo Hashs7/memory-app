@@ -16,7 +16,7 @@
                 class="form__input"
                 :class="{ error: errors.length }"
               />
-              <span class="form__error">{{ errors[0] }}</span>
+              <!--              <span class="form__error">{{ errors[0] }}</span>-->
             </ValidationProvider>
           </label>
         </div>
@@ -34,7 +34,7 @@
                 class="form__input"
                 :class="{ error: errors.length }"
               />
-              <span class="form__error">{{ errors[0] }}</span>
+              <!--              <span class="form__error">{{ errors[0] }}</span>-->
             </ValidationProvider>
           </label>
           <label class="form__field--half">
@@ -50,7 +50,7 @@
                 type="text"
                 :class="{ error: errors.length }"
               />
-              <span class="form__error">{{ errors[0] }}</span>
+              <!--              <span class="form__error">{{ errors[0] }}</span>-->
             </ValidationProvider>
           </label>
         </div>
@@ -69,7 +69,7 @@
                 type="email"
                 :class="{ error: errors.length }"
               />
-              <span class="form__error">{{ errors[0] }}</span>
+              <!--              <span class="form__error">{{ errors[0] }}</span>-->
             </ValidationProvider>
           </label>
         </div>
@@ -87,7 +87,7 @@
                 type="password"
                 :class="{ error: errors.length }"
               />
-              <span class="form__error">{{ errors[0] }}</span>
+              <!--              <span class="form__error">{{ errors[0] }}</span>-->
             </ValidationProvider>
           </label>
         </div>

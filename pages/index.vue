@@ -56,6 +56,9 @@ export default {
   text-align: center;
   margin: auto;
 }
+.o-page--intro {
+  background-image: url('~/assets/img/scratches.png');
+}
 
 .o-page__container {
   margin: auto;

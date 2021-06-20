@@ -83,7 +83,10 @@ export default {
       if (this.data.name) {
         name = this.data.name;
       }
-      return `${name} ${this.data.brand}`;
+      if (this.data.brand) {
+        name += ' ' + this.data.brand;
+      }
+      return name;
     },
   },
   methods: {
