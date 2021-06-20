@@ -80,10 +80,14 @@ export default {
     },
     instrumentName() {
       let name = '';
+      let brand = '';
       if (this.data.name) {
         name = this.data.name;
       }
-      return `${name} ${this.data.brand}`;
+      if (this.data.brand) {
+        brand = this.data.brand;
+      }
+      return `${name} ${brand}`;
     },
   },
   methods: {
