@@ -46,11 +46,6 @@
         :instrument-image="instrument.images[0]"
         :allow-add="isOwner"
       />
-
-      <MemorySection
-        :memories="instrument.memories"
-        class="o-page__container"
-      />
     </div>
 
     <NuxtChild v-if="instrument" :is-owner="isOwner" :instrument="instrument" />
@@ -59,7 +54,6 @@
 
 <script>
 import UserPreview from '@/components/user/UserPreview';
-import MemorySection from '@/components/memories/MemorySection';
 import ImagesCarousel from '@/components/instrument/ImagesCarousel';
 import OwnerActions from '@/components/instrument/OwnerActions';
 import ButtonBack from '@/components/UI/ButtonBack';
@@ -71,7 +65,6 @@ export default {
     ButtonBack,
     OwnerActions,
     ImagesCarousel,
-    MemorySection,
     UserPreview,
   },
   layout(ctx) {
