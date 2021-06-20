@@ -50,6 +50,7 @@ export default {
     };
   },
   created() {
+    if (process.env.VUE_ENV === 'server') return;
     if (!navigator.mediaDevices) {
       this.disabled = true;
     }
@@ -66,6 +67,7 @@ export default {
       }
     },
     handleAudioStream() {
+      if (!navigator) return;
       navigator.mediaDevices?.getUserMedia({ audio: true }).then((stream) => {
         this.stream = stream;
         this.handlerFunction(stream);
