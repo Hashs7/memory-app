@@ -1,5 +1,5 @@
 <template>
-  <div class="o-page o-page--login">
+  <div class="o-page o-page--login o-page__flex">
     <div class="o-page__header">
       <div class="logo"><IconLogo /></div>
       <span class="o-page__title">Connexion au compte</span>
@@ -7,7 +7,7 @@
     </div>
     <LoginForm v-if="!$auth.loggedIn" />
     <Logout v-else type="submit" class="button"> Me déconnecter </Logout>
-    <button class="u-link" @click="resetPassword">Mot de passe oublié</button>
+    <!--    <button class="u-link" @click="resetPassword">Mot de passe oublié</button>-->
   </div>
 </template>
 

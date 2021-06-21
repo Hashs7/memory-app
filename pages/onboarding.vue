@@ -87,6 +87,8 @@ export default {
 [data-glide-el='controls'] {
   z-index: 5;
   margin-left: 7%;
+  position: absolute;
+  bottom: 32px;
 }
 
 .onboarding__container {
@@ -98,7 +100,7 @@ export default {
 }
 
 .onboarding__image-container .glide__track {
-  height: 85vh;
+  //height: 85vh;
 }
 
 .onboarding__content-container {
@@ -110,6 +112,7 @@ export default {
 .onboarding__image-preview {
   height: 100vh;
   background-repeat: no-repeat;
+  background-size: contain;
   background-position-x: 50%;
 
   &:nth-child(even) {
@@ -148,7 +151,7 @@ export default {
 
 .onboarding__content-title {
   line-height: 1.2;
-  font-family: YoungSerif, Arial, sans-serif;
+  font-family: $font-secondary;
   font-weight: 900;
   color: $gray-darkest;
 }
@@ -160,9 +163,10 @@ export default {
 }
 
 .onboarding__begin-button {
-  width: 50%;
   visibility: hidden;
+  pointer-events: none;
   &.visible {
+    pointer-events: auto;
     visibility: visible;
   }
 }
