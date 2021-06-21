@@ -43,7 +43,6 @@ export default {
     this.$store.commit('memory/resetState');
   },
   mounted() {
-    console.log(this.instrument);
     this.$store.commit('gallery/resetSelected');
   },
   methods: {

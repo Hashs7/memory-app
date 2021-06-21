@@ -1,7 +1,7 @@
 <template>
   <div class="o-page o-page--summary">
     <div class="o-page__header o-page__header-nav">
-      <ButtonEdit emit @back="$emit('open-form')" />
+      <ButtonBack emit @back="$emit('back')" />
     </div>
     <div class="o-page__body">
       <p class="summary__title">Publication du Memory</p>
@@ -38,7 +38,10 @@
       <label class="o-cells__label">Qui peut voir ce Memory ?</label>
       <Visibility />
 
-      <button class="" @click="$emit('submit')">
+      <button
+        class="summary__submit u-button u-button--primary"
+        @click="$emit('submit')"
+      >
         <span>Enregistrer</span>
       </button>
     </div>
@@ -49,13 +52,13 @@
 import { mapMutations, mapState } from 'vuex';
 import dayjs from 'dayjs';
 import Visibility from '@/components/memories/creation/form/Visibility';
-import ButtonEdit from '../../../UI/ButtonEdit';
+import ButtonBack from '@/components/UI/ButtonBack';
 
 export default {
   name: 'Summary',
   components: {
     Visibility,
-    ButtonEdit,
+    ButtonBack,
   },
   props: {
     edit: {
@@ -126,5 +129,10 @@ export default {
     font-family: $font-secondary;
     color: rgba(0, 0, 0, 0.4);
   }
+}
+
+.summary__submit {
+  width: 100%;
+  margin-top: 30px;
 }
 </style>
