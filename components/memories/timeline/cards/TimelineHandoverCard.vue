@@ -55,10 +55,10 @@ export default {
       return dayjs(this.data.date).format('D MMMM YYYY');
     },
     oldUserThumbnail() {
-      return this.data.oldUser?.thumbnail;
+      return this.data.oldUser?.thumbnail?.path;
     },
     newUserThumbnail() {
-      return this.data.newUser?.thumbnail;
+      return this.data.newUser?.thumbnail?.path;
     },
   },
 };

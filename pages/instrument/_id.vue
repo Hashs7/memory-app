@@ -32,7 +32,7 @@
         <div v-else class="instrument__not-owner">
           <button
             :class="[isFavorite]"
-            class="u-button"
+            class="u-button u-button--primary"
             @click.prevent="addToWish"
           >
             {{ !isFavorite ? 'Ajouter aux favoris' : 'Enlever des favoris' }}
@@ -80,22 +80,21 @@ export default {
     return layout;
   },
   scrollToTop: false,
-  async asyncData({ $api, params, redirect }) {
-    try {
-      const instrument = (await $api.getInstrumentById(params.id))?.data;
-      return {
-        instrument,
-      };
-    } catch (e) {
-      redirect('/404/');
-    }
-  },
   data() {
     return {
       illu,
+      instrument: null,
     };
   },
-  fetchOnServer: false,
+  async fetch() {
+    try {
+      this.instrument = (
+        await this.$api.getInstrumentById(this.$route.params.id)
+      )?.data;
+    } catch (e) {
+      await this.$router.push('/404/');
+    }
+  },
   computed: {
     isOwner() {
       return this.instrument.owner._id === this.$auth.$state.user?._id;

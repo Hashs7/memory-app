@@ -47,16 +47,6 @@ export default {
   components: {
     Background,
   },
-  async asyncData({ $api, params }) {
-    try {
-      const res = await $api.getInstrumentById(params.id);
-      return {
-        instrument: res.data,
-      };
-    } catch (e) {
-      console.log(e);
-    }
-  },
   data() {
     return {
       error: {
@@ -66,6 +56,14 @@ export default {
       instrument: null,
       validated: null,
     };
+  },
+  async fetch({ $api, params }) {
+    try {
+      const res = await $api.getInstrumentById(params.id);
+      this.instrument = res.data;
+    } catch (e) {
+      console.log(e);
+    }
   },
   computed: {
     token() {
