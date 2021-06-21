@@ -100,7 +100,10 @@ export default {
       if (this.thumbnailPreview) {
         return this.thumbnailPreview;
       }
-      return this.user.thumbnail.path;
+      if (this.user.thumbnail) {
+        return this.user.thumbnail.path;
+      }
+      return '';
     },
   },
   mounted() {
