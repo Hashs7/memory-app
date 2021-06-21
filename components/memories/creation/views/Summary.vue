@@ -38,7 +38,10 @@
       <label class="o-cells__label">Qui peut voir ce Memory ?</label>
       <Visibility />
 
-      <button class="" @click="$emit('submit')">
+      <button
+        class="summary__submit u-button u-button--primary"
+        @click="$emit('submit')"
+      >
         <span>Enregistrer</span>
       </button>
     </div>
@@ -126,5 +129,10 @@ export default {
     font-family: $font-secondary;
     color: rgba(0, 0, 0, 0.4);
   }
+}
+
+.summary__submit {
+  width: 100%;
+  margin-top: 30px;
 }
 </style>
