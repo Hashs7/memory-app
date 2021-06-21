@@ -5,36 +5,38 @@
         <StopWatch v-show="!hasAudio" ref="stopwatch" />
         <AudioPlayer v-show="hasAudio" ref="recordedAudio" light progress-bar />
       </div>
-      <div class="audio-recorder__btn">
+      <div class="recorder-container">
+        <div class="audio-recorder__btn">
+          <button
+            v-show="!recordDisabled"
+            ref="record"
+            class="record"
+            :disabled="recordDisabled"
+            @click="startRecord"
+          ></button>
+          <button
+            v-show="!stopRecordDisabled"
+            ref="stopRecord"
+            class="stop"
+            :disabled="stopRecordDisabled"
+            @click="stopRecord"
+          ></button>
+        </div>
         <button
-          v-show="!recordDisabled"
-          ref="record"
-          class="record"
-          :disabled="recordDisabled"
-          @click="startRecord"
-        ></button>
+          v-if="hasAudio"
+          class="upload u-button--round small light"
+          @click="upload"
+        >
+          <IconCheck />
+        </button>
         <button
-          v-show="!stopRecordDisabled"
-          ref="stopRecord"
-          class="stop"
-          :disabled="stopRecordDisabled"
-          @click="stopRecord"
-        ></button>
+          v-if="!hideActions && hasAudio"
+          class="remove u-button--round small light"
+          @click="deleteRecord"
+        >
+          <IconTrash />
+        </button>
       </div>
-      <button
-        v-if="hasAudio"
-        class="u-button u-button--primary"
-        @click="upload"
-      >
-        Envoyer
-      </button>
-      <button
-        v-if="!hideActions && hasAudio"
-        class="u-button u-button--outline"
-        @click="deleteRecord"
-      >
-        Supprimer
-      </button>
     </div>
     <div v-else>
       <p>L'enregistrement audio n'est pas disponible</p>
@@ -43,12 +45,14 @@
 </template>
 
 <script>
+import IconCheck from '@/assets/svg/ic_check.svg?inline';
+import IconTrash from '@/assets/svg/ic_trash.svg?inline';
 import StopWatch from '../../UI/StopWatch';
 import AudioPlayer from './AudioPlayer';
 
 export default {
   name: 'AudioRecorder',
-  components: { StopWatch, AudioPlayer },
+  components: { StopWatch, AudioPlayer, IconTrash, IconCheck },
   props: {
     hideActions: {
       type: Boolean,
@@ -144,6 +148,7 @@ export default {
 }
 
 .audio-recorder__btn {
+  grid-column-start: 2;
   display: block;
   margin: auto;
   width: 92px;
@@ -159,11 +164,25 @@ export default {
   }
 }
 
+.remove {
+  grid-column-start: 1;
+  grid-row-start: 1;
+}
+.upload {
+  grid-column-start: 3;
+  grid-row-start: 1;
+}
+
 .record {
   background-color: $background !important;
   width: 100%;
   height: 100%;
   border-radius: 50%;
+}
+
+.recorder-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .stop {

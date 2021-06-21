@@ -48,6 +48,26 @@
   align-items: center;
 }
 
+.u-button--round.small {
+  margin: auto;
+  padding: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 100%;
+  border: none;
+  box-shadow: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &.light {
+    background-color: $background;
+    path {
+      fill: $gray-darkest;
+    }
+  }
+}
+
 .u-button--background {
   position: relative;
   padding: 0;
