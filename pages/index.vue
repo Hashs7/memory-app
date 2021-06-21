@@ -25,12 +25,17 @@
         <span class="u-button__content">S'inscrire</span>
         <IconBackground class="u-button__bg" />
       </NuxtLink>
+      <NuxtLink v-else to="/motel" class="u-button--background">
+        <span class="u-button__content">S'inscrire</span>
+        <IconBackgroundFull class="u-button__bg" />
+      </NuxtLink>
     </div>
   </div>
 </template>
 
 <script>
 import IconBackground from '~/assets/svg/button/btn_background-half.svg?inline';
+import IconBackgroundFull from '~/assets/svg/button/btn_background-large.svg?inline';
 import IconOutline from '~/assets/svg/button/btn_outline-half.svg?inline';
 import IconLogo from '~/assets/svg/ic_logo.svg?inline';
 import IconPartition from '~/assets/svg/ic_partition.svg?inline';
@@ -38,6 +43,7 @@ import IconPartition from '~/assets/svg/ic_partition.svg?inline';
 export default {
   components: {
     IconBackground,
+    IconBackgroundFull,
     IconOutline,
     IconLogo,
     IconPartition,
@@ -46,7 +52,7 @@ export default {
   asyncData({ $auth, redirect }) {
     if (!$auth.loggedIn) return;
     redirect({
-      name: 'feed',
+      name: 'instrument',
     });
   },
 };
