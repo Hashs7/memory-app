@@ -92,7 +92,7 @@ export default {
     };
   },
   created() {
-    this.updateMemoryPath();
+    // this.updateMemoryPath();
     this.updateProfilePath();
   },
   methods: {

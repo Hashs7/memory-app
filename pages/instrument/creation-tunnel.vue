@@ -80,7 +80,7 @@
         src="~/assets/img/tunnel_sonority.png"
         alt="Sonority instrument"
       />
-      <AudioRecorder />
+      <AudioRecorder hide-actions />
     </section>
 
     <div class="buttons_container o-page__actions">

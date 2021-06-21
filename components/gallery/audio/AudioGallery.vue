@@ -85,7 +85,10 @@ export default {
 }
 .o-page--gallery {
   .audio-view {
-    max-height: calc(100vh - 404px);
+    max-height: calc(
+      100vh - 404px - env(safe-area-inset-top, 0) -
+        env(safe-area-inset-bottom, 0)
+    );
     height: calc(
       100vh - 404px - env(safe-area-inset-top, 0) -
         env(safe-area-inset-bottom, 0)
