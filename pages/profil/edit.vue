@@ -137,7 +137,6 @@ export default {
     previewImg() {
       const fileReader = new FileReader();
       const f = this.$refs.file.files[0];
-      console.log(f);
       fileReader.readAsDataURL(f);
       fileReader.addEventListener('loadend', (e) => {
         this.thumbnailPreview = fileReader.result;

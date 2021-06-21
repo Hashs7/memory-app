@@ -68,7 +68,7 @@ export default {
     { src: '~/plugins/carousel.js' /* mode: 'client' */ },
     { src: '~/plugins/vue-lazyload.js', mode: 'client' },
     { src: '~/plugins/vee-validate.js', mode: 'client' },
-    { src: '~/plugins/vuex-persist.js', mode: 'client' },
+    // { src: '~/plugins/vuex-persist.js', mode: 'client' },
     { src: '~/plugins/colors.js', mode: 'client' },
     { src: '~/plugins/hammer.js', mode: 'client' },
     { src: '~/plugins/wysiwyg.js', mode: 'client' },

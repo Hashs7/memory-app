@@ -1,6 +1,6 @@
 <template>
   <div class="o-page o-page__container instru-tunnel__container o-page__flex">
-    <section v-if="index === 0" class="instru-tunnel__section">
+    <section v-show="index === 0" class="instru-tunnel__section">
       <div class="instru-tunnel__text">
         <h2>Cheeeese !</h2>
         <p>Ajoute une photo de ton instrument préféré</p>
@@ -27,7 +27,7 @@
       </div>
     </section>
 
-    <section v-if="index === 1" class="instru-tunnel__section">
+    <section v-show="index === 1" class="instru-tunnel__section">
       <div class="instru-tunnel__text">
         <h2>Nomme ton instrument</h2>
         <p>Quel petit nom pour ton instrument ?</p>
@@ -47,7 +47,7 @@
         />
       </div>
     </section>
-    <section v-if="index === 2" class="instru-tunnel__section">
+    <section v-show="index === 2" class="instru-tunnel__section">
       <div class="instru-tunnel__text">
         <h2>Année de rencontre</h2>
         <p>Quand est-ce que cet instrument est devenu le votre ?</p>
@@ -68,7 +68,7 @@
       </div>
     </section>
 
-    <section v-if="index === 3" class="instru-tunnel__section">
+    <section v-show="index === 3" class="instru-tunnel__section">
       <div class="instru-tunnel__text">
         <h2>Son plus bel accord</h2>
         <p>
@@ -188,6 +188,8 @@ export default {
         try {
           const res = await this.$api.newInstrument(this.instrument);
           this.redirect(res.data.id);
+          console.log('redirerct');
+          return;
         } catch (e) {
           console.log(e);
         }
@@ -197,9 +199,12 @@ export default {
 
     previewImg() {
       const fileReader = new FileReader();
-      [...this.$refs.file.files].forEach((f) => {
-        fileReader.readAsDataURL(f);
-        fileReader.addEventListener('loadend', (e) => this.uploadImg(e, f));
+      if (!this.$refs.file.files.length) return;
+      const f = this.$refs.file.files[0];
+      fileReader.readAsDataURL(f);
+      fileReader.addEventListener('loadend', (e) => {
+        this.imagePath = fileReader.result;
+        this.uploadImg(e, f);
       });
     },
 
@@ -209,7 +214,6 @@ export default {
       try {
         const { data } = await this.$api.uploadFile(formData);
         this.instrument.images.push(data.response._id);
-        this.imagePath = data.response.path;
         this.hasImg = true;
         this.$store.commit('gallery/addMedia', data.response);
       } catch (e) {
