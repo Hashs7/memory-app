@@ -108,6 +108,8 @@ export default {
 <style lang="scss" scoped>
 .create-instrument {
   margin-bottom: 8px;
+  grid-column-start: 1;
+  grid-column-end: 3;
 }
 
 .instruments-container {

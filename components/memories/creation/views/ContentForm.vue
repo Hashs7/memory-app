@@ -57,7 +57,7 @@
           class="button u-button u-button--round actions__theme"
           @click="showThemes = !showThemes"
         >
-          <IconBrush />
+          <IconNote />
         </button>
         <button
           type="button"
@@ -81,7 +81,7 @@ import MediaContent from '@/components/memories/creation/contents/MediaContent';
 import ThemeSelector from '@/components/memories/creation/ThemeSelector';
 import MemoryPreview from '@/components/memories/MemoryPreview';
 import IconCheck from '@/assets/svg/ic_check.svg?inline';
-import IconBrush from '@/assets/svg/ic_brush.svg?inline';
+import IconNote from '@/assets/svg/ic_note.svg?inline';
 import IconChevron from '@/assets/svg/ic_chevron.svg?inline';
 import IconVisibility from '@/assets/svg/ic_visibility.svg?inline';
 import { CONTENT_TYPE } from '@/const/memory';
@@ -103,7 +103,7 @@ export default {
     MediaContent,
     MemoryPreview,
     IconCheck,
-    IconBrush,
+    IconNote,
     IconChevron,
     IconVisibility,
     draggable,
@@ -312,21 +312,24 @@ export default {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 5px solid white;
     width: 48px;
-    box-shadow: 0px 0px 9px rgba(0, 0, 0, 0.13);
+    box-shadow: 0 0 9px rgba(0, 0, 0, 0.13);
     height: 48px;
+    border: none;
+    outline: none;
+    background-color: $gray-darkest;
 
     svg {
       width: 18px;
     }
   }
   &__theme {
-    background-color: $secondary;
+    background: $background;
+    border: 3px solid $gray-darkest;
   }
 
   &__submit {
-    background-color: $primary;
+    background-color: $gray-darkest;
   }
 }
 

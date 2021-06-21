@@ -100,10 +100,7 @@ export default {
       if (this.thumbnailPreview) {
         return this.thumbnailPreview;
       }
-      if (this.user.thumbnail) {
-        return this.user.thumbnail.path;
-      }
-      return '';
+      return this.user?.thumbnail?.path;
     },
   },
   mounted() {
@@ -140,7 +137,6 @@ export default {
     previewImg() {
       const fileReader = new FileReader();
       const f = this.$refs.file.files[0];
-      console.log(f);
       fileReader.readAsDataURL(f);
       fileReader.addEventListener('loadend', (e) => {
         this.thumbnailPreview = fileReader.result;

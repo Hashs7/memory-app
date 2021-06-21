@@ -1,6 +1,6 @@
 <template>
   <div class="audio-recorder">
-    <div v-if="!disabled" class="container">
+    <div v-if="!disabled" class="audio-recorder__container">
       <div class="stopwatch">
         <StopWatch v-show="!hasAudio" ref="stopwatch" />
         <AudioPlayer v-show="hasAudio" ref="recordedAudio" light progress-bar />
@@ -21,8 +21,20 @@
           @click="stopRecord"
         ></button>
       </div>
-      <button v-if="hasAudio" @click="upload">Upload</button>
-      <button v-if="hasAudio" @click="deleteRecord">Supprimer</button>
+      <button
+        v-if="hasAudio"
+        class="u-button u-button--primary"
+        @click="upload"
+      >
+        Envoyer
+      </button>
+      <button
+        v-if="!hideActions && hasAudio"
+        class="u-button u-button--outline"
+        @click="deleteRecord"
+      >
+        Supprimer
+      </button>
     </div>
     <div v-else>
       <p>L'enregistrement audio n'est pas disponible</p>
@@ -37,6 +49,12 @@ import AudioPlayer from './AudioPlayer';
 export default {
   name: 'AudioRecorder',
   components: { StopWatch, AudioPlayer },
+  props: {
+    hideActions: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       rec: null,
@@ -118,6 +136,7 @@ export default {
 
 <style lang="scss" scoped>
 .audio-recorder {
+  width: 100%;
   text-align: center;
   color: $background;
   padding: 24px 24px 40px 24px;
