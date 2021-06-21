@@ -1,8 +1,10 @@
 <template>
-  <div class="o-page o-page--handover o-page__container o-page__flex">
-    <ButtonBack absolute emit @back="stepBack" />
-    <h1 class="o-page__title">{{ title[step - 1] }}</h1>
-    <div class="step-container o-page__body">
+  <div class="o-page o-page--handover o-page__flex">
+    <div class="o-page__header o-page__header-nav">
+      <ButtonBack emit @back="stepBack" />
+    </div>
+    <h1 class="o-page__title o-page__container">{{ title[step - 1] }}</h1>
+    <div class="step-container o-page__body o-page__container">
       <component
         :is="`Step${i}`"
         v-for="i in MAX_STEP"
@@ -11,7 +13,7 @@
         :show="step === i"
       />
     </div>
-    <div class="">
+    <div class="o-page__container">
       <button
         v-if="step !== MAX_STEP"
         class="u-button u-button--primary"

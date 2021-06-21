@@ -188,7 +188,6 @@ export default {
         try {
           const res = await this.$api.newInstrument(this.instrument);
           this.redirect(res.data.id);
-          console.log('redirerct');
           return;
         } catch (e) {
           console.log(e);

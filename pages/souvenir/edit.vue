@@ -29,9 +29,14 @@ export default {
     next();
   },
   middleware: 'auth',
-  async asyncData({ $api, store, params }) {
-    const memory = (await $api.getMemoryById(params.id, params.memoryId))?.data;
-    await store.commit('memory/setMemory', memory);
+  async fetch() {
+    const memory = (
+      await this.$api.getMemoryById(
+        this.$route.params.id,
+        this.$route.params.memoryId
+      )
+    )?.data;
+    await this.$store.commit('memory/setMemory', memory);
   },
   data() {
     return {
