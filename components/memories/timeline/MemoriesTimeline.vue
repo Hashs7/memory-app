@@ -145,7 +145,6 @@ export default {
   },
 
   mounted() {
-    if (!this.data.length) return;
     const sliderStep = this.$refs.slider.childNodes[0];
     const sliderStepSize =
       sliderStep.clientWidth +
