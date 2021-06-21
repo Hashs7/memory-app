@@ -5,7 +5,9 @@
         <SearchBar />
         <transition name="fade" mode="out-in">
           <NuxtLink v-if="!searchActive" :to="profileLink" class="profile">
-            <IconUser v-if="!$auth.loggedIn || !profilePicture" />
+            <client-only>
+              <IconUser v-if="!$auth.loggedIn || !profilePicture" />
+            </client-only>
             <img
               v-if="profilePicture"
               :src="profilePicture"
@@ -48,7 +50,7 @@
 
         <FeedMemorySection
           :memories-cat="memoriesCat"
-          :memories-fav-instru="results"
+          :memories-fav-instru="results.memories"
         />
       </section>
     </div>
@@ -68,7 +70,8 @@ import FeedMemorySection from '../components/feed/FeedMemorySection';
 
 export default {
   components: { FeedMemorySection, SearchModal, SearchBar, IconUser },
-  async asyncData({ $api }) {
+  async asyncData({ $api, $auth }) {
+    if (!$auth.loggedIn) return;
     try {
       const res = await $api.getInstruments();
       const categories = await $api.fetchAllCategories();
@@ -85,7 +88,6 @@ export default {
         categories: categories.data,
       };
     } catch (e) {
-      // throw new Error(e);
       console.log(e);
     }
   },
@@ -95,13 +97,14 @@ export default {
         instruments: [],
         memories: [],
       },
+      instruments: [],
+      categories: [],
       memoriesCat: {},
     };
   },
   computed: {
     ...mapState('search', { searchActive: 'active' }),
     profilePicture() {
-      console.log(this.$auth.user);
       return this.$auth.user?.thumbnail?.path;
     },
     username() {

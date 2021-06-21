@@ -99,19 +99,10 @@ import IconTriangle from '@/assets/svg/ic_triangle.svg?inline';
 import IconAdd from '@/assets/svg/ic_add.svg?inline';
 import gsap from 'gsap';
 import dayjs from 'dayjs';
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import Duration from 'dayjs/plugin/duration';
 import { Draggable } from 'gsap/Draggable';
-import { InertiaPlugin } from '@/vendor/gsap/InertiaPlugin';
-
 import MemoryPreview from '@/components/memories/MemoryPreview';
 import { findIndexOfClosest } from '../../../helpers';
 import TimelineHandoverCard from './cards/TimelineHandoverCard';
-
-dayjs.extend(isSameOrBefore);
-dayjs.extend(Duration);
-gsap.registerPlugin(Draggable);
-gsap.registerPlugin(InertiaPlugin);
 
 export default {
   name: 'MemoriesTimeline',
