@@ -8,28 +8,30 @@
       </header>
     </div>
     <IconPartition class="icon--partition" />
-    <div class="o-page__actions">
-      <NuxtLink
-        v-if="!$auth.loggedIn"
-        to="/connexion"
-        class="u-button u-button--background half"
-      >
-        <span class="u-button__content">Se connecter</span>
-        <IconOutline class="u-button__bg" />
-      </NuxtLink>
-      <NuxtLink
-        v-if="!$auth.loggedIn"
-        to="/onboarding"
-        class="u-button u-button--background u-button--primary half dark"
-      >
-        <span class="u-button__content">S'inscrire</span>
-        <IconBackground class="u-button__bg" />
-      </NuxtLink>
-      <NuxtLink v-else to="/motel" class="u-button--background">
-        <span class="u-button__content">S'inscrire</span>
-        <IconBackgroundFull class="u-button__bg" />
-      </NuxtLink>
-    </div>
+    <client-only>
+      <div class="o-page__actions">
+        <NuxtLink
+          v-if="!$auth.loggedIn"
+          to="/connexion"
+          class="u-button u-button--background half"
+        >
+          <span class="u-button__content">Se connecter</span>
+          <IconOutline class="u-button__bg" />
+        </NuxtLink>
+        <NuxtLink
+          v-if="!$auth.loggedIn"
+          to="/onboarding"
+          class="u-button u-button--background u-button--primary half dark"
+        >
+          <span class="u-button__content">S'inscrire</span>
+          <IconBackground class="u-button__bg" />
+        </NuxtLink>
+        <NuxtLink v-else to="/motel" class="u-button--background dark">
+          <span class="u-button__content">S'inscrire</span>
+          <IconBackgroundFull class="u-button__bg" />
+        </NuxtLink>
+      </div>
+    </client-only>
   </div>
 </template>
 
