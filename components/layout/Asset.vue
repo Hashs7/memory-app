@@ -63,7 +63,7 @@ export default {
       if (!this.isImage) {
         return null;
       }
-      return `${this.data.path}?w=10`;
+      return this.data.path;
     },
   },
   async mounted() {

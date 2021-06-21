@@ -108,7 +108,7 @@ export default {
       return this.$auth.$state.user.username;
     },
     title() {
-      if (this.$auth.$state.user.firstName) {
+      if (this.$auth.$state?.user?.firstName) {
         return `Cher ${this.$auth.$state.user.firstName},`;
       }
       return 'Explorer';
@@ -128,7 +128,7 @@ export default {
       const selectedCats = this.categories?.filter((c) => {
         return c.selected;
       });
-      return selectedCats.map((s) => s._id);
+      return selectedCats?.map((s) => s._id);
     },
   },
   created() {
