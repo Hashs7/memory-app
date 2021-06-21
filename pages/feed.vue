@@ -49,6 +49,7 @@
         </div>
 
         <FeedMemorySection
+          v-if="results.memories"
           :memories-cat="memoriesCat"
           :memories-fav-instru="results.memories"
         />

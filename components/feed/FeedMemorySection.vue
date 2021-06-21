@@ -1,7 +1,7 @@
 <template>
   <section>
     <FeedMemoryCarousel
-      v-if="memoriesFavInstru.length"
+      v-if="memoriesFavInstru && memoriesFavInstru.length"
       :data="memoriesFavInstru"
     />
 
