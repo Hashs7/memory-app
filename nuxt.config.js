@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'development') {
 export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
-  ssr: false,
+  // ssr: false,
   loading: false,
 
   cache: {
@@ -221,7 +221,7 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: ['vee-validate/dist/rules'],
+    transpile: ['vee-validate/dist/rules', 'gsap'],
   },
 
   generate: {

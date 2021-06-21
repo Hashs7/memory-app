@@ -159,9 +159,10 @@ export default {
 }
 
 .audio-item__infos {
-  //display: flex;
-  //justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
   .left {
+    flex-grow: 1;
     max-width: calc(100% - 40px);
   }
 }

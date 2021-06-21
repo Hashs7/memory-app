@@ -51,12 +51,14 @@
           type="submit"
           :disabled="invalid"
           :class="[invalid]"
-          class="u-button u-button--primary"
+          class="u-button u-button--primary u-button--background"
         >
-          Me connecter
+          <span class="u-button__content">Me connecter</span>
+          <BtnBackground class="u-button__bg" />
         </button>
-        <NuxtLink to="/inscription" class="u-button u-button--outline">
-          S'inscrire
+        <NuxtLink to="/inscription" class="u-button u-button--background">
+          <span class="u-button__content">S'inscrire</span>
+          <BtnOutline class="u-button__bg" />
         </NuxtLink>
       </div>
     </form>
@@ -64,6 +66,8 @@
 </template>
 
 <script>
+import BtnBackground from '@/assets/svg/button/btn_background-large.svg?inline';
+import BtnOutline from '@/assets/svg/button/btn_outline.svg?inline';
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 
 export default {
@@ -71,6 +75,8 @@ export default {
   components: {
     ValidationProvider,
     ValidationObserver,
+    BtnBackground,
+    BtnOutline,
   },
   data() {
     return {
@@ -133,6 +139,8 @@ export default {
 <style scoped>
 .form-observer {
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 .register__form {
   height: 100%;

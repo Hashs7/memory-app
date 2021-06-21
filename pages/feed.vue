@@ -5,7 +5,9 @@
         <SearchBar />
         <transition name="fade" mode="out-in">
           <NuxtLink v-if="!searchActive" :to="profileLink" class="profile">
-            <IconUser v-if="!$auth.loggedIn || !profilePicture" />
+            <client-only>
+              <IconUser v-if="!$auth.loggedIn || !profilePicture" />
+            </client-only>
             <img
               v-if="profilePicture"
               :src="profilePicture"
@@ -47,8 +49,9 @@
         </div>
 
         <FeedMemorySection
+          v-if="results.memories"
           :memories-cat="memoriesCat"
-          :memories-fav-instru="results"
+          :memories-fav-instru="results.memories"
         />
       </section>
     </div>
@@ -68,7 +71,8 @@ import FeedMemorySection from '../components/feed/FeedMemorySection';
 
 export default {
   components: { FeedMemorySection, SearchModal, SearchBar, IconUser },
-  async asyncData({ $api }) {
+  async asyncData({ $api, $auth }) {
+    if (!$auth.loggedIn) return;
     try {
       const res = await $api.getInstruments();
       const categories = await $api.fetchAllCategories();
@@ -85,7 +89,6 @@ export default {
         categories: categories.data,
       };
     } catch (e) {
-      // throw new Error(e);
       console.log(e);
     }
   },
@@ -95,20 +98,21 @@ export default {
         instruments: [],
         memories: [],
       },
+      instruments: [],
+      categories: [],
       memoriesCat: {},
     };
   },
   computed: {
     ...mapState('search', { searchActive: 'active' }),
     profilePicture() {
-      console.log(this.$auth.user);
       return this.$auth.user?.thumbnail?.path;
     },
     username() {
       return this.$auth.$state.user.username;
     },
     title() {
-      if (this.$auth.$state.user.firstName) {
+      if (this.$auth.$state?.user?.firstName) {
         return `Cher ${this.$auth.$state.user.firstName},`;
       }
       return 'Explorer';
@@ -128,7 +132,7 @@ export default {
       const selectedCats = this.categories?.filter((c) => {
         return c.selected;
       });
-      return selectedCats.map((s) => s._id);
+      return selectedCats?.map((s) => s._id);
     },
   },
   created() {

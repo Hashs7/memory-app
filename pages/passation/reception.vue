@@ -7,7 +7,7 @@
       <h1>{{ error.message }}</h1>
     </div>
 
-    <div class="instrument-container">
+    <div v-if="instrument" class="instrument-container">
       <Background class="background" />
       <div class="instrument__thumbnail">
         <img
@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <div v-if="!$auth.loggedIn" class="">
+    <div v-if="!$auth.loggedIn && instrument" class="">
       <h1>Pour faire l'acquisition de {{ instrument.name }}</h1>
       <p>Veuillez d'abord vous authentifier</p>
       <NuxtLink :to="signIn" class="u-button u-button--primary"
@@ -57,14 +57,15 @@ export default {
       validated: null,
     };
   },
-  async fetch({ $api, params }) {
+  async fetch() {
     try {
-      const res = await $api.getInstrumentById(params.id);
+      const res = await this.$api.getInstrumentById(this.$route.params.id);
       this.instrument = res.data;
     } catch (e) {
       console.log(e);
     }
   },
+  fetchOnServer: false,
   computed: {
     token() {
       return this.$route.query.token;

@@ -9,8 +9,12 @@
           :src="media.path"
           alt=""
         />
-        <video v-if="isVideo" class="media-preview__img" controls>
-          <source :src="media.path" :type="media.mimetype" />
+        <video
+          v-if="isVideo"
+          class="media-preview__img"
+          :src="media.path"
+          controls
+        >
           Sorry, your browser doesn't support embedded videos.
         </video>
       </div>

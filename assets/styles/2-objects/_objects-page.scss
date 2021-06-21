@@ -126,7 +126,7 @@
   .o-page__header {
     text-align: center;
     margin: 144px 0 64px 0;
-    padding: 0 72px;
+    padding: 0 50px;
   }
 
   .register__form {
@@ -151,6 +151,10 @@
   .form__actions {
     .u-button {
       width: 100%;
+
+      &:not(:last-child) {
+        margin-bottom: 8px;
+      }
     }
   }
 }

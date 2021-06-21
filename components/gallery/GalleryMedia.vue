@@ -7,8 +7,15 @@
   >
     <div class="gallery-media__container">
       <img v-if="isImage" class="gallery-media__img" :src="path" alt="" />
-      <span v-if="isAudio">Audio</span>
-      <span v-if="isVideo">Video</span>
+      <video
+        v-if="isVideo && path"
+        :src="path"
+        class="preview gallery-media__img"
+        autoplay
+        loop
+        playsinline
+        muted
+      ></video>
     </div>
   </div>
 </template>
@@ -101,6 +108,11 @@ export default {
   left: 0;
   right: 0;
   margin: auto;
+}
+
+.preview {
+  width: 100%;
+  height: 100%;
 }
 
 .gallery-media__img {
