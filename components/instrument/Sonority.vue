@@ -52,11 +52,14 @@ export default {
 
 <style lang="scss" scoped>
 .sonority {
+  cursor: pointer;
   width: 68px;
   height: 68px;
   background-color: $gray-darkest;
   display: flex;
   border-radius: 50%;
+  box-shadow: $shadow--third;
+  margin: 0 0 auto auto;
 
   svg {
     margin: auto;
@@ -76,6 +79,14 @@ export default {
     pointer-events: none;
     z-index: -1;
     visibility: hidden;
+  }
+}
+.images-carousel + .instrument__container {
+  .sonority {
+    position: absolute;
+    top: 0;
+    right: 26px;
+    transform: translateY(-50%);
   }
 }
 </style>

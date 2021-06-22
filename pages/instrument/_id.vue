@@ -5,6 +5,8 @@
     <div v-if="instrument">
       <ImagesCarousel v-if="thumbnail" :data="instrument.images" />
       <div class="instrument__container o-page__container">
+        <Sonority v-if="instrument.sonority" :media="instrument.sonority" />
+
         <div class="instrument__head">
           <h1 class="instrument__title">{{ instrument.name }}</h1>
           <h2
@@ -39,7 +41,6 @@
           </button>
         </div>
       </div>
-      <Sonority v-if="instrument.sonority" :media="instrument.sonority" />
 
       <MemoriesTimeline
         :data="instrument.timeline"
