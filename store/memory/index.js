@@ -41,6 +41,10 @@ export const mutations = {
     state.data.visibility = value;
   },
 
+  updateCategories(state, value) {
+    state.data.categories = value;
+  },
+
   setMemory(state, memory) {
     state.data = { ...memory };
   },

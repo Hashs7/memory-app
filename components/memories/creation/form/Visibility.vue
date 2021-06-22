@@ -76,4 +76,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.u-select {
+  margin-bottom: 8px;
+}
+</style>
