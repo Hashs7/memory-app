@@ -97,6 +97,8 @@ export default {
       this.instruments = res.data;
       this.results = results.data;
       this.categories = categories.data;
+
+      await this.fetchMemoriesCat();
     } catch (e) {
       console.log(e);
     }
@@ -149,15 +151,12 @@ export default {
     },
 
     async fetchMemoriesCat() {
+      if (!this.selectedCategoriesMapped.length) return;
       try {
         const res = await this.$api.fetchMemoriesCat(
           this.selectedCategoriesMapped
         );
-
-        this.memoriesCat = Object.assign({}, res.data);
-        // this.memoriesCat = res.data;
-
-        console.log('data', this.memoriesCat);
+        this.memoriesCat = res.data;
       } catch (e) {
         console.log(e);
       }

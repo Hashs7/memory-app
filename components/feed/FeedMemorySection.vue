@@ -1,6 +1,5 @@
 <template>
   <section>
-    <p>lol</p>
     <FeedMemoryCarousel
       v-if="memoriesFavInstru && memoriesFavInstru.length"
       :data="memoriesFavInstru"
@@ -11,9 +10,10 @@
       :key="categoryId.id"
       class="o-section"
     >
-      <p>{{ categoryId }}</p>
-      <div class="o-section__head">
-        <h4 class="o-section__title">{{ memoriesCat[categoryId].name }}</h4>
+      <div class="o-section__head feed-head">
+        <h4 class="o-section__title">
+          {{ memoriesCat[categoryId].category.name }}
+        </h4>
       </div>
 
       <FeedMemoryCarousel :data="memoriesCat[categoryId].memories" />
@@ -39,16 +39,14 @@ export default {
   },
   computed: {
     categoriesArray() {
-      console.log(Object.keys(this.memoriesCat));
       return Object.keys(this.memoriesCat);
-    },
-  },
-  watch: {
-    memoriesCat(newValue) {
-      console.log('newValue', newValue);
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style>
+.feed-head {
+  margin-left: 20px;
+}
+</style>
