@@ -150,10 +150,14 @@ export default {
 
     async fetchMemoriesCat() {
       try {
-        const { data } = await this.$api.fetchMemoriesCat(
+        const res = await this.$api.fetchMemoriesCat(
           this.selectedCategoriesMapped
         );
-        this.memoriesCat = data;
+
+        this.memoriesCat = Object.assign({}, this.memoriesCat, res.data);
+        // this.memoriesCat = res.data;
+
+        console.log('data', res.data);
       } catch (e) {
         console.log(e);
       }
