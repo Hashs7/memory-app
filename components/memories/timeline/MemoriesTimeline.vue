@@ -195,14 +195,18 @@ export default {
       return positions[positionIndex] + offset;
     };
 
-    const bindStripPosition = (stripPosition, stepSize) => {
+    const bindStripPosition = (stripPosition, positions, stepSize) => {
       const positionIndex = findIndexOfClosest(stripPositions, stripPosition);
+      const position = positions[positionIndex];
+      const nextPosition =
+        stripPositions[positionIndex + 1] ||
+        stripPositions[stripPositions.length - 1];
       const offsetPercentage =
-        (stripPosition /
-          (stripPositions[positionIndex + 1] - stripPositions[positionIndex])) %
-          1 || 0;
+        (stripPosition - stripPositions[positionIndex]) /
+        (nextPosition - stripPositions[positionIndex]);
       const offset = stepSize * offsetPercentage;
-      return sliderPositions[positionIndex] - offset;
+      const safeOffset = isFinite(offset) ? offset : 0;
+      return position - safeOffset;
     };
 
     // Initiate slider draggable
@@ -249,18 +253,18 @@ export default {
       snap: stripPositions,
       onDrag() {
         gsap.set(document.querySelector('.memories-timeline__slider'), {
-          x: bindStripPosition(this.x, sliderStepSize),
+          x: bindStripPosition(this.x, sliderPositions, sliderStepSize),
         });
         gsap.set(document.querySelector('.memories-timeline__date-strip'), {
-          x: bindStripPosition(this.x, dateStepSize),
+          x: bindStripPosition(this.x, datesPositions, dateStepSize),
         });
       },
       onThrowUpdate() {
         gsap.set(document.querySelector('.memories-timeline__slider'), {
-          x: bindStripPosition(this.x, sliderStepSize),
+          x: bindStripPosition(this.x, sliderPositions, sliderStepSize),
         });
         gsap.set(document.querySelector('.memories-timeline__date-strip'), {
-          x: bindStripPosition(this.x, dateStepSize),
+          x: bindStripPosition(this.x, datesPositions, dateStepSize),
         });
       },
     });
