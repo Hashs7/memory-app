@@ -5,8 +5,10 @@
       <span class="o-page__title">Connexion au compte</span>
       <h1 class="o-page__subtitle">Bon retour parmis nous !</h1>
     </div>
-    <LoginForm v-if="!$auth.loggedIn" />
-    <Logout v-else type="submit" class="button"> Me déconnecter </Logout>
+    <LoginForm v-show="!$auth.loggedIn" />
+    <Logout v-show="$auth.loggedIn" type="submit" class="button">
+      Me déconnecter
+    </Logout>
     <!--    <button class="u-link" @click="resetPassword">Mot de passe oublié</button>-->
   </div>
 </template>
