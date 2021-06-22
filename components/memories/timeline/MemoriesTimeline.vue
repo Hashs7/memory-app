@@ -63,13 +63,16 @@
       </div>
     </div>
     <div class="memories-timeline__date">
-      <span
-        v-for="(step, i) in memorySteps"
-        :key="i"
-        class="memories-timeline__date-text"
-      >
-        {{ calendarDate(step.date) }}
-      </span>
+      <div ref="dateStrip" class="memories-timeline__date-strip">
+        <span
+          v-for="(step, i) in memorySteps"
+          ref="dates"
+          :key="i"
+          class="memories-timeline__date-text"
+        >
+          {{ calendarDate(step.date) }}
+        </span>
+      </div>
     </div>
     <div class="memories-timeline__controls">
       <div class="memories-timeline__controls-top">
@@ -161,36 +164,44 @@ export default {
       sliderStep.clientWidth +
       parseInt(window.getComputedStyle(sliderStep)?.marginLeft) +
       parseInt(window.getComputedStyle(sliderStep)?.marginRight);
+    const dateStep = this.$refs.dates[0];
+    const dateStepSize =
+      dateStep.clientWidth +
+      parseInt(window.getComputedStyle(dateStep)?.marginLeft) +
+      parseInt(window.getComputedStyle(dateStep)?.marginRight);
     const stripStep = this.$refs.steps[0];
     const stripStepSize =
       stripStep.clientWidth +
       parseInt(window.getComputedStyle(stripStep)?.marginLeft) +
       parseInt(window.getComputedStyle(stripStep)?.marginRight);
 
-    const stripPositions = this.memorySteps.map(
-      (s) => stripStepSize * s.position * -1
-    );
     const sliderPositions = this.memorySteps.map(
       (s, i) => sliderStepSize * i * -1
     );
+    const datesPositions = this.memorySteps.map(
+      (s, i) => dateStepSize * i * -1
+    );
+    const stripPositions = this.memorySteps.map(
+      (s) => stripStepSize * s.position * -1
+    );
 
-    const bindSliderPositionToStrip = (sliderPosition) => {
+    const bindSliderPosition = (sliderPosition, positions) => {
       const position = sliderPosition / sliderStepSize;
       const positionIndex = Math.floor(position * -1);
       const offsetPercentage = Math.abs(position % 1) || 0;
       const offset =
-        (stripPositions[positionIndex + 1] - stripPositions[positionIndex]) *
+        (positions[positionIndex + 1] - positions[positionIndex]) *
           offsetPercentage || 0;
-      return stripPositions[positionIndex] + offset;
+      return positions[positionIndex] + offset;
     };
 
-    const bindStripPositionToSlider = (stripPosition) => {
+    const bindStripPosition = (stripPosition, stepSize) => {
       const positionIndex = findIndexOfClosest(stripPositions, stripPosition);
       const offsetPercentage =
         (stripPosition /
           (stripPositions[positionIndex + 1] - stripPositions[positionIndex])) %
           1 || 0;
-      const offset = sliderStepSize * offsetPercentage;
+      const offset = stepSize * offsetPercentage;
       return sliderPositions[positionIndex] - offset;
     };
 
@@ -210,12 +221,18 @@ export default {
       },
       onDrag() {
         gsap.set(document.querySelector('.memories-timeline__strip'), {
-          x: bindSliderPositionToStrip(this.x),
+          x: bindSliderPosition(this.x, stripPositions),
+        });
+        gsap.set(document.querySelector('.memories-timeline__date-strip'), {
+          x: bindSliderPosition(this.x, datesPositions),
         });
       },
       onThrowUpdate() {
         gsap.set(document.querySelector('.memories-timeline__strip'), {
-          x: bindSliderPositionToStrip(this.x),
+          x: bindSliderPosition(this.x, stripPositions),
+        });
+        gsap.set(document.querySelector('.memories-timeline__date-strip'), {
+          x: bindSliderPosition(this.x, datesPositions),
         });
       },
     });
@@ -232,12 +249,18 @@ export default {
       snap: stripPositions,
       onDrag() {
         gsap.set(document.querySelector('.memories-timeline__slider'), {
-          x: bindStripPositionToSlider(this.x),
+          x: bindStripPosition(this.x, sliderStepSize),
+        });
+        gsap.set(document.querySelector('.memories-timeline__date-strip'), {
+          x: bindStripPosition(this.x, dateStepSize),
         });
       },
       onThrowUpdate() {
         gsap.set(document.querySelector('.memories-timeline__slider'), {
-          x: bindStripPositionToSlider(this.x),
+          x: bindStripPosition(this.x, sliderStepSize),
+        });
+        gsap.set(document.querySelector('.memories-timeline__date-strip'), {
+          x: bindStripPosition(this.x, dateStepSize),
         });
       },
     });
@@ -245,6 +268,9 @@ export default {
     // Position slider and strip to the end
     gsap.set(this.$refs.slider, {
       x: this.$refs.slider.clientWidth * -1 + sliderStepSize,
+    });
+    gsap.set(this.$refs.dateStrip, {
+      x: this.$refs.dateStrip.clientWidth * -1 + dateStepSize,
     });
     gsap.set(this.$refs.strip, {
       x: this.$refs.strip.clientWidth * -1 + stripStepSize,
@@ -264,6 +290,32 @@ export default {
         }
       };
 
+      const fillStepsBetween = (from, to) => {
+        const daysBetween = dayjs(to).diff(from, 'd');
+        // plus performant que le switch : https://stackoverflow.com/a/12259830
+        if (daysBetween < 7) {
+          if (daysBetween > 0) addToSteps(emptyStep('day'), daysBetween - 1);
+        } else if (daysBetween < 30) {
+          addToSteps(emptyStep('day'));
+          addToSteps(emptyStep('week'), Math.floor(daysBetween / 7));
+          addToSteps(emptyStep('day'));
+        } else if (daysBetween < 365) {
+          addToSteps(emptyStep('day'));
+          addToSteps(emptyStep('week'));
+          addToSteps(emptyStep('month'), Math.floor(daysBetween / 30));
+          addToSteps(emptyStep('week'));
+          addToSteps(emptyStep('day'));
+        } else {
+          addToSteps(emptyStep('day'));
+          addToSteps(emptyStep('week'));
+          addToSteps(emptyStep('month'));
+          addToSteps(emptyStep('year'), Math.floor(daysBetween / 365));
+          addToSteps(emptyStep('month'));
+          addToSteps(emptyStep('week'));
+          addToSteps(emptyStep('day'));
+        }
+      };
+
       const emptyStep = (unit) => {
         return {
           type: 'empty',
@@ -280,34 +332,13 @@ export default {
         },
       });
 
+      if (this.data.length > 0) {
+        fillStepsBetween(steps[0].date, this.data[0].data.date);
+      }
+
       this.data.forEach((event, index) => {
         if (index > 0) {
-          const daysBetween = dayjs(event.data.date).diff(
-            previousEvent.data.date,
-            'd'
-          );
-          // plus performant que le switch : https://stackoverflow.com/a/12259830
-          if (daysBetween < 7) {
-            if (daysBetween > 0) addToSteps(emptyStep('day'), daysBetween - 1);
-          } else if (daysBetween < 30) {
-            addToSteps(emptyStep('day'));
-            addToSteps(emptyStep('week'), Math.floor(daysBetween / 7));
-            addToSteps(emptyStep('day'));
-          } else if (daysBetween < 365) {
-            addToSteps(emptyStep('day'));
-            addToSteps(emptyStep('week'));
-            addToSteps(emptyStep('month'), Math.floor(daysBetween / 30));
-            addToSteps(emptyStep('week'));
-            addToSteps(emptyStep('day'));
-          } else {
-            addToSteps(emptyStep('day'));
-            addToSteps(emptyStep('week'));
-            addToSteps(emptyStep('month'));
-            addToSteps(emptyStep('year'), Math.floor(daysBetween / 365));
-            addToSteps(emptyStep('month'));
-            addToSteps(emptyStep('week'));
-            addToSteps(emptyStep('day'));
-          }
+          fillStepsBetween(previousEvent.data.date, event.data.date);
         }
         addToSteps({
           date: event.data.date,
@@ -319,6 +350,7 @@ export default {
       });
 
       if (this.allowAdd) {
+        fillStepsBetween(steps[steps.length - 1].date, Date.now());
         addToSteps({
           date: Date.now(),
           type: 'add',
@@ -443,10 +475,15 @@ $step-margin: 5px;
   }
 
   &__date {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     margin-top: 23px;
+
+    &-strip {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      margin: 0 calc(50% - #{$slide-margin} - #{$slide-width} / 4);
+    }
 
     &-text {
       display: inline-block;
