@@ -62,6 +62,18 @@
         </template>
       </div>
     </div>
+    <div class="memories-timeline__date">
+      <div ref="dateStrip" class="memories-timeline__date-strip">
+        <span
+          v-for="(step, i) in memorySteps"
+          ref="dates"
+          :key="i"
+          class="memories-timeline__date-text"
+        >
+          {{ calendarDate(step.date) }}
+        </span>
+      </div>
+    </div>
     <div class="memories-timeline__controls">
       <div class="memories-timeline__controls-top">
         <span class="memories-timeline__cursor memories-timeline__cursor--top">
@@ -99,10 +111,12 @@ import IconTriangle from '@/assets/svg/ic_triangle.svg?inline';
 import IconAdd from '@/assets/svg/ic_add.svg?inline';
 import gsap from 'gsap';
 import dayjs from 'dayjs';
+import calendar from 'dayjs/plugin/calendar';
 import { Draggable } from 'gsap/Draggable';
 import MemoryPreview from '@/components/memories/MemoryPreview';
 import { findIndexOfClosest } from '../../../helpers';
 import TimelineHandoverCard from './cards/TimelineHandoverCard';
+dayjs.extend(calendar);
 
 export default {
   name: 'MemoriesTimeline',
@@ -145,43 +159,54 @@ export default {
   },
 
   mounted() {
-    if (!this.data.length) return;
     const sliderStep = this.$refs.slider.childNodes[0];
     const sliderStepSize =
       sliderStep.clientWidth +
       parseInt(window.getComputedStyle(sliderStep)?.marginLeft) +
       parseInt(window.getComputedStyle(sliderStep)?.marginRight);
+    const dateStep = this.$refs.dates[0];
+    const dateStepSize =
+      dateStep.clientWidth +
+      parseInt(window.getComputedStyle(dateStep)?.marginLeft) +
+      parseInt(window.getComputedStyle(dateStep)?.marginRight);
     const stripStep = this.$refs.steps[0];
     const stripStepSize =
       stripStep.clientWidth +
       parseInt(window.getComputedStyle(stripStep)?.marginLeft) +
       parseInt(window.getComputedStyle(stripStep)?.marginRight);
 
-    const stripPositions = this.memorySteps.map(
-      (s) => stripStepSize * s.position * -1
-    );
     const sliderPositions = this.memorySteps.map(
       (s, i) => sliderStepSize * i * -1
     );
+    const datesPositions = this.memorySteps.map(
+      (s, i) => dateStepSize * i * -1
+    );
+    const stripPositions = this.memorySteps.map(
+      (s) => stripStepSize * s.position * -1
+    );
 
-    const bindSliderPositionToStrip = (sliderPosition) => {
+    const bindSliderPosition = (sliderPosition, positions) => {
       const position = sliderPosition / sliderStepSize;
       const positionIndex = Math.floor(position * -1);
       const offsetPercentage = Math.abs(position % 1) || 0;
       const offset =
-        (stripPositions[positionIndex + 1] - stripPositions[positionIndex]) *
+        (positions[positionIndex + 1] - positions[positionIndex]) *
           offsetPercentage || 0;
-      return stripPositions[positionIndex] + offset;
+      return positions[positionIndex] + offset;
     };
 
-    const bindStripPositionToSlider = (stripPosition) => {
+    const bindStripPosition = (stripPosition, positions, stepSize) => {
       const positionIndex = findIndexOfClosest(stripPositions, stripPosition);
+      const position = positions[positionIndex];
+      const nextPosition =
+        stripPositions[positionIndex + 1] ||
+        stripPositions[stripPositions.length - 1];
       const offsetPercentage =
-        (stripPosition /
-          (stripPositions[positionIndex + 1] - stripPositions[positionIndex])) %
-          1 || 0;
-      const offset = sliderStepSize * offsetPercentage;
-      return sliderPositions[positionIndex] - offset;
+        (stripPosition - stripPositions[positionIndex]) /
+        (nextPosition - stripPositions[positionIndex]);
+      const offset = stepSize * offsetPercentage;
+      const safeOffset = isFinite(offset) ? offset : 0;
+      return position - safeOffset;
     };
 
     // Initiate slider draggable
@@ -200,12 +225,18 @@ export default {
       },
       onDrag() {
         gsap.set(document.querySelector('.memories-timeline__strip'), {
-          x: bindSliderPositionToStrip(this.x),
+          x: bindSliderPosition(this.x, stripPositions),
+        });
+        gsap.set(document.querySelector('.memories-timeline__date-strip'), {
+          x: bindSliderPosition(this.x, datesPositions),
         });
       },
       onThrowUpdate() {
         gsap.set(document.querySelector('.memories-timeline__strip'), {
-          x: bindSliderPositionToStrip(this.x),
+          x: bindSliderPosition(this.x, stripPositions),
+        });
+        gsap.set(document.querySelector('.memories-timeline__date-strip'), {
+          x: bindSliderPosition(this.x, datesPositions),
         });
       },
     });
@@ -222,12 +253,18 @@ export default {
       snap: stripPositions,
       onDrag() {
         gsap.set(document.querySelector('.memories-timeline__slider'), {
-          x: bindStripPositionToSlider(this.x),
+          x: bindStripPosition(this.x, sliderPositions, sliderStepSize),
+        });
+        gsap.set(document.querySelector('.memories-timeline__date-strip'), {
+          x: bindStripPosition(this.x, datesPositions, dateStepSize),
         });
       },
       onThrowUpdate() {
         gsap.set(document.querySelector('.memories-timeline__slider'), {
-          x: bindStripPositionToSlider(this.x),
+          x: bindStripPosition(this.x, sliderPositions, sliderStepSize),
+        });
+        gsap.set(document.querySelector('.memories-timeline__date-strip'), {
+          x: bindStripPosition(this.x, datesPositions, dateStepSize),
         });
       },
     });
@@ -235,6 +272,9 @@ export default {
     // Position slider and strip to the end
     gsap.set(this.$refs.slider, {
       x: this.$refs.slider.clientWidth * -1 + sliderStepSize,
+    });
+    gsap.set(this.$refs.dateStrip, {
+      x: this.$refs.dateStrip.clientWidth * -1 + dateStepSize,
     });
     gsap.set(this.$refs.strip, {
       x: this.$refs.strip.clientWidth * -1 + stripStepSize,
@@ -254,6 +294,32 @@ export default {
         }
       };
 
+      const fillStepsBetween = (from, to) => {
+        const daysBetween = dayjs(to).diff(from, 'd');
+        // plus performant que le switch : https://stackoverflow.com/a/12259830
+        if (daysBetween < 7) {
+          if (daysBetween > 0) addToSteps(emptyStep('day'), daysBetween - 1);
+        } else if (daysBetween < 30) {
+          addToSteps(emptyStep('day'));
+          addToSteps(emptyStep('week'), Math.floor(daysBetween / 7));
+          addToSteps(emptyStep('day'));
+        } else if (daysBetween < 365) {
+          addToSteps(emptyStep('day'));
+          addToSteps(emptyStep('week'));
+          addToSteps(emptyStep('month'), Math.floor(daysBetween / 30));
+          addToSteps(emptyStep('week'));
+          addToSteps(emptyStep('day'));
+        } else {
+          addToSteps(emptyStep('day'));
+          addToSteps(emptyStep('week'));
+          addToSteps(emptyStep('month'));
+          addToSteps(emptyStep('year'), Math.floor(daysBetween / 365));
+          addToSteps(emptyStep('month'));
+          addToSteps(emptyStep('week'));
+          addToSteps(emptyStep('day'));
+        }
+      };
+
       const emptyStep = (unit) => {
         return {
           type: 'empty',
@@ -270,34 +336,13 @@ export default {
         },
       });
 
+      if (this.data.length > 0) {
+        fillStepsBetween(steps[0].date, this.data[0].data.date);
+      }
+
       this.data.forEach((event, index) => {
         if (index > 0) {
-          const daysBetween = dayjs(event.data.date).diff(
-            previousEvent.data.date,
-            'd'
-          );
-          // plus performant que le switch : https://stackoverflow.com/a/12259830
-          if (daysBetween < 7) {
-            if (daysBetween > 0) addToSteps(emptyStep('day'), daysBetween - 1);
-          } else if (daysBetween < 30) {
-            addToSteps(emptyStep('day'));
-            addToSteps(emptyStep('week'), Math.floor(daysBetween / 7));
-            addToSteps(emptyStep('day'));
-          } else if (daysBetween < 365) {
-            addToSteps(emptyStep('day'));
-            addToSteps(emptyStep('week'));
-            addToSteps(emptyStep('month'), Math.floor(daysBetween / 30));
-            addToSteps(emptyStep('week'));
-            addToSteps(emptyStep('day'));
-          } else {
-            addToSteps(emptyStep('day'));
-            addToSteps(emptyStep('week'));
-            addToSteps(emptyStep('month'));
-            addToSteps(emptyStep('year'), Math.floor(daysBetween / 365));
-            addToSteps(emptyStep('month'));
-            addToSteps(emptyStep('week'));
-            addToSteps(emptyStep('day'));
-          }
+          fillStepsBetween(previousEvent.data.date, event.data.date);
         }
         addToSteps({
           date: event.data.date,
@@ -309,6 +354,7 @@ export default {
       });
 
       if (this.allowAdd) {
+        fillStepsBetween(steps[steps.length - 1].date, Date.now());
         addToSteps({
           date: Date.now(),
           type: 'add',
@@ -317,6 +363,16 @@ export default {
       }
 
       return steps;
+    },
+    calendarDate(date) {
+      return dayjs(date).calendar(null, {
+        sameDay: "[Aujourd'hui]", // The same day ( Today at 2:30 AM )
+        nextDay: '[Demain]', // The next day ( Tomorrow at 2:30 AM )
+        nextWeek: 'dddd', // The next week ( Sunday at 2:30 AM )
+        lastDay: '[Hier]', // The day before ( Yesterday at 2:30 AM )
+        lastWeek: 'dddd', // Last week ( Last Monday at 2:30 AM )
+        sameElse: 'DD MMMM YYYY', // Everything else ( 7/10/2011 )
+      });
     },
   },
 };
@@ -420,6 +476,27 @@ $step-margin: 5px;
     margin-bottom: 30px;
     height: 40px;
     width: 40px;
+  }
+
+  &__date {
+    margin-top: 23px;
+
+    &-strip {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      margin: 0 calc(50% - #{$slide-margin} - #{$slide-width} / 4);
+    }
+
+    &-text {
+      display: inline-block;
+      font-size: 12px;
+      text-align: center;
+      width: $slide-width / 2;
+      flex-shrink: 0;
+      margin: 0 $slide-margin;
+    }
   }
 
   &__controls {
