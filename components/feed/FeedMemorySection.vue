@@ -4,37 +4,49 @@
       v-if="memoriesFavInstru && memoriesFavInstru.length"
       :data="memoriesFavInstru"
     />
-
+    <EmptyInstrument v-else />
     <section
-      v-for="categoryId in memoriesCat"
+      v-for="categoryId in categoriesArray"
       :key="categoryId.id"
       class="o-section"
     >
-      <div class="o-section__head">
-        <h4 class="o-section__title">{{ categoryId.category.name }}</h4>
+      <div class="o-section__head feed-head">
+        <h4 class="o-section__title">
+          {{ memoriesCat[categoryId].category.name }}
+        </h4>
       </div>
 
-      <FeedMemoryCarousel :data="categoryId.memories"> </FeedMemoryCarousel>
+      <FeedMemoryCarousel :data="memoriesCat[categoryId].memories" />
     </section>
   </section>
 </template>
 
 <script>
+import EmptyInstrument from '../instrument/EmptyInstrument';
 import FeedMemoryCarousel from './FeedMemoryCarousel';
 export default {
   name: 'FeedMemorySection',
-  components: { FeedMemoryCarousel },
+  components: { EmptyInstrument, FeedMemoryCarousel },
   props: {
     memoriesFavInstru: {
       type: Array,
-      required: true,
+      default: () => [],
     },
     memoriesCat: {
       type: Object,
-      required: true,
+      default: () => {},
+    },
+  },
+  computed: {
+    categoriesArray() {
+      return Object.keys(this.memoriesCat);
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style>
+.feed-head {
+  margin-left: 20px;
+}
+</style>

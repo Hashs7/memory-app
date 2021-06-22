@@ -8,8 +8,8 @@
       </header>
     </div>
     <IconPartition class="icon--partition" />
-    <client-only>
-      <div class="o-page__actions">
+    <div class="o-page__actions">
+      <client-only>
         <NuxtLink
           v-if="!$auth.loggedIn"
           to="/connexion"
@@ -27,11 +27,11 @@
           <IconBackground class="u-button__bg" />
         </NuxtLink>
         <NuxtLink v-else to="/motel" class="u-button--background dark">
-          <span class="u-button__content">S'inscrire</span>
+          <span class="u-button__content">C'est parti !</span>
           <IconBackgroundFull class="u-button__bg" />
         </NuxtLink>
-      </div>
-    </client-only>
+      </client-only>
+    </div>
   </div>
 </template>
 
@@ -54,6 +54,12 @@ export default {
   asyncData({ $auth, redirect }) {
     if (!$auth.loggedIn) return;
     redirect({
+      name: 'instrument',
+    });
+  },
+  mounted() {
+    if (!this.$auth.loggedIn) return;
+    this.$router.push({
       name: 'instrument',
     });
   },

@@ -1,6 +1,12 @@
 <template>
   <NuxtLink :to="link" class="instrument-preview">
-    <Asset v-if="thumbnail" :data="thumbnail" class="instrument-preview__img" />
+    <img
+      v-if="thumbnail"
+      :src="thumbnail.path"
+      class="instrument-preview__img"
+      alt=""
+    />
+    <!--    <Asset v-if="thumbnail" :data="thumbnail" class="instrument-preview__img" />-->
     <div class="instrument-preview__content">
       <p class="instrument-preview__name">{{ instrumentName }}</p>
       <p v-if="data.createdAt" class="instrument-preview__date">
@@ -20,12 +26,10 @@
 
 <script>
 import IconHeart from '@/assets/svg/ic_heart.svg?inline';
-import Asset from '../layout/Asset';
 
 export default {
   name: 'InstrumentPreview',
   components: {
-    Asset,
     IconHeart,
   },
   props: {

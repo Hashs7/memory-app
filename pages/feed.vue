@@ -49,7 +49,7 @@
         </div>
 
         <FeedMemorySection
-          v-if="results.memories"
+          v-if="results.memories || memoriesCat"
           :memories-cat="memoriesCat"
           :memories-fav-instru="results.memories"
         />
@@ -71,27 +71,6 @@ import FeedMemorySection from '../components/feed/FeedMemorySection';
 
 export default {
   components: { FeedMemorySection, SearchModal, SearchBar, IconUser },
-  async asyncData({ $api, $auth }) {
-    if (!$auth.loggedIn) return;
-    try {
-      const res = await $api.getInstruments();
-      const categories = await $api.fetchAllCategories();
-      const results = await $api.fetchFeedFavMemories();
-
-      categories.data = categories.data.map((category, i) => {
-        category.selected = i < 3;
-        return category;
-      });
-
-      return {
-        instruments: res.data,
-        results: results.data,
-        categories: categories.data,
-      };
-    } catch (e) {
-      console.log(e);
-    }
-  },
   data() {
     return {
       results: {
@@ -103,6 +82,28 @@ export default {
       memoriesCat: {},
     };
   },
+  async fetch() {
+    if (!this.$auth.loggedIn) return;
+    try {
+      const res = await this.$api.getInstruments();
+      const categories = await this.$api.fetchAllCategories();
+      const results = await this.$api.fetchFeedFavMemories();
+
+      categories.data = categories.data.map((category, i) => {
+        category.selected = i < 3;
+        return category;
+      });
+
+      this.instruments = res.data;
+      this.results = results.data;
+      this.categories = categories.data;
+
+      await this.fetchMemoriesCat();
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  fetchOnServer: false,
   computed: {
     ...mapState('search', { searchActive: 'active' }),
     profilePicture() {
@@ -150,11 +151,12 @@ export default {
     },
 
     async fetchMemoriesCat() {
+      if (!this.selectedCategoriesMapped.length) return;
       try {
-        const { data } = await this.$api.fetchMemoriesCat(
+        const res = await this.$api.fetchMemoriesCat(
           this.selectedCategoriesMapped
         );
-        this.memoriesCat = data;
+        this.memoriesCat = res.data;
       } catch (e) {
         console.log(e);
       }

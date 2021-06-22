@@ -1,8 +1,8 @@
 <template>
   <div class="images-carousel">
     <vue-glide
-      v-model="active"
       ref="slider"
+      v-model="active"
       :options="options"
       class="instrument__image-container"
     >
@@ -13,7 +13,11 @@
       >
         <img class="instrument__image" :src="image.path" alt="" />
       </vue-glide-slide>
-      <template slot="control" class="instrument__controls">
+      <template
+        v-if="data.length < 1"
+        slot="control"
+        class="instrument__controls"
+      >
         <button
           v-for="(img, i) in data"
           :key="i"

@@ -2,9 +2,13 @@
   <div class="instrument">
     <ButtonBack link="/motel" class="instrument__back" />
 
+    <button v-if="isOwner" class="btn-edit absolute">Modifier</button>
+
     <div v-if="instrument">
       <ImagesCarousel v-if="thumbnail" :data="instrument.images" />
       <div class="instrument__container o-page__container">
+        <Sonority v-if="instrument.sonority" :media="instrument.sonority" />
+
         <div class="instrument__head">
           <h1 class="instrument__title">{{ instrument.name }}</h1>
           <h2
@@ -62,10 +66,12 @@ import ImagesCarousel from '@/components/instrument/ImagesCarousel';
 import OwnerActions from '@/components/instrument/OwnerActions';
 import ButtonBack from '@/components/UI/ButtonBack';
 import MemoriesTimeline from '@/components/memories/timeline/MemoriesTimeline';
+import Sonority from '@/components/instrument/Sonority';
 import illu from '~/assets/img/illu_spiderweb.png';
 
 export default {
   components: {
+    Sonority,
     MemoriesTimeline,
     ButtonBack,
     OwnerActions,
@@ -95,9 +101,10 @@ export default {
       await this.$router.push('/404/');
     }
   },
+  fetchOnServer: false,
   computed: {
     isOwner() {
-      return this.instrument.owner._id === this.$auth.$state.user?._id;
+      return this.instrument?.owner?._id === this.$auth.$state.user?._id;
     },
     isFavorite() {
       if (this.isOwner) return false;

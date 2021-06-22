@@ -68,7 +68,7 @@ export default {
     { src: '~/plugins/carousel.js' /* mode: 'client' */ },
     { src: '~/plugins/vue-lazyload.js', mode: 'client' },
     { src: '~/plugins/vee-validate.js', mode: 'client' },
-    // { src: '~/plugins/vuex-persist.js', mode: 'client' },
+    { src: '~/plugins/vuex-persist.js', mode: 'client' },
     { src: '~/plugins/colors.js', mode: 'client' },
     { src: '~/plugins/hammer.js', mode: 'client' },
     { src: '~/plugins/wysiwyg.js', mode: 'client' },
@@ -165,13 +165,14 @@ export default {
     themeColor: '#FFF9E2',
     msTileColor: '#373737',
     appleMobileWebAppStatusBarStyle: 'default',
-    /* workbox: {
+    workbox: {
       exclude: ['.htaccess'],
       importScripts: ['/serviceWorkerSkipWaiting.js'],
       skipWaiting: false,
       navigateFallback: 'index.html',
       runtimeCaching: [
         // Cache the Google Fonts stylesheets with a stale while revalidate strategy.
+        /*
         {
           urlPattern: /^https:\/\/fonts\.googleapis\.com/,
           handler: 'StaleWhileRevalidate',
@@ -197,13 +198,14 @@ export default {
             },
           },
         },
+        */
 
         // Cache the Carto CDN map tiles
         {
-          urlPattern: /^https:\/\/.+\.basemaps\.cartocdn\.com/,
+          urlPattern: /^https:\/\/memoryapp\.blob\.core\.windows\.net/,
           handler: 'StaleWhileRevalidate',
           options: {
-            cacheName: 'cartocdn-basemaps',
+            cacheName: 'images-cdn',
             cacheableResponse: {
               statuses: [0, 200],
             },
@@ -214,7 +216,7 @@ export default {
           },
         },
       ],
-    }, */
+    },
   },
 
   ...serverConfig,

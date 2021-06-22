@@ -1,6 +1,5 @@
 <template>
   <ValidationObserver
-    v-if="!$auth.loggedIn"
     v-slot="{ invalid }"
     tag="div"
     class="form-observer o-page__container"

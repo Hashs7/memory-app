@@ -88,7 +88,7 @@ export default {
       this.selectedSection = name;
     },
     getIndex(section) {
-      return section.data.length;
+      return section.data?.length;
     },
   },
 };

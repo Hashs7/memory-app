@@ -16,7 +16,7 @@
     </div>
 
     <div v-if="recorder" class="o-page__outside audio-gallery__recorder">
-      <AudioRecorder />
+      <AudioRecorder light />
     </div>
   </div>
 </template>
