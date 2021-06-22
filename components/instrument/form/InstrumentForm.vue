@@ -61,8 +61,8 @@
         <div class="form__group">
           <label>
             <input
-              class="form__input"
               v-model="specification"
+              class="form__input"
               name="specification"
               type="text"
               placeholder="Modèle (optionnel)"

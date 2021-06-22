@@ -68,20 +68,7 @@
       </div>
     </section>
 
-    <section v-show="index === 3" class="instru-tunnel__section">
-      <div class="instru-tunnel__text">
-        <h2>Son plus bel accord</h2>
-        <p>
-          Enregistre le son que fait ton instrument sur un accord de ton choix !
-        </p>
-      </div>
-      <img
-        class="instru-tunnel__img"
-        src="~/assets/img/tunnel_sonority.png"
-        alt="Sonority instrument"
-      />
-      <AudioRecorder hide-actions />
-    </section>
+    <CreationStep3 v-show="index === 3" class="instru-tunnel__section" />
 
     <div class="buttons_container o-page__actions">
       <button v-if="index !== 0" class="btn-pass">
@@ -107,13 +94,13 @@
 </template>
 
 <script>
-import AudioRecorder from '../../components/gallery/audio/AudioRecorder';
+import CreationStep3 from '../../components/instrument/form/CreationStep3';
 import IconMedia from '~/assets/svg/ic_camera.svg?inline';
 
 export default {
   name: 'NewInstrumentTunnel',
   components: {
-    AudioRecorder,
+    CreationStep3,
     IconMedia,
   },
   layout: 'none',
@@ -150,12 +137,6 @@ export default {
         this.instrument.buyDate = document.getElementsByName('date')[0].value;
       }
 
-      if (this.sections[this.index] === 'sonority') {
-        if (this.audio) {
-          this.instrument.sonority = this.audio._id;
-        }
-      }
-
       if (this.sections[this.index] === 'images') {
         this.instrument.images.push();
       }
@@ -180,6 +161,12 @@ export default {
     },
 
     async submitInstrument() {
+      if (this.audio) {
+        console.log(this.audio);
+        debugger;
+        this.instrument.sonority = this.audio._id;
+      }
+
       const isEmpty = !Object.values(this.instrument).some(
         (x) => x !== null && x !== '' && x.length > 0
       );
@@ -252,17 +239,21 @@ export default {
   margin: 50px auto auto auto;
   width: 100%;
 }
+
 .instru-tunnel__button {
   @include button-background;
 }
+
 .btn-pass {
   padding: 0 52px;
   background-color: transparent;
   border: none;
   box-shadow: none;
 }
+
 .instru-tunnel__section {
-  height: 615px;
+  //height: 615px;
+  flex-grow: 1;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -287,6 +278,7 @@ export default {
   border: none;
   margin-top: 50px;
 }
+
 .photo-placeholder {
   position: relative;
   display: flex;

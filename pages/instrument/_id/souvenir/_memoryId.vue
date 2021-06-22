@@ -118,12 +118,6 @@ export default {
       globalAudioDiscreet: false,
     };
   },
-  created() {
-    if (this.memory) return;
-    this.$router.push({
-      name: 'feed',
-    });
-  },
   computed: {
     memory() {
       const { memoryId } = this.$route.params;
@@ -152,6 +146,12 @@ export default {
         duration: 1,
       });
     },
+  },
+  created() {
+    if (this.memory) return;
+    this.$router.push({
+      name: 'feed',
+    });
   },
   mounted() {
     document.body.style.overflow = 'hidden';

@@ -39,6 +39,7 @@
           </button>
         </div>
       </div>
+      <Sonority v-if="instrument.sonority" :media="instrument.sonority" />
 
       <MemoriesTimeline
         :data="instrument.timeline"
@@ -62,10 +63,12 @@ import ImagesCarousel from '@/components/instrument/ImagesCarousel';
 import OwnerActions from '@/components/instrument/OwnerActions';
 import ButtonBack from '@/components/UI/ButtonBack';
 import MemoriesTimeline from '@/components/memories/timeline/MemoriesTimeline';
+import Sonority from '@/components/instrument/Sonority';
 import illu from '~/assets/img/illu_spiderweb.png';
 
 export default {
   components: {
+    Sonority,
     MemoriesTimeline,
     ButtonBack,
     OwnerActions,
@@ -95,6 +98,7 @@ export default {
       await this.$router.push('/404/');
     }
   },
+  fetchOnServer: false,
   computed: {
     isOwner() {
       return this.instrument.owner._id === this.$auth.$state.user?._id;

@@ -3,7 +3,12 @@
     <div v-if="!disabled" class="audio-recorder__container">
       <div class="stopwatch">
         <StopWatch v-show="!hasAudio" ref="stopwatch" />
-        <AudioPlayer v-show="hasAudio" ref="recordedAudio" light progress-bar />
+        <AudioPlayer
+          v-show="hasAudio"
+          ref="recordedAudio"
+          :light="light"
+          progress-bar
+        />
       </div>
       <div class="recorder-container">
         <div class="audio-recorder__btn">
@@ -55,6 +60,10 @@ export default {
   components: { StopWatch, AudioPlayer, IconTrash, IconCheck },
   props: {
     hideActions: {
+      type: Boolean,
+      default: false,
+    },
+    light: {
       type: Boolean,
       default: false,
     },
@@ -156,7 +165,7 @@ export default {
   padding: 4px;
   border: 2px solid rgba($background, 0.4);
   border-radius: 50%;
-  background-color: transparent;
+  background-color: $gray-darkest;
 
   button {
     border: none;

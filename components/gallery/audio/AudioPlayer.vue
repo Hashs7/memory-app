@@ -1,15 +1,10 @@
 <template>
-  <div :class="{ light }" ref="player" class="player">
+  <div ref="player" :class="{ light }" class="player">
     <div v-if="visualizer" class="visualizer">
       <canvas id="canvas" class="audio-visualizer"></canvas>
     </div>
-    <audio
-      id="audio-element"
-      ref="audio"
-      :src="media ? media.path : ''"
-      muted
-      controls
-    >
+    <audio id="audio-element" ref="audio" controls preload="metadata">
+      <source v-if="media" :src="media.path" :type="media.mimetype" />
       Sorry, your browser doesn't support embedded videos.
     </audio>
 
@@ -19,7 +14,9 @@
       </div>
       <p class="progress__top">
         <span class="progress__time">{{ currentTime }}</span>
-        <span class="progress__duration">{{ duration }}</span>
+        <span v-if="duration !== '00:00'" class="progress__duration">{{
+          duration
+        }}</span>
       </p>
     </div>
 
@@ -90,8 +87,10 @@ export default {
     };
   },
   mounted() {
-    this.$refs.audio.loadedmetadata = () => {
+    this.$refs.audio.onloadedmetadata = () => {
+      setTimeout(() => this.generateTime(), 10);
       this.generateTime();
+      console.log('meta');
     };
 
     this.$refs.audio?.addEventListener('durationchange', (e) => {
@@ -136,6 +135,7 @@ export default {
     },
 
     generateTime() {
+      console.log('duration', this.$refs.audio.duration);
       if (!this.$refs.audio || this.$refs.audio.duration === Infinity) return;
       const width =
         (100 / this.$refs.audio.duration) * this.$refs.audio.currentTime;
@@ -157,8 +157,9 @@ export default {
       if (cursec < 10) {
         cursec = '0' + cursec;
       }
-      this.duration = durmin + ':' + dursec;
       this.currentTime = curmin + ':' + cursec;
+      if (isNaN(durmin) || isNaN(dursec)) return;
+      this.duration = durmin + ':' + dursec;
     },
 
     updateBar(x) {
@@ -174,12 +175,19 @@ export default {
       }
       this.barWidth = percentage + '%';
       this.circleLeft = percentage + '%';
-      this.$refs.audio.currentTime = (maxduration * percentage) / 100;
+      let currentTime = Math.floor(percentage);
+      if (maxduration !== Infinity) {
+        currentTime = (maxduration * percentage) / 100;
+      }
+      console.log(currentTime);
+      // debugger;
+      this.$refs.audio.currentTime = currentTime;
       this.$refs.audio.play();
     },
 
     clickProgress(e) {
       this.isTimerPlaying = true;
+      if (!this.$refs.audio) return;
       this.$refs.audio.pause();
       this.updateBar(e.pageX);
     },

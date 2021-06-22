@@ -29,6 +29,11 @@ export default {
     next();
   },
   middleware: 'auth',
+  data() {
+    return {
+      currentView: 'Summary',
+    };
+  },
   async fetch() {
     const memory = (
       await this.$api.getMemoryById(
@@ -37,11 +42,6 @@ export default {
       )
     )?.data;
     await this.$store.commit('memory/setMemory', memory);
-  },
-  data() {
-    return {
-      currentView: 'Summary',
-    };
   },
   computed: {
     ...mapState('memory', { memory: 'data' }),

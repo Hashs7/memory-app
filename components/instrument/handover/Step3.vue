@@ -46,6 +46,14 @@ export default {
       illu,
     };
   },
+  computed: {
+    instrument() {
+      return this.$store.state.instrument.data;
+    },
+    thumbnail() {
+      return this.$store.state.instrument.data.images[0];
+    },
+  },
   watch: {
     show(newVal) {
       if (!newVal) return;
@@ -63,14 +71,6 @@ export default {
           duration: 2,
         }
       );
-    },
-  },
-  computed: {
-    instrument() {
-      return this.$store.state.instrument.data;
-    },
-    thumbnail() {
-      return this.$store.state.instrument.data.images[0];
     },
   },
 };
