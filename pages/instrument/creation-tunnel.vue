@@ -162,8 +162,6 @@ export default {
 
     async submitInstrument() {
       if (this.audio) {
-        console.log(this.audio);
-        debugger;
         this.instrument.sonority = this.audio._id;
       }
 
