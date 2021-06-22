@@ -1,67 +1,53 @@
 <template>
-  <div class="o-page o-page--user">
-    <div class="user__header">
-      <ButtonBack v-if="!isOwner" light class="user-back" />
-      <span v-else></span>
-      <div v-if="isOwner" class="owner">
-        <NuxtLink to="profil/edit" class="btn-edit">Modifier</NuxtLink>
+  <client-only>
+    <div class="o-page o-page--user">
+      <div class="user__header">
+        <ButtonBack v-if="!isOwner" light class="user-back" />
+        <span v-else></span>
+        <div v-if="isOwner" class="owner">
+          <NuxtLink to="profil/edit" class="btn-edit">Modifier</NuxtLink>
+        </div>
       </div>
-    </div>
-    <!--    <div class="user-banner"></div>-->
-    <div class="user-infos">
-      <div v-if="user.thumbnail" class="user-thumbnail">
-        <img
-          :src="user.thumbnail.path"
-          :alt="`Photo de profil de ${user.firstName}`"
-        />
+      <!--    <div class="user-banner"></div>-->
+      <div v-if="user" class="user-infos">
+        <div v-if="user.thumbnail" class="user-thumbnail">
+          <img
+            :src="user.thumbnail.path"
+            :alt="`Photo de profil de ${user.firstName}`"
+          />
+        </div>
+        <h1 v-if="name" class="user-name">
+          {{ name }}
+        </h1>
+        <p class="user-username">
+          @<span>{{ user.username }}</span>
+        </p>
+        <p v-if="user.description" class="user-description">
+          {{ user.description }}
+        </p>
       </div>
-      <h1 v-if="name" class="user-name">
-        {{ name }}
-      </h1>
-      <p class="user-username">
-        @<span>{{ user.username }}</span>
-      </p>
-      <p v-if="user.description" class="user-description">
-        {{ user.description }}
-      </p>
-    </div>
 
-    <div class="o-page__container user__actions">
-      <Logout v-if="isOwner" type="submit" class="button">
-        Me déconnecter
-      </Logout>
-    </div>
+      <div class="o-page__container user__actions">
+        <Logout v-if="isOwner" type="submit" class="button">
+          Me déconnecter
+        </Logout>
+      </div>
 
-    <section class="o-page__container">
-      <TabSections :sections="sections" :show-index="true" />
-    </section>
-  </div>
+      <section class="o-page__container">
+        <TabSections :sections="sections" :show-index="true" />
+      </section>
+    </div>
+  </client-only>
 </template>
 
 <script>
 import TabSections from '@/components/layout/TabSections';
 import ButtonBack from '../../components/UI/ButtonBack';
-import { router } from '../../mixins/router';
 import Logout from '../../components/user/Logout';
 
 export default {
   name: 'UserProfile',
   components: { Logout, ButtonBack, TabSections },
-  mixins: [router],
-  async asyncData({ $api, params, redirect }) {
-    try {
-      const user = await $api.getUserByUsername(params.user);
-      const res = await $api.getUserInstrumentsByUsername(params.user);
-
-      return {
-        user: user.data,
-        instruments: res.data.userInstruments,
-        memories: res.data.memories,
-      };
-    } catch (e) {
-      redirect(404, '/');
-    }
-  },
   data() {
     return {
       user: null,
@@ -84,6 +70,21 @@ export default {
       ],
     };
   },
+  async fetch() {
+    try {
+      const user = await this.$api.getUserByUsername(this.$route.params.user);
+      const res = await this.$api.getUserInstrumentsByUsername(
+        this.$route.params.user
+      );
+      this.user = user.data;
+      this.instruments = res.data.userInstruments;
+      this.memories = res.data.memories;
+      this.updateSections();
+    } catch (e) {
+      await this.$router.push('/404/');
+    }
+  },
+  fetchOnServer: false,
   computed: {
     name() {
       if (!this.user.firstName) return null;
@@ -95,19 +96,24 @@ export default {
       return txt;
     },
     isOwner() {
-      return this.$auth.$state.user._id === this.user._id;
+      return this.$auth.$state.user?._id === this.user?._id;
     },
     isCurrentUser() {
-      return this.$auth.$state.user.username === this.user.username;
+      return this.$auth.$state.user?.username === this.user?.username;
     },
   },
   created() {
-    const instrumentSection = this.sections.find(
-      (s) => s.name === 'instruments'
-    );
-    const memoriesSection = this.sections.find((s) => s.name === 'memories');
-    instrumentSection.data = this.instruments;
-    memoriesSection.data = this.memories;
+    this.updateSections();
+  },
+  methods: {
+    updateSections() {
+      const instrumentSection = this.sections.find(
+        (s) => s.name === 'instruments'
+      );
+      const memoriesSection = this.sections.find((s) => s.name === 'memories');
+      instrumentSection.data = this.instruments;
+      memoriesSection.data = this.memories;
+    },
   },
 };
 </script>
