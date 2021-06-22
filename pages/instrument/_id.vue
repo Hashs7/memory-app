@@ -2,6 +2,8 @@
   <div class="instrument">
     <ButtonBack link="/motel" class="instrument__back" />
 
+    <button v-if="isOwner" class="btn-edit absolute">Modifier</button>
+
     <div v-if="instrument">
       <ImagesCarousel v-if="thumbnail" :data="instrument.images" />
       <div class="instrument__container o-page__container">
@@ -102,7 +104,7 @@ export default {
   fetchOnServer: false,
   computed: {
     isOwner() {
-      return this.instrument.owner._id === this.$auth.$state.user?._id;
+      return this.instrument?.owner?._id === this.$auth.$state.user?._id;
     },
     isFavorite() {
       if (this.isOwner) return false;

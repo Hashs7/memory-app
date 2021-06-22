@@ -107,4 +107,14 @@
     color: $gray-darkest;
     background-color: $background;
   }
+
+  &.absolute {
+    position: absolute;
+    border: none;
+    z-index: 10;
+    top: 18px;
+    right: 18px;
+    background-color: $background;
+    line-height: 36px;
+  }
 }
