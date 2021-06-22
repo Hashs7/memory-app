@@ -1,11 +1,11 @@
 <template>
   <section>
+    <p>lol</p>
     <FeedMemoryCarousel
       v-if="memoriesFavInstru && memoriesFavInstru.length"
       :data="memoriesFavInstru"
     />
     <EmptyInstrument v-else />
-    <p>lol</p>
     <section
       v-for="categoryId in categoriesArray"
       :key="categoryId.id"
@@ -13,10 +13,10 @@
     >
       <p>{{ categoryId }}</p>
       <div class="o-section__head">
-        <h4 class="o-section__title">{{ categoryId.category.name }}</h4>
+        <h4 class="o-section__title">{{ memoriesCat[categoryId].name }}</h4>
       </div>
 
-      <FeedMemoryCarousel :data="categoryId.memories"> </FeedMemoryCarousel>
+      <FeedMemoryCarousel :data="memoriesCat[categoryId].memories" />
     </section>
   </section>
 </template>
@@ -30,11 +30,11 @@ export default {
   props: {
     memoriesFavInstru: {
       type: Array,
-      required: true,
+      default: () => [],
     },
     memoriesCat: {
       type: Object,
-      required: true,
+      default: () => {},
     },
   },
   computed: {

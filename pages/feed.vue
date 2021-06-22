@@ -49,7 +49,7 @@
         </div>
 
         <FeedMemorySection
-          v-if="results.memories"
+          v-if="results.memories || memoriesCat"
           :memories-cat="memoriesCat"
           :memories-fav-instru="results.memories"
         />
@@ -154,10 +154,10 @@ export default {
           this.selectedCategoriesMapped
         );
 
-        this.memoriesCat = Object.assign({}, this.memoriesCat, res.data);
+        this.memoriesCat = Object.assign({}, res.data);
         // this.memoriesCat = res.data;
 
-        console.log('data', res.data);
+        console.log('data', this.memoriesCat);
       } catch (e) {
         console.log(e);
       }

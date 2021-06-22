@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     getMemoryPreview(memory) {
-      return memory.contents[0].file.path;
+      return memory.contents.find((c) => c.type === 'media')?.file?.path;
     },
 
     getMemoryDate(date) {
@@ -73,7 +73,8 @@ export default {
     },
 
     getInstrumentThumbnail(memory) {
-      return memory.instrument.images[0].path;
+      if (!memory.instrument.images.length) return;
+      return memory.instrument.images[0]?.path;
     },
     getLinkUrl(memory) {
       return `/instrument/${memory.instrument.id}/souvenir/${memory.id}`;
