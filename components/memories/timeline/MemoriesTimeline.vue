@@ -62,6 +62,15 @@
         </template>
       </div>
     </div>
+    <div class="memories-timeline__date">
+      <span
+        v-for="(step, i) in memorySteps"
+        :key="i"
+        class="memories-timeline__date-text"
+      >
+        {{ calendarDate(step.date) }}
+      </span>
+    </div>
     <div class="memories-timeline__controls">
       <div class="memories-timeline__controls-top">
         <span class="memories-timeline__cursor memories-timeline__cursor--top">
@@ -99,10 +108,12 @@ import IconTriangle from '@/assets/svg/ic_triangle.svg?inline';
 import IconAdd from '@/assets/svg/ic_add.svg?inline';
 import gsap from 'gsap';
 import dayjs from 'dayjs';
+import calendar from 'dayjs/plugin/calendar';
 import { Draggable } from 'gsap/Draggable';
 import MemoryPreview from '@/components/memories/MemoryPreview';
 import { findIndexOfClosest } from '../../../helpers';
 import TimelineHandoverCard from './cards/TimelineHandoverCard';
+dayjs.extend(calendar);
 
 export default {
   name: 'MemoriesTimeline',
@@ -317,6 +328,16 @@ export default {
 
       return steps;
     },
+    calendarDate(date) {
+      return dayjs(date).calendar(null, {
+        sameDay: "[Aujourd'hui]", // The same day ( Today at 2:30 AM )
+        nextDay: '[Demain]', // The next day ( Tomorrow at 2:30 AM )
+        nextWeek: 'dddd', // The next week ( Sunday at 2:30 AM )
+        lastDay: '[Hier]', // The day before ( Yesterday at 2:30 AM )
+        lastWeek: 'dddd', // Last week ( Last Monday at 2:30 AM )
+        sameElse: 'DD MMMM YYYY', // Everything else ( 7/10/2011 )
+      });
+    },
   },
 };
 </script>
@@ -419,6 +440,22 @@ $step-margin: 5px;
     margin-bottom: 30px;
     height: 40px;
     width: 40px;
+  }
+
+  &__date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 23px;
+
+    &-text {
+      display: inline-block;
+      font-size: 12px;
+      text-align: center;
+      width: $slide-width / 2;
+      flex-shrink: 0;
+      margin: 0 $slide-margin;
+    }
   }
 
   &__controls {
