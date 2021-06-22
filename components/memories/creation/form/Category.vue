@@ -3,9 +3,9 @@
     <vue-scroll>
       <li
         v-for="category in selectionCategories"
-        :key="category.id"
-        :class="{ selected: category.selected }"
-        @click="toggleCategory(category)"
+        :key="category._id"
+        :class="{ selected: isSelected(category._id) }"
+        @click="toggleCategory(category._id)"
       >
         {{ category.name }}
       </li>
@@ -28,9 +28,7 @@ export default {
     if (!this.$auth.loggedIn) return;
     try {
       const categories = await this.$api.fetchAllCategories();
-
       this.selectionCategories = categories.data.map((category) => {
-        category.selected = false;
         return category;
       });
     } catch (e) {
@@ -39,25 +37,17 @@ export default {
   },
 
   computed: {
-    categories: {
-      get() {
-        return this.$store.state.memory.data?.categories;
-      },
-      set(newValue) {
-        this.updateCategories(newValue);
-      },
+    categories() {
+      return this.$store.state.memory.data?.categories;
     },
   },
 
   methods: {
-    toggleCategory(category) {
-      category.selected = !category.selected;
-      const selectedCats = this.selectionCategories?.filter((c) => {
-        return c.selected;
-      });
-      this.categories = selectedCats?.map((s) => s._id);
+    isSelected(id) {
+      return this.categories.includes(id);
     },
-    ...mapMutations('memory', ['updateCategories']),
+
+    ...mapMutations('memory', ['toggleCategory']),
   },
 };
 </script>

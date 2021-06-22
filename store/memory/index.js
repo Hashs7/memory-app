@@ -41,8 +41,13 @@ export const mutations = {
     state.data.visibility = value;
   },
 
-  updateCategories(state, value) {
-    state.data.categories = value;
+  toggleCategory(state, id) {
+    const index = state.data.categories.indexOf(id);
+    if (index === -1) {
+      state.data.categories.push(id);
+      return;
+    }
+    state.data.categories.splice(index, 1);
   },
 
   setMemory(state, memory) {
