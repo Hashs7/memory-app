@@ -1,15 +1,13 @@
 <template>
   <div class="media-modal o-page--full">
-    <div class="media-modal__container">
-      <div class="media-modal__head">
-        <ButtonBack emit @back="closeModal" />
-        <p class="">Galerie Memory Motel</p>
-        <button class="u-button--back check" @click="addContent">
-          <IconCheck />
-        </button>
-      </div>
+    <div class="media-modal__container o-page__container">
       <div class="media-modal__body">
         <slot />
+      </div>
+      <div class="media-modal__footer">
+        <button class="u-button u-button--secondary" @click="closeModal">
+          Annuler
+        </button>
       </div>
     </div>
     <div class="media-modal__background o-page--full" @click="closeModal"></div>
@@ -17,34 +15,31 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex';
-import IconCheck from '@/assets/svg/ic_check.svg?inline';
-import ButtonBack from '../../UI/ButtonBack';
-
 export default {
-  name: 'MediaModal',
-  components: { ButtonBack, IconCheck },
+  name: 'InstrumentModal',
   mounted() {
     document.body.style.position = 'fixed';
   },
   beforeDestroy() {
     document.body.style.position = '';
   },
-  computed: {
-    ...mapState('memory', ['modal']),
-  },
   methods: {
-    ...mapActions('memory', ['addContent']),
-    ...mapMutations('memory', ['closeModal']),
-    validate() {},
+    closeModal() {
+      console.log('close');
+      this.$emit('close');
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .media-modal {
-  z-index: 10;
-  padding-top: 60px;
+  z-index: 1000;
+  padding-bottom: calc(72px + env(safe-area-inset-bottom, 0));
+}
+
+.media-modal__footer {
+  margin-top: 24px;
 }
 
 .media-modal__background {
@@ -57,9 +52,9 @@ export default {
   position: relative;
   z-index: 10;
   height: 100%;
-  border-radius: 22px 22px 0 0;
-  overflow: scroll;
-  background-color: $background;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
 }
 
 .media-modal__head {

@@ -85,13 +85,17 @@ export default {
     instrumentName() {
       let name = '';
       let brand = '';
+      let separator = ' ';
       if (this.data.name) {
         name = this.data.name;
+      }
+      if (this.data.name && this.data.brand) {
+        separator = ' - ';
       }
       if (this.data.brand) {
         brand = this.data.brand;
       }
-      return `${name} ${brand}`;
+      return `${name}${separator}${brand}`;
     },
   },
   methods: {
@@ -179,7 +183,7 @@ export default {
 
   &.selected {
     path {
-      fill: #ff8181;
+      fill: #b81919;
     }
   }
 }

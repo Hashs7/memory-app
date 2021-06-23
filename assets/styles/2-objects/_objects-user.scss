@@ -109,6 +109,7 @@
   }
 
   &.absolute {
+    margin-top: env(safe-area-inset-top, 0);
     position: absolute;
     border: none;
     z-index: 10;

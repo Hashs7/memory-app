@@ -28,6 +28,12 @@
   color: $white;
   border: none;
 }
+.u-button--secondary {
+  background-color: $background;
+  color: $gray-darkest;
+  border: none;
+  width: 100%;
+}
 
 .u-button--outline {
   border: 1px solid $gray-darkest;
@@ -174,6 +180,10 @@
 .u-button--back.chevron svg {
   width: 8px;
   height: 12px;
+}
+
+.u-button--back.check svg {
+  width: 18px;
 }
 
 .u-button--back.light {

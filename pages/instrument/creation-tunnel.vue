@@ -188,6 +188,7 @@ export default {
       fileReader.readAsDataURL(f);
       fileReader.addEventListener('loadend', (e) => {
         this.imagePath = fileReader.result;
+        this.hasImg = true;
         this.uploadImg(e, f);
       });
     },
@@ -198,7 +199,6 @@ export default {
       try {
         const { data } = await this.$api.uploadFile(formData);
         this.instrument.images.push(data.response._id);
-        this.hasImg = true;
         this.$store.commit('gallery/addMedia', data.response);
       } catch (e) {
         console.error(e);

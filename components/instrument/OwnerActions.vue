@@ -1,22 +1,22 @@
 <template>
   <div class="owner-actions">
-    <NuxtLink :to="addMemory" class="u-button u-button--primary">
+    <NuxtLink :to="addMemory" class="u-button u-button--secondary">
       Ajouter un souvenir
     </NuxtLink>
 
-    <button class="u-button u-button--primary" @click="toggleForSale">
+    <button class="u-button u-button--secondary" @click="toggleForSale">
       {{ instrument.forSale ? 'Retirer de la vente' : 'Mettre en vente' }}
     </button>
 
     <NuxtLink
       v-if="instrument.forSale"
       :to="handover"
-      class="u-button u-button--primary"
+      class="u-button u-button--secondary"
     >
       Je ne suis plus propriétaire
     </NuxtLink>
 
-    <NuxtLink :to="edit" class="u-button u-button--primary">
+    <NuxtLink :to="edit" class="u-button u-button--secondary">
       Modifier les informations
     </NuxtLink>
   </div>

@@ -2,7 +2,13 @@
   <div class="instrument">
     <ButtonBack link="/motel" class="instrument__back" />
 
-    <button v-if="isOwner" class="btn-edit absolute">Modifier</button>
+    <button
+      v-if="isOwner"
+      class="btn-edit absolute"
+      @click="showActions = true"
+    >
+      Modifier
+    </button>
 
     <div v-if="instrument">
       <ImagesCarousel v-if="thumbnail" :data="instrument.images" />
@@ -27,11 +33,12 @@
           <UserPreview :user="instrument.owner" />
         </div>
 
-        <OwnerActions
-          v-if="isOwner"
-          :instrument="instrument"
-          @update="updateInstrument"
-        />
+        <InstrumentModal
+          v-if="isOwner && showActions"
+          @close="showActions = false"
+        >
+          <OwnerActions :instrument="instrument" @update="updateInstrument" />
+        </InstrumentModal>
 
         <div v-else class="instrument__not-owner">
           <button
@@ -67,10 +74,12 @@ import OwnerActions from '@/components/instrument/OwnerActions';
 import ButtonBack from '@/components/UI/ButtonBack';
 import MemoriesTimeline from '@/components/memories/timeline/MemoriesTimeline';
 import Sonority from '@/components/instrument/Sonority';
+import InstrumentModal from '@/components/instrument/InstrumentModal';
 import illu from '~/assets/img/illu_spiderweb.png';
 
 export default {
   components: {
+    InstrumentModal,
     Sonority,
     MemoriesTimeline,
     ButtonBack,
@@ -90,6 +99,7 @@ export default {
     return {
       illu,
       instrument: null,
+      showActions: false,
     };
   },
   async fetch() {

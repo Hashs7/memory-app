@@ -34,14 +34,14 @@
                 <IconRectangle class="u-button__bg" />
               </NuxtLink>
 
-              <div v-if="motel[s.name].length">
+              <template v-if="motel[s.name].length">
                 <InstrumentPreview
                   v-for="ins in motel[s.name]"
                   :key="ins.id"
                   :data="ins"
                   :show-favorite="s.name === 'wish'"
                 />
-              </div>
+              </template>
               <EmptyInstrument v-else />
             </div>
           </section>
