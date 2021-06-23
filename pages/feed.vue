@@ -49,7 +49,7 @@
         </div>
 
         <FeedMemorySection
-          v-if="results.memories"
+          v-if="results.memories || memoriesCat"
           :memories-cat="memoriesCat"
           :memories-fav-instru="results.memories"
         />
@@ -97,6 +97,8 @@ export default {
       this.instruments = res.data;
       this.results = results.data;
       this.categories = categories.data;
+
+      await this.fetchMemoriesCat();
     } catch (e) {
       console.log(e);
     }
@@ -149,11 +151,12 @@ export default {
     },
 
     async fetchMemoriesCat() {
+      if (!this.selectedCategoriesMapped.length) return;
       try {
-        const { data } = await this.$api.fetchMemoriesCat(
+        const res = await this.$api.fetchMemoriesCat(
           this.selectedCategoriesMapped
         );
-        this.memoriesCat = data;
+        this.memoriesCat = res.data;
       } catch (e) {
         console.log(e);
       }

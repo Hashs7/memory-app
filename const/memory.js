@@ -28,6 +28,7 @@ export const emptyMemory = {
   tags: [],
   visibility: null,
   theme: null,
+  categories: [],
 };
 
 export const VISIBILITY = {

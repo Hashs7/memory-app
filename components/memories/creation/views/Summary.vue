@@ -38,6 +38,11 @@
       <label class="o-cells__label">Qui peut voir ce Memory ?</label>
       <Visibility />
 
+      <label class="o-cells__label"
+        >Quelles catégories correspondent à ce Memory ?</label
+      >
+      <Category />
+
       <button
         class="summary__submit u-button u-button--primary"
         @click="$emit('submit')"
@@ -52,12 +57,14 @@
 import { mapMutations, mapState } from 'vuex';
 import dayjs from 'dayjs';
 import Visibility from '@/components/memories/creation/form/Visibility';
+import Category from '@/components/memories/creation/form/Category';
 import ButtonBack from '@/components/UI/ButtonBack';
 
 export default {
   name: 'Summary',
   components: {
     Visibility,
+    Category,
     ButtonBack,
   },
   props: {
