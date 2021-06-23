@@ -48,6 +48,16 @@ import Logout from '../../components/user/Logout';
 export default {
   name: 'UserProfile',
   components: { Logout, ButtonBack, TabSections },
+  async asyncData({ $api, params }) {
+    try {
+      const user = await $api.getUserByUsername(params.user);
+      return {
+        user,
+      };
+    } catch (e) {
+      console.log(e);
+    }
+  },
   data() {
     return {
       user: null,
