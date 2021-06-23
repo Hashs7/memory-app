@@ -175,16 +175,5 @@ export default {
   position: absolute;
   top: 12px;
   right: 8px;
-  padding: 0;
-  border: none;
-  background-color: transparent;
-  width: 32px;
-  height: 32px;
-
-  &.selected {
-    path {
-      fill: #b81919;
-    }
-  }
 }
 </style>

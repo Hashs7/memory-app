@@ -26,10 +26,18 @@
     <template v-else-if="thumbnail">
       <div class="memory-preview__image-container">
         <img
+          v-if="isImage"
           class="memory-preview__image"
-          :src="thumbnail"
+          :src="thumbnail.path"
           alt="Image du souvenir"
         />
+        <video
+          v-if="isVideo"
+          class="memory-preview__image"
+          :src="thumbnail.path"
+          muted
+          autoplay
+        ></video>
       </div>
       <div class="memory-preview__body">
         <h4 class="memory-preview__name">{{ data.name }}</h4>
@@ -87,8 +95,15 @@ export default {
     isOwner() {
       return this.data.createdBy === this.$auth.$state.user?._id;
     },
+    isImage() {
+      return this.thumbnail.mimetype.split('/')[0] === 'image';
+    },
+    isVideo() {
+      return this.thumbnail.mimetype.split('/')[0] === 'video';
+    },
     thumbnail() {
-      return this.data.contents.find((c) => c.type === 'media')?.file?.path;
+      console.log(this.data.contents.find((c) => c.type === 'media')?.file);
+      return this.data.contents.find((c) => c.type === 'media')?.file;
     },
     date() {
       return dayjs(this.data.date).format('MMMM YYYY');

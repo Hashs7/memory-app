@@ -6,7 +6,7 @@
   max-height: 100%;
   overflow: hidden;
   padding: 80px 25px 90px 25px;
-  background-color: #FFFCF1;
+  background-color: #fffcf1;
 }
 
 .memory-text-card__pattern {
@@ -15,9 +15,9 @@
   min-height: 30%;
   overflow: hidden;
   background-image: repeating-linear-gradient(
-          transparent 0px,
-          transparent 40px,
-          rgba($gray-darkest, 0.4) 41px
+    transparent 0px,
+    transparent 40px,
+    rgba($gray-darkest, 0.4) 41px
   );
   background-position: 0 -4px;
 }
@@ -34,4 +34,18 @@ textarea.memory-text-card__text {
   background-color: transparent;
   padding: 0;
   resize: none;
+}
+
+.instrument-preview__fav {
+  padding: 0;
+  border: none !important;
+  background-color: transparent !important;
+  width: 32px;
+  height: 32px;
+
+  &.selected {
+    path {
+      fill: #b81919;
+    }
+  }
 }

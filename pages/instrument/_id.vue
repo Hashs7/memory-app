@@ -9,6 +9,14 @@
     >
       Modifier
     </button>
+    <button
+      v-else
+      :class="{ selected: isFavorite }"
+      class="instrument-preview__fav btn-edit absolute"
+      @click.prevent.stop="addToWish"
+    >
+      <IconHeart />
+    </button>
 
     <div v-if="instrument">
       <ImagesCarousel v-if="thumbnail" :data="instrument.images" />
@@ -40,15 +48,7 @@
           <OwnerActions :instrument="instrument" @update="updateInstrument" />
         </InstrumentModal>
 
-        <div v-else class="instrument__not-owner">
-          <button
-            :class="[isFavorite]"
-            class="u-button u-button--primary"
-            @click.prevent="addToWish"
-          >
-            {{ !isFavorite ? 'Ajouter aux favoris' : 'Enlever des favoris' }}
-          </button>
-        </div>
+        <div v-if="!isOwner" class="instrument__not-owner"></div>
       </div>
 
       <MemoriesTimeline
@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import IconHeart from '@/assets/svg/ic_heart.svg?inline';
 import UserPreview from '@/components/user/UserPreview';
 import ImagesCarousel from '@/components/instrument/ImagesCarousel';
 import OwnerActions from '@/components/instrument/OwnerActions';
@@ -86,6 +87,7 @@ export default {
     OwnerActions,
     ImagesCarousel,
     UserPreview,
+    IconHeart,
   },
   layout(ctx) {
     let layout = 'default';
@@ -118,7 +120,7 @@ export default {
     },
     isFavorite() {
       if (this.isOwner) return false;
-      return this.$auth.$state.user?.wishList?.includes(this.instrument.id);
+      return this.$auth.$state.user?.wishList?.includes(this.$route.params.id);
     },
     thumbnail() {
       return this.instrument.images[0]?.path;
