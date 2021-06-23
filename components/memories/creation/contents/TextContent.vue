@@ -2,7 +2,11 @@
   <div class="text-content memory-content">
     <div class="memory-text-card">
       <div class="memory-text-card__pattern">
-        <textarea v-model="html" class="memory-text-card__text"></textarea>
+        <textarea
+          v-model="html"
+          class="memory-text-card__text"
+          maxlength="240"
+        ></textarea>
       </div>
     </div>
   </div>
