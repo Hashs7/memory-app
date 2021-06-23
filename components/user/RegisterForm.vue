@@ -63,7 +63,7 @@
             >
               <input
                 v-model="email"
-                autocomplete="username"
+                autocomplete="email"
                 placeholder="Email"
                 class="form__input"
                 type="email"

@@ -75,6 +75,7 @@ export default {
         firstName: null,
         lastName: null,
         username: null,
+        description: null,
       },
     };
   },
@@ -103,7 +104,8 @@ export default {
       return this.user?.thumbnail?.path;
     },
   },
-  mounted() {
+  async mounted() {
+    await this.$auth.fetchUser();
     if (this.$auth.loggedIn) {
       this.user = { ...this.$auth.$state.user };
     }

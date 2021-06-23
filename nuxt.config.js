@@ -109,6 +109,7 @@ export default {
   /**
    * Add 404 page
    */
+  /*
   router: {
     extendRoutes(routes, resolve) {
       routes.push({
@@ -118,6 +119,7 @@ export default {
       });
     },
   },
+  */
 
   auth: {
     redirect: {
@@ -230,6 +232,6 @@ export default {
     exclude: [
       /^\/admin/, // path starts with /admin
     ],
-    fallback: true,
+    // fallback: true,
   },
 };
