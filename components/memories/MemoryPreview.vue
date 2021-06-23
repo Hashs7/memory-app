@@ -3,6 +3,7 @@
     :is="linkUrl ? 'nuxt-link' : 'div'"
     :to="linkUrl"
     class="memory-preview"
+    :class="{ 'memory-preview--text': isTextOnly }"
     @click="$emit('click')"
   >
     <client-only>
@@ -14,27 +15,38 @@
         <IconEdit />
       </nuxt-link>
     </client-only>
-    <div v-if="thumbnail" class="memory-preview__image-container">
-      <img
-        class="memory-preview__image"
-        :src="thumbnail"
-        alt="Image du souvenir"
-      />
-    </div>
-    <div class="memory-preview__body">
-      <h4 class="memory-preview__name">{{ data.name }}</h4>
-      <p class="memory-preview__date">{{ date }}</p>
-    </div>
+    <template v-if="isTextOnly">
+      <div class="memory-preview__text-wrap">
+        <div class="memory-preview__text-container">
+          <p class="memory-preview__text" v-html="data.contents[0].content"></p>
+        </div>
+      </div>
+      <FooterTextMemory class="memory-preview__text-footer" />
+    </template>
+    <template v-else-if="thumbnail">
+      <div class="memory-preview__image-container">
+        <img
+          class="memory-preview__image"
+          :src="thumbnail"
+          alt="Image du souvenir"
+        />
+      </div>
+      <div class="memory-preview__body">
+        <h4 class="memory-preview__name">{{ data.name }}</h4>
+        <p class="memory-preview__date">{{ date }}</p>
+      </div>
+    </template>
   </component>
 </template>
 
 <script>
 import dayjs from 'dayjs';
 import IconEdit from '@/assets/svg/ic_edit.svg?inline';
+import FooterTextMemory from '@/assets/svg/footer_text-memory.svg?inline';
 
 export default {
   name: 'MemoryPreview',
-  components: { IconEdit },
+  components: { IconEdit, FooterTextMemory },
   props: {
     link: {
       type: Boolean,
@@ -80,6 +92,12 @@ export default {
     },
     date() {
       return dayjs(this.data.date).format('MMMM YYYY');
+    },
+    isTextOnly() {
+      return (
+        this.data.contents.filter((m) => m.type !== 'text').length < 1 &&
+        this.data.contents.filter((m) => m.type === 'text').length > 0
+      );
     },
   },
 };
