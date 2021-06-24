@@ -3,24 +3,11 @@
     <div class="o-page__container">
       <div class="memory__head">
         <div class="memory__actions">
-          <div
-            class="memory__sound"
-            :class="{ 'memory__sound--muted': globalAudioMuted }"
-          >
-            <button class="memory__sound-btn u-button u-button--icon">
-              <IconSoundButton @click="toggleGlobalAudioMute" />
-            </button>
-            <audio
-              ref="globalAudio"
-              class="memory__sound-audio"
-              src="/lullaby.mp3"
-              loop
-              muted
-            />
-            <svg class="memory__sound-title" height="14">
-              <text x="0" y="10">"Lullaby" - Matthew May</text>
-            </svg>
-          </div>
+          <transition name="fade">
+            <span v-show="index > 0" class="memory__actions__name-small">
+              {{ memory.name }}
+            </span>
+          </transition>
           <button class="memory__close u-button" @click="closeMemory">
             <IconCross class="icon" />
           </button>
@@ -50,12 +37,7 @@
             :data="c"
             @toggle-mute="toggleVideoMute"
           />
-          <MemoryAudioCard
-            v-else-if="c.type === 'audio'"
-            :data="c"
-            @play="globalAudioDiscreet = true"
-            @pause="globalAudioDiscreet = false"
-          />
+          <MemoryAudioCard v-else-if="c.type === 'audio'" :data="c" />
           <MemoryTextCard v-else-if="c.type !== 'media'" :data="c" />
         </MemoryCard>
       </div>
@@ -79,7 +61,6 @@
 <script>
 import MemoryCard from '@/components/memories/MemoryCard';
 import IconCross from '@/assets/svg/ic_cross.svg?inline';
-import IconSoundButton from '@/assets/svg/ic_sound-btn.svg?inline';
 import IconChevron from '@/assets/svg/ic_chevron.svg?inline';
 import dayjs from 'dayjs';
 import gsap from 'gsap';
@@ -96,7 +77,6 @@ export default {
     MemoryTextCard,
     MemoryCard,
     IconCross,
-    IconSoundButton,
     IconChevron,
   },
   props: {
@@ -113,9 +93,6 @@ export default {
     return {
       index: 0,
       videosMuted: true,
-      globalAudio: null,
-      globalAudioMuted: false,
-      globalAudioDiscreet: false,
     };
   },
   computed: {
@@ -139,14 +116,6 @@ export default {
       return this.memory.contents;
     },
   },
-  watch: {
-    globalAudioDiscreet(active) {
-      gsap.to(this.$refs.globalAudio, {
-        volume: active ? 0 : 1,
-        duration: 1,
-      });
-    },
-  },
   created() {
     if (this.memory) return;
     this.$router.push({
@@ -163,15 +132,6 @@ export default {
         duration: 1.5,
         ease: 'power3.out',
         stagger: 0.2,
-      });
-    }
-
-    if (this.$refs.globalAudio) {
-      this.$refs.globalAudio.muted = false;
-      this.$refs.globalAudio.play();
-      gsap.from(this.$refs.globalAudio, {
-        volume: 0,
-        duration: 0.5,
       });
     }
   },
@@ -228,16 +188,7 @@ export default {
         });
       }
 
-      this.globalAudioDiscreet = e.target.muted;
-
       this.videosMuted = false;
-    },
-
-    toggleGlobalAudioMute() {
-      if (this.$refs.globalAudio) {
-        this.$refs.globalAudio.muted = !this.$refs.globalAudio.muted;
-        this.globalAudioMuted = this.$refs.globalAudio.muted;
-      }
     },
 
     getClass(contentIndex) {
@@ -265,13 +216,11 @@ export default {
     handleMediaBeforeIndexChange() {
       // Stop video before next card
       if (this.mediaType(this.contents[this.index].file) === 'video') {
-        this.globalAudioDiscreet = false;
         this.$refs.cards[this.index].$el.querySelector('video')?.pause();
       }
 
       // Stop audio before next card
       if (this.mediaType(this.contents[this.index].file) === 'audio') {
-        this.globalAudioDiscreet = false;
         this.$refs.cards[this.index].$el.querySelector('audio')?.pause();
       }
     },
@@ -280,7 +229,6 @@ export default {
       // Start video when appearing
       if (this.mediaType(this.contents[this.index].file) === 'video') {
         const video = this.$refs.cards[this.index].$el.querySelector('video');
-        if (!video.muted) this.globalAudioDiscreet = true;
         video.play();
       }
     },
@@ -330,8 +278,21 @@ export default {
 
 .memory__actions {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: flex-end;
   pointer-events: auto;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.memory__actions__name-small {
+  display: inline-block;
+  color: $background;
+  font-family: $font-secondary;
+  margin-right: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .memory__close {
@@ -339,6 +300,8 @@ export default {
   border: none;
   margin-left: auto;
   padding: 0;
+  line-height: 0;
+  height: auto;
 
   svg {
     width: 15px;
