@@ -1,10 +1,6 @@
 <template>
   <div class="instrument">
-    <ButtonBack
-      v-if="!!$auth.$state.user"
-      link="/motel"
-      class="instrument__back"
-    />
+    <ButtonBack v-if="isLogged" link="/motel" class="instrument__back" />
 
     <button
       v-if="isOwner"
@@ -51,6 +47,20 @@
         <div v-if="!isOwner" class="instrument__owner">
           <UserPreview :user="instrument.owner" />
         </div>
+<<<<<<< HEAD
+=======
+
+        <div v-if="!isOwner" class="instrument__not-owner"></div>
+
+        <div class="instrument__description__text">
+          <p
+            v-if="instrument.description"
+            class="instrument__description__text"
+          >
+            {{ instrument.description }}
+          </p>
+        </div>
+>>>>>>> 80e9aec0c8375df6d885854113ae255535a2096f
       </div>
 
       <MemoriesTimeline
@@ -112,6 +122,9 @@ export default {
   computed: {
     isOwner() {
       return this.instrument?.owner?._id === this.$auth.$state.user?._id;
+    },
+    isLogged() {
+      return !!this.$auth.$state.user;
     },
     isFavorite() {
       if (this.isOwner) return false;
@@ -175,6 +188,14 @@ export default {
   font-size: 16px;
   font-weight: 400;
   font-family: $font-primary;
+}
+.instrument__description__text {
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 20px;
+  & p {
+    font-weight: 400;
+  }
 }
 
 .instrument__owner {
