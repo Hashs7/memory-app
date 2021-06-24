@@ -1,6 +1,10 @@
 <template>
   <div class="instrument">
-    <ButtonBack link="/motel" class="instrument__back" />
+    <ButtonBack
+      v-if="!!$auth.$state.user"
+      link="/motel"
+      class="instrument__back"
+    />
 
     <button
       v-if="isOwner"
@@ -20,6 +24,13 @@
 
     <div v-if="instrument">
       <ImagesCarousel v-if="thumbnail" :data="instrument.images" />
+      <InstrumentModal
+        v-if="isOwner && showActions"
+        @close="showActions = false"
+      >
+        <OwnerActions :instrument="instrument" @update="updateInstrument" />
+      </InstrumentModal>
+
       <div class="instrument__container o-page__container">
         <Sonority v-if="instrument.sonority" :media="instrument.sonority" />
 
@@ -41,6 +52,8 @@
           <UserPreview :user="instrument.owner" />
         </div>
 
+        <div v-if="!isOwner" class="instrument__not-owner"></div>
+
         <div class="instrument__description__text">
           <p
             v-if="instrument.description"
@@ -49,14 +62,6 @@
             {{ instrument.description }}
           </p>
         </div>
-        <InstrumentModal
-          v-if="isOwner && showActions"
-          @close="showActions = false"
-        >
-          <OwnerActions :instrument="instrument" @update="updateInstrument" />
-        </InstrumentModal>
-
-        <div v-if="!isOwner" class="instrument__not-owner"></div>
       </div>
 
       <MemoriesTimeline
@@ -99,7 +104,7 @@ export default {
   },
   layout(ctx) {
     let layout = 'default';
-    if (ctx.route.params.memoryId) {
+    if (ctx.route.params.memoryId || !ctx.$auth.$state.user) {
       layout = 'none';
     }
     return layout;

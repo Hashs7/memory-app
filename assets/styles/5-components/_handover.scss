@@ -1,0 +1,92 @@
+.handover {
+}
+
+.step-2 {
+  text-align: center;
+}
+.step-3 {
+  text-align: center;
+}
+
+.handover__qrcode {
+  position: relative;
+  display: inline-flex;
+  padding: 32px;
+  margin: auto;
+
+  .canvas {
+    margin: auto;
+    position: relative;
+    z-index: 1;
+    border-radius: 8px;
+    box-shadow: $shadow--third;
+    background-color: $background;
+  }
+  .background {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.handover__title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 24px auto 12px auto;
+}
+
+.handover__description {
+
+}
+
+.o-page--handover.o-page__flex {
+  padding-bottom: 32px;
+}
+
+
+// Handover page
+.o-page--handover {
+  .instrument-container {
+    position: relative;
+    width: 232px;
+    height: 232px;
+    padding: 16px;
+    margin: 48px auto;
+
+    .background {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+      width: 100%;
+      height: 100%;
+
+      &.front {
+        z-index: 5;
+      }
+    }
+  }
+
+  .instrument__thumbnail {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+}

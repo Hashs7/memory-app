@@ -37,6 +37,7 @@
           :src="thumbnail.path"
           muted
           autoplay
+          loop
         ></video>
       </div>
       <div class="memory-preview__body">
@@ -102,7 +103,6 @@ export default {
       return this.thumbnail.mimetype.split('/')[0] === 'video';
     },
     thumbnail() {
-      console.log(this.data.contents.find((c) => c.type === 'media')?.file);
       return this.data.contents.find((c) => c.type === 'media')?.file;
     },
     date() {

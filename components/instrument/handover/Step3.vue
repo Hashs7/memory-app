@@ -17,8 +17,8 @@
         />
       </div>
     </div>
-    <p>Ce n’est pas fini !</p>
-    <p>
+    <p class="handover__title">Ce n’est pas fini !</p>
+    <p class="handover__description">
       Vous pourrez toujours suivre la vie de votre instrument dans votre Motel
       en “Instrument Passés”
     </p>
