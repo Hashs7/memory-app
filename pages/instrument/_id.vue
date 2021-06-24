@@ -150,6 +150,7 @@ export default {
 <style lang="scss">
 .instrument {
   position: relative;
+  overflow-x: hidden;
 }
 
 .instrument__back {
