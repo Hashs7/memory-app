@@ -69,6 +69,16 @@
             />
           </label>
         </div>
+        <div class="form__group">
+          <label>
+            <textarea
+              v-model="description"
+              class="form__input"
+              name="description"
+              placeholder="Description (optionnelle)"
+            />
+          </label>
+        </div>
       </div>
     </section>
 
@@ -148,6 +158,17 @@ export default {
         this.$store.commit('instrument/updateProps', { prop: 'brand', value });
       },
     },
+    description: {
+      get() {
+        return this.data.description;
+      },
+      set(value) {
+        this.$store.commit('instrument/updateProps', {
+          prop: 'description',
+          value,
+        });
+      },
+    },
   },
   methods: {
     // Form submitted event
@@ -219,8 +240,15 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .u-button {
   margin: auto auto 20px auto !important;
+}
+
+.form__group {
+  & textarea {
+    padding: 16px;
+    color: $gray-darkest;
+  }
 }
 </style>

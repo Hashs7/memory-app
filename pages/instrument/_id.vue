@@ -41,6 +41,14 @@
           <UserPreview :user="instrument.owner" />
         </div>
 
+        <div class="instrument__description__text">
+          <p
+            v-if="instrument.description"
+            class="instrument__description__text"
+          >
+            {{ instrument.description }}
+          </p>
+        </div>
         <InstrumentModal
           v-if="isOwner && showActions"
           @close="showActions = false"
@@ -180,6 +188,14 @@ export default {
   font-size: 16px;
   font-weight: 400;
   font-family: $font-primary;
+}
+.instrument__description__text {
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 20px;
+  & p {
+    font-weight: 400;
+  }
 }
 
 .instrument__owner {

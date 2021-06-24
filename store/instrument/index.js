@@ -6,6 +6,7 @@ const emptyState = {
     brand: '',
     colors: [],
     images: [],
+    description: '',
   },
 };
 // Add memory store
