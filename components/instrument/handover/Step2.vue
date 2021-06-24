@@ -5,12 +5,14 @@
         <span>Scannez le code</span>
       </button>
     </nav>
-    <div class="handover__qrcode">
+    <div class="handover__qrcode" :data-url="url">
       <canvas ref="canvas" class="canvas" width="172px" height="172px"></canvas>
       <Background class="background" />
     </div>
-    <p class="">Faites-lui scanner !</p>
-    <p class="">Faites scanner ce code unique au nouveau propriétaire</p>
+    <p class="handover__title">Faites-lui scanner !</p>
+    <p class="handover__description">
+      Faites scanner ce code unique au nouveau propriétaire
+    </p>
     <!--<ClipboardCopy v-if="url" :value="url">Copier le lien</ClipboardCopy>-->
   </div>
 </template>
@@ -52,32 +54,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.step-2 {
-  text-align: center;
-}
-.handover__qrcode {
-  position: relative;
-  display: inline-flex;
-  padding: 32px;
-  margin: auto;
-
-  .canvas {
-    margin: auto;
-    position: relative;
-    z-index: 1;
-    border-radius: 8px;
-    box-shadow: $shadow--third;
-    background-color: $background;
-  }
-  .background {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-  }
-}
-</style>

@@ -10,7 +10,10 @@
         </button>
       </div>
     </div>
-    <div class="media-modal__background o-page--full" @click="closeModal"></div>
+    <div
+      class="media-modal__background o-page--full"
+      @click.stop.prevent="closeModal"
+    ></div>
   </div>
 </template>
 
@@ -18,14 +21,13 @@
 export default {
   name: 'InstrumentModal',
   mounted() {
-    document.body.style.position = 'fixed';
+    document.body.style.height = '100vh';
   },
   beforeDestroy() {
-    document.body.style.position = '';
+    document.body.style.height = 'auto';
   },
   methods: {
     closeModal() {
-      console.log('close');
       this.$emit('close');
     },
   },
@@ -35,7 +37,7 @@ export default {
 <style lang="scss" scoped>
 .media-modal {
   z-index: 1000;
-  padding-bottom: calc(72px + env(safe-area-inset-bottom, 0));
+  padding-bottom: 72px;
 }
 
 .media-modal__footer {

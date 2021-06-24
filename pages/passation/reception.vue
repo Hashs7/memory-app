@@ -1,7 +1,7 @@
 <template>
   <div class="o-page o-page--handover o-page__container">
     <h1 v-if="validated && instrument" class="o-page__title">
-      Vous venez de faire l'acquisition de {{ instrument.name }}
+      Félicitation, {{ instrument.name }} fait maintenant parti de votre motel
     </h1>
     <div v-if="error.hasError" class="o-page__title error">
       <h1>{{ error.message }}</h1>
@@ -20,8 +20,8 @@
     </div>
 
     <div v-if="!$auth.loggedIn && instrument" class="">
-      <h1>Pour faire l'acquisition de {{ instrument.name }}</h1>
-      <p>Veuillez d'abord vous authentifier</p>
+      <h1>Bienvenue parmis nous</h1>
+      <p>Connectez-vous pour faire l'acquisition de {{ instrument.name }}</p>
       <NuxtLink :to="signIn" class="u-button u-button--primary"
         >Connexion</NuxtLink
       >

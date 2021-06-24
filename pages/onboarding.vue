@@ -84,11 +84,12 @@ export default {
 </script>
 
 <style lang="scss">
-[data-glide-el='controls'] {
+.onboarding__container [data-glide-el='controls'] {
   z-index: 5;
   margin-left: 7%;
   position: absolute;
   bottom: 32px;
+  display: block;
 }
 
 .onboarding__container {

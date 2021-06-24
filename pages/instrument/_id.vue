@@ -20,6 +20,13 @@
 
     <div v-if="instrument">
       <ImagesCarousel v-if="thumbnail" :data="instrument.images" />
+      <InstrumentModal
+        v-if="isOwner && showActions"
+        @close="showActions = false"
+      >
+        <OwnerActions :instrument="instrument" @update="updateInstrument" />
+      </InstrumentModal>
+
       <div class="instrument__container o-page__container">
         <Sonority v-if="instrument.sonority" :media="instrument.sonority" />
 
@@ -40,13 +47,6 @@
         <div v-if="!isOwner" class="instrument__owner">
           <UserPreview :user="instrument.owner" />
         </div>
-
-        <InstrumentModal
-          v-if="isOwner && showActions"
-          @close="showActions = false"
-        >
-          <OwnerActions :instrument="instrument" @update="updateInstrument" />
-        </InstrumentModal>
 
         <div v-if="!isOwner" class="instrument__not-owner"></div>
       </div>
