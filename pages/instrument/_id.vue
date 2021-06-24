@@ -1,10 +1,6 @@
 <template>
   <div class="instrument">
-    <ButtonBack
-      v-if="!!$auth.$state.user"
-      link="/motel"
-      class="instrument__back"
-    />
+    <ButtonBack v-if="isLogged" link="/motel" class="instrument__back" />
 
     <button
       v-if="isOwner"
@@ -14,7 +10,7 @@
       Modifier
     </button>
     <button
-      v-else
+      v-else-if="isLogged"
       :class="{ selected: isFavorite }"
       class="instrument-preview__fav btn-edit absolute"
       @click.prevent.stop="addToWish"
@@ -130,6 +126,9 @@ export default {
   computed: {
     isOwner() {
       return this.instrument?.owner?._id === this.$auth.$state.user?._id;
+    },
+    isLogged() {
+      return !!this.$auth.$state.user;
     },
     isFavorite() {
       if (this.isOwner) return false;
