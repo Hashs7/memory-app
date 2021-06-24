@@ -14,7 +14,7 @@
       Modifier
     </button>
     <button
-      v-else
+      v-if="!!$auth.$state.user && !isOwner"
       :class="{ selected: isFavorite }"
       class="instrument-preview__fav btn-edit absolute"
       @click.prevent.stop="addToWish"
@@ -51,8 +51,6 @@
         <div v-if="!isOwner" class="instrument__owner">
           <UserPreview :user="instrument.owner" />
         </div>
-
-        <div v-if="!isOwner" class="instrument__not-owner"></div>
       </div>
 
       <MemoriesTimeline
@@ -92,13 +90,6 @@ export default {
     ImagesCarousel,
     UserPreview,
     IconHeart,
-  },
-  layout(ctx) {
-    let layout = 'default';
-    if (ctx.route.params.memoryId || !ctx.$auth.$state.user) {
-      layout = 'none';
-    }
-    return layout;
   },
   scrollToTop: false,
   data() {

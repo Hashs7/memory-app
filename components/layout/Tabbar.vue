@@ -1,5 +1,5 @@
 <template>
-  <nav class="tabbar">
+  <nav v-if="$auth.loggedIn" class="tabbar">
     <div class="tabbar__container">
       <div
         v-for="(navItem, i) in nav"
