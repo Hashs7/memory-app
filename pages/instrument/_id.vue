@@ -47,8 +47,6 @@
         <div v-if="!isOwner" class="instrument__owner">
           <UserPreview :user="instrument.owner" />
         </div>
-<<<<<<< HEAD
-=======
 
         <div v-if="!isOwner" class="instrument__not-owner"></div>
 
@@ -60,7 +58,6 @@
             {{ instrument.description }}
           </p>
         </div>
->>>>>>> 80e9aec0c8375df6d885854113ae255535a2096f
       </div>
 
       <MemoriesTimeline
