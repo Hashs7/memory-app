@@ -1,6 +1,10 @@
 <template>
   <div class="instrument">
-    <ButtonBack link="/motel" class="instrument__back" />
+    <ButtonBack
+      v-if="!!$auth.$state.user"
+      link="/motel"
+      class="instrument__back"
+    />
 
     <button
       v-if="isOwner"
@@ -91,7 +95,7 @@ export default {
   },
   layout(ctx) {
     let layout = 'default';
-    if (ctx.route.params.memoryId) {
+    if (ctx.route.params.memoryId || !ctx.$auth.$state.user) {
       layout = 'none';
     }
     return layout;
@@ -150,6 +154,7 @@ export default {
 <style lang="scss">
 .instrument {
   position: relative;
+  overflow-x: hidden;
 }
 
 .instrument__back {
